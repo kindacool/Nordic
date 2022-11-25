@@ -18,7 +18,7 @@ public class MainController {
         this.mapper = mapper;
     }
 
-    @GetMapping("/")
+    @GetMapping("/") 
     public String Main() {
         return "Hello, Nordic!";
     }
