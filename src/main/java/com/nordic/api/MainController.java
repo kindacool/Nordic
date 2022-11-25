@@ -27,4 +27,4 @@ public class MainController {
     public List<TestBean> Member() throws Exception{
         return mapper.Data();
     }
-} 
+}
