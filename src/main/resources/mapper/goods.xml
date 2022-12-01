@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nordic.repository.goods.GoodsMapper">
+<insert id="createGoods" parameterType="goods" useGeneratedKeys="true" keyProperty="goods_no">
+insert into point_goods (goods_name,point,goods_desc,image1,image2,image3,image4,image5,remark,create_member,update_member) 
+value (#{goods_name},#{point},#{goods_desc},#{image1,jdbcType=VARCHAR},#{image2,jdbcType=VARCHAR},
+#{image3,jdbcType=VARCHAR},#{image4,jdbcType=VARCHAR},#{image5,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{create_member},#{update_member})
+</insert>
+
+<select id="readOneGoods" parameterType="int" resultType="goods">
+select * from point_goods where goods_no = #{no}
+</select>
+
+<select id="readAllGoods" resultType="goods">
+select * from point_goods
+</select>
+
+<select id="readAvailableGoods" resultType="goods">
+select * from point_goods where use_yn = 'Y'
+</select>
+
+<delete id="deleteGoods" parameterType="int">
+update point_goods set use_yn = 'N' where goods_no = #{goods_no}
+</delete>
+
+<update id="updateGoods" parameterType="goods">
+update point_goods set goods_name = #{goods_name}, point=#{point}, goods_desc=#{goods_desc},
+image1=#{image1,jdbcType=VARCHAR}, image2=#{image2,jdbcType=VARCHAR}, image3=#{image3,jdbcType=VARCHAR}, 
+image4=#{image4,jdbcType=VARCHAR}, image5=#{image5,jdbcType=VARCHAR},
+remark=#{remark,jdbcType=VARCHAR}, update_member=#{update_member}, update_date = now() 
+where goods_no = #{goods_no}
+</update>
+
+</mapper>
