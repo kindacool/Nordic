@@ -3,6 +3,7 @@ package com.nordic.service.goods;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.nordic.dto.goods.GoodsDto;
+import com.nordic.dto.goods.GoodsReqDto;
 import com.nordic.repository.goods.GoodsDao;
 import lombok.RequiredArgsConstructor;
 
@@ -35,5 +36,7 @@ public class GoodsService {
 	public List<GoodsDto> readAvailableGoods() {
 		return goodsDao.readAvailableGoods();
 	}
+
+
 
 }

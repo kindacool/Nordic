@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.nordic.dto.goods.GoodsDto;
+import com.nordic.dto.goods.GoodsReqDto;
 
 
 
@@ -21,4 +22,6 @@ public interface GoodsMapper {
 	public void updateGoods(GoodsDto goodsDto);
 	
 	public List<GoodsDto> readAvailableGoods();
+	
+	
 }

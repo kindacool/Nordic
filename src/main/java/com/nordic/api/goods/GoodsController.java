@@ -27,12 +27,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.goods.GoodsDto;
+import com.nordic.dto.goods.GoodsReqDto;
 import com.nordic.service.goods.GoodsService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/goods")
@@ -121,6 +124,7 @@ public class GoodsController {
 		System.out.println(no);
 		
 		GoodsDto goodsDto = goodsService.readOneGoods(no);
+		if(goodsDto.getImage1() != null) {
 		String path = System.getProperty("user.dir") + "/src/main/resources/static/img/goods/";
 		InputStream imageStream = new FileInputStream(
 				path + goodsDto.getImage1());
@@ -135,7 +139,7 @@ public class GoodsController {
         imageStream.close();
         
         goodsDto.setByte_image(targetArray);
-		
+		}
 		return new ResponseDto("상세정보", goodsDto);
 	}
 	
@@ -190,5 +194,7 @@ public class GoodsController {
 		goodsService.updateGoods(goodsDto);
 		return new ResponseDto("굿즈가 수정되었습니다.", no);
 	}
+	
+
 
 }

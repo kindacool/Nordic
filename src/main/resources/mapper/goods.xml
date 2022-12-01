@@ -33,4 +33,6 @@ remark=#{remark,jdbcType=VARCHAR}, update_member=#{update_member}, update_date =
 where goods_no = #{goods_no}
 </update>
 
+
+
 </mapper>
