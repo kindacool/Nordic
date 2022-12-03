@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.nordic.dto.goods.GoodsReqDto;
+import com.nordic.dto.requests.AcceptedRequestsDto;
+import com.nordic.dto.requests.GoodsReqDto;
+import com.nordic.dto.requests.UnconfirmedRequestsDto;
 
 @Mapper
 public interface RequestsMapper {
@@ -16,11 +18,11 @@ public interface RequestsMapper {
 
 	public void rejectRequest(GoodsReqDto goodsReqDto);
 
-	List<GoodsReqDto> findAllUnconfirmedRequest();
+	List<UnconfirmedRequestsDto> findAllUnconfirmedRequest();
 
 	public List<GoodsReqDto> findAllRequest();
 
 	List<GoodsReqDto> findAllConfirmedRequest();
 
-	public List<GoodsReqDto> findAllAcceptedRequest();
+	public List<AcceptedRequestsDto> findAllAcceptedRequest();
 }

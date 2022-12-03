@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.nordic.dto.goods.BestSellingGoodsDto;
 import com.nordic.dto.goods.GoodsDto;
-import com.nordic.dto.goods.GoodsReqDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,8 +40,14 @@ public class GoodsDao implements GoodsMapper{
 		goodsMapper.updateGoods(goodsDto);
 	}
 
+	@Override
 	public List<GoodsDto> readAvailableGoods() {
 		return goodsMapper.readAvailableGoods();
+	}
+	
+	@Override
+	public List<BestSellingGoodsDto> getBestSellingGoods() {
+		return goodsMapper.getBestSellingGoods();
 	}
 
 

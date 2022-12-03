@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -22,10 +24,10 @@ public class GoodsDto {
 	private char use_yn;
 	private String remark;
 	private String create_member;
+	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
 	private Timestamp create_date;
 	private String update_member;
+	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
 	private Timestamp update_date;
-	
-	private byte[] byte_image;
 	
 }

@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.nordic.dto.goods.GoodsReqDto;
+import com.github.pagehelper.PageHelper;
+import com.nordic.dto.requests.AcceptedRequestsDto;
+import com.nordic.dto.requests.GoodsReqDto;
+import com.nordic.dto.requests.UnconfirmedRequestsDto;
 import com.nordic.repository.requests.RequestsDao;
 import com.nordic.service.points.PointsService;
 
@@ -31,19 +34,23 @@ public class RequestsService {
 		requestsDao.rejectRequest(goodsReqDto);
 	}
 
-	public List<GoodsReqDto> findAllUnconfirmedRequest() {
+	public List<UnconfirmedRequestsDto> findAllUnconfirmedRequest(int pageNum) {
+		PageHelper.startPage(pageNum,10);
 		return requestsDao.findAllUnconfirmedRequest();
 	}
 
-	public List<GoodsReqDto> findAllRequest() {
+	public List<GoodsReqDto> findAllRequest(int pageNum) {
+		PageHelper.startPage(pageNum,10);
 		return requestsDao.findAllRequest();
 	}
 
-	public List<GoodsReqDto> findAllConfirmedRequest() {
+	public List<GoodsReqDto> findAllConfirmedRequest(int pageNum) {
+		PageHelper.startPage(pageNum,10);
 		return requestsDao.findAllConfirmedRequest();
 	}
 
-	public List<GoodsReqDto> findAllAcceptedRequest() {
+	public List<AcceptedRequestsDto> findAllAcceptedRequest(int pageNum) {
+		PageHelper.startPage(pageNum,10);
 		return requestsDao.findAllAcceptedRequest();
 	}
 }

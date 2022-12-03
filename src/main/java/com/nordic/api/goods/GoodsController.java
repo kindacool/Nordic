@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +24,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.pagehelper.PageInfo;
 import com.nordic.dto.common.ResponseDto;
+import com.nordic.dto.goods.BestSellingGoodsDto;
 import com.nordic.dto.goods.GoodsDto;
-import com.nordic.dto.goods.GoodsReqDto;
 import com.nordic.service.goods.GoodsService;
 
 import io.swagger.annotations.ApiOperation;
@@ -48,15 +52,12 @@ public class GoodsController {
     public ResponseDto createGoods(@RequestPart(value="key") GoodsDto goodsDto, 
     		@RequestPart(value="file", required = false) List<MultipartFile> fileList,
     		HttpSession session) throws Exception {
-		System.out.println("controller 도착");
-		System.out.println(goodsDto);
-		System.out.println(fileList);
-		
+		log.info("굿즈 등록 Controller 도착");
+
 		String writer = "Lee"; // 토큰 구현전까지 일시로
 		goodsDto.setCreate_member(writer);
-		goodsDto.setUpdate_member(writer);
 		
-		if(!fileList.isEmpty()) {
+		if(fileList != null) {
 			for(int i = 0 ; i < fileList.size() ; i ++) {
 				String fileName = (fileList.get(i)).getOriginalFilename();
 				int fileSize = (int) (fileList.get(i)).getSize(); // 단위 : Byte
@@ -75,8 +76,9 @@ public class GoodsController {
 				System.out.println("newfilename; " + newfilename);
 				
 				// 첨부파일 업로드
-				//String path = "C:/file";
-				String path = System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
+				//String path = 
+				String path = "C:/file";
+						//System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
 						//session.getServletContext().getRealPath("resources/static/img/goods");
 				System.out.println("path : " + path);
 						
@@ -99,11 +101,11 @@ public class GoodsController {
 		            break;
 		        case 3:            // 4 인 경우
 		        	goodsDto.setImage4(newfilename);
-		        	System.out.println(goodsDto.getImage3());
+		        	System.out.println(goodsDto.getImage4());
 		            break;
 		        case 4:            // 5 인 경우
 		        	goodsDto.setImage5(newfilename);
-		        	System.out.println(goodsDto.getImage3());
+		        	System.out.println(goodsDto.getImage5());
 		            break;
 		        default:        // 모두 해당이 안되는 경우
 		            System.out.println("기타");
@@ -117,84 +119,84 @@ public class GoodsController {
         return new ResponseDto("굿즈가 등록되었습니다.", goodsDto);
     }
 	
+	@ApiOperation(value="굿즈 상세정보")
 	@GetMapping("/{no}")
 	public ResponseDto readOneGoods(@PathVariable int no) throws IOException {
 	
-		System.out.println("controller 도착");
-		System.out.println(no);
-		
+		log.info("하나의 굿즈 상세정보 Controller 도착");
 		GoodsDto goodsDto = goodsService.readOneGoods(no);
-		if(goodsDto.getImage1() != null) {
-		String path = System.getProperty("user.dir") + "/src/main/resources/static/img/goods/";
-		InputStream imageStream = new FileInputStream(
-				path + goodsDto.getImage1());
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-		int read;
-        byte[] imageByteArray = new byte[imageStream.available()];
-        while ((read = imageStream.read(imageByteArray, 0, imageByteArray.length)) != -1) {
-            buffer.write(imageByteArray, 0, read);
-        }
-        buffer.flush();
-        byte[] targetArray = buffer.toByteArray();
-        imageStream.close();
-        
-        goodsDto.setByte_image(targetArray);
-		}
+
 		return new ResponseDto("상세정보", goodsDto);
 	}
 	
-	@GetMapping
-	public ResponseDto readAllGoods() {
+    //파일 url 호출
+	@ApiOperation(value="굿즈 사진 파일 url 호출")
+    @GetMapping(value = "/image/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] fileView(@PathVariable String fileName) throws IOException {
+    	String path = "C:/file";
+        InputStream in = new FileInputStream(path + "/" + fileName);
+        return IOUtils.toByteArray(in);
+    }
+    
+	@ApiOperation(value="모든 굿즈(삭제된 굿즈 포함) 목록")
+	@GetMapping("/all")
+	public ResponseDto readAllGoods(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) {
 	
-		System.out.println("controller 도착");
+		log.info("모든 굿즈 Controller 도착");
 		
-		List<GoodsDto> goodsList = goodsService.readAllGoods();
+		List<GoodsDto> goodsList = goodsService.readAllGoods(pageNum);
 		
-		return new ResponseDto("전체목록", goodsList);
+		return new ResponseDto("전체목록", PageInfo.of(goodsList));
 	}
 	
+	@ApiOperation(value="구매가능상태 굿즈 목록")
 	@GetMapping("/avail")
-	public ResponseDto readAvailableGoods() {
-	
-		System.out.println("controller 도착");
+	public ResponseDto readAvailableGoods(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) {
+		log.info("구매가능 굿즈 Controller 도착");
 		
-		List<GoodsDto> goodsList = goodsService.readAvailableGoods();
+		List<GoodsDto> goodsList = goodsService.readAvailableGoods(pageNum);
 		
-		return new ResponseDto("구매가능한 굿즈 목록", goodsList);
+		return new ResponseDto("구매가능한 굿즈 목록", PageInfo.of(goodsList));
 	}
 	
+	@ApiOperation(value="굿즈 삭제")
 	@DeleteMapping("/{no}")
 	public ResponseDto deleteGoods(@PathVariable int no) {
-		System.out.println("controller 도착");
-		System.out.println(no);
+		log.info("삭제 Controller 도착");
 		
 		goodsService.deleteGoods(no);
 		return new ResponseDto("굿즈가 삭제되었습니다.", no);
 	}
 	
+	@ApiOperation(value="굿즈 수정")
 	@PutMapping("/{no}")
-	public ResponseDto updateGoods(@PathVariable int no, @RequestBody GoodsDto goodsDto) throws IOException {
-		System.out.println("controller 도착");
+	public ResponseDto updateGoods(@PathVariable int no, 
+			@RequestPart(value="key") GoodsDto goodsDto,
+    		HttpSession session) throws Exception {
+		log.info("수정 Controller 도착");
 		System.out.println(no);
 		
 		// 수정자 정보
 		String writer = "Kim"; // 토큰 구현전까지 일시로
 		goodsDto.setUpdate_member(writer);
-		
 		goodsDto.setGoods_no(no);
-		// 이미지를 변경하지 않을때
-		GoodsDto old = (GoodsDto)((this.readOneGoods(no)).getData());
-		goodsDto.setImage1(old.getImage1());
-		goodsDto.setImage2(old.getImage2());
-		goodsDto.setImage3(old.getImage3());
-		goodsDto.setImage4(old.getImage4());
-		goodsDto.setImage5(old.getImage5());
-		
-		
+
 		goodsService.updateGoods(goodsDto);
 		return new ResponseDto("굿즈가 수정되었습니다.", no);
 	}
 	
-
+	// Best Selling Goods 
+	@ApiOperation(value="가장 많이 팔린 굿즈")
+	@GetMapping("/best")
+	public ResponseDto getBestSellingGoods(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) throws IOException {
+		List<BestSellingGoodsDto> bsGoodsList = goodsService.getBestSellingGoods(pageNum);
+		return new ResponseDto("가장 많이 팔린 굿즈",PageInfo.of(bsGoodsList));
+	}
 
 }

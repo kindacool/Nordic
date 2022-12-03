@@ -3,6 +3,7 @@ package com.nordic.api.requests;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.aop.ThrowsAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,13 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
+import com.nordic.config.CustomException;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.goods.GoodsDto;
-import com.nordic.dto.goods.GoodsReqDto;
+import com.nordic.dto.requests.AcceptedRequestsDto;
+import com.nordic.dto.requests.GoodsReqDto;
+import com.nordic.dto.requests.UnconfirmedRequestsDto;
 import com.nordic.service.goods.GoodsService;
 import com.nordic.service.points.PointsService;
 import com.nordic.service.requests.RequestsService;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,6 +35,7 @@ public class RequestsController {
 	private final GoodsService goodsService;
 	private final PointsService pointsService;
 	
+	@ApiOperation("굿즈 구매 요청")
 	@PostMapping("/{no}")
 	public ResponseDto createRequest(@PathVariable int no) throws IOException{
 		log.info("굿즈 요청 Controller 도착");
@@ -43,7 +50,6 @@ public class RequestsController {
 		String buyer = "10007"; // 토큰 구현전까지 일시로
 		goodsReqDto.setMember_code(buyer);
 		goodsReqDto.setCreate_member(buyer);
-		goodsReqDto.setUpdate_member(buyer);
 		goodsReqDto.setUse_yn('Y');
 		if(pointsService.getAvailablePoints(buyer) < oldPoint) {
 			log.info("잔액 부족으로 굿즈 신청한다고 메세지 뿌리기");
@@ -64,38 +70,47 @@ public class RequestsController {
 	}
 	
 	@GetMapping
-	public ResponseDto findAllRequest() throws Exception{
+	public ResponseDto findAllRequest(@RequestParam(value = "pageNum",
+	required = false,
+	defaultValue = "1") int pageNum) throws Exception{
 		log.info("모든 요청 Controller 도착");
 		
-		List<GoodsReqDto> requestList = requestsService.findAllRequest();
-		return new ResponseDto("모든 요청", requestList);
+		List<GoodsReqDto> requestList = requestsService.findAllRequest(pageNum);
+		return new ResponseDto("모든 요청", PageInfo.of(requestList));
 	}
 	
 	@GetMapping("/unconfirmed")
-	public ResponseDto findAllUnconfirmedRequest() throws Exception{
+	public ResponseDto findAllUnconfirmedRequest(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) throws Exception{
 		log.info("확인 안된 모든 요청 Controller 도착");
 		
-		List<GoodsReqDto> requestList = requestsService.findAllUnconfirmedRequest();
-		return new ResponseDto("확인 안된 모든 요청", requestList);
+		List<UnconfirmedRequestsDto> requestList = requestsService.findAllUnconfirmedRequest(pageNum);
+		return new ResponseDto("확인 안된 모든 요청", PageInfo.of(requestList));
 	}
 	
 	@GetMapping("/confirmed")
-	public ResponseDto findAllConfirmedRequest() throws Exception{
+	public ResponseDto findAllConfirmedRequest(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) throws Exception{
 		log.info("확인 된 모든 요청 Controller 도착");
 		
-		List<GoodsReqDto> requestList = requestsService.findAllConfirmedRequest();
-		return new ResponseDto("확인된 모든 요청", requestList);
+		List<GoodsReqDto> requestList = requestsService.findAllConfirmedRequest(pageNum);
+		return new ResponseDto("확인된 모든 요청", PageInfo.of(requestList));
 	}
 	
 	@GetMapping("/confirmed/y")
-	public ResponseDto findAllAcceptedRequest() throws Exception{
+	public ResponseDto findAllAcceptedRequest(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) throws Exception{
 		log.info("지급된 모든 요청 Controller 도착");
 		
-		List<GoodsReqDto> requestList = requestsService.findAllAcceptedRequest();
-		return new ResponseDto("지급된 모든 요청", requestList);
+		List<AcceptedRequestsDto> requestList = requestsService.findAllAcceptedRequest(pageNum);
+		return new ResponseDto("지급된 모든 요청", PageInfo.of(requestList));
 	}
 	
 	// 요청 수락
+	@ApiOperation("굿즈 구매 요청 수락")
 	@PostMapping("/{reqNo}/y")
 	public ResponseDto acceptRequest(@PathVariable int reqNo) throws IOException{
 		log.info("요청 수락 Controller 도착");
@@ -112,6 +127,7 @@ public class RequestsController {
 	}
 	
 	// 요청 거절
+	@ApiOperation("굿즈 구매 요청 거절")
 	@PostMapping("/{reqNo}/n")
 	public ResponseDto rejectRequest(@PathVariable int reqNo, @RequestParam String remark) throws IOException{
 		log.info("요청 거절 Controller 도착");

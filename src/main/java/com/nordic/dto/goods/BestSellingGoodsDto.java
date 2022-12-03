@@ -1,5 +1,4 @@
-package com.nordic.dto.requests;
-
+package com.nordic.dto.goods;
 
 import java.sql.Timestamp;
 
@@ -10,15 +9,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-@Alias("unconfirmedreq")
-public class UnconfirmedRequestsDto {
-	private int request_no;
+@Alias("bsgoods")
+public class BestSellingGoodsDto {
 	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
-	private Timestamp create_date;
-	private int member_code;
-	private String member_name;
+	private Timestamp last_date;
+	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
+	private Timestamp first_date;
+	private int cnt;
 	private int goods_no;
 	private String goods_name;
 	private int point;
-	private int avaiable_point;
 }

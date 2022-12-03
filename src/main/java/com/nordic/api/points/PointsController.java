@@ -10,15 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.goods.GoodsDto;
-import com.nordic.dto.goods.GoodsReqDto;
 import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.points.PointsDto;
+import com.nordic.dto.requests.GoodsReqDto;
 import com.nordic.service.goods.GoodsService;
 import com.nordic.service.points.PointsService;
 import com.nordic.service.requests.RequestsService;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
@@ -66,7 +68,6 @@ public class PointsController {
 		// member 테이블에 반영
 		// 처리할 포인트와 멤버코드를 가져감
 		pointsService.usedMemberPoints(pointDto);
-		
 		return new ResponseDto("req-> use 완료");
 	}
 	
@@ -89,4 +90,14 @@ public class PointsController {
 		
 		return new ResponseDto("req-> total 완료");
 	}
+	
+	// 멤버별 포인트 (내포인트(가용포인트)) 구하기
+	@ApiOperation("내 포인트 확인")
+	@GetMapping("mypoint")
+	public ResponseDto getMyPoint() {
+		String member_code = "10007"; // 토큰 구현전까지 일시로
+		int point = pointsService.getAvailablePoints(member_code);
+		return new ResponseDto("내 포인트 조회", point);
+	}
+	
 }
