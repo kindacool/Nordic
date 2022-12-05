@@ -23,8 +23,4 @@ public class MainController {
         return "Hello, Nordic!";
     }
 
-    @GetMapping("/members") // 단순 테스트
-    public List<TestBean> Member() throws Exception{
-        return mapper.Data();
-    }
 } 

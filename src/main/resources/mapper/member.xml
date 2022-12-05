@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.member.MemberMapper">
+
+	<select id="findAll" resultType="MemberDto">
+		select * from member
+	</select>
+	
+	<select id="findAdmins" resultType="MemberDto">
+		select * from member where admin_yn = 'Y'
+	</select>
+	
+	<select id="findOne" parameterType="String" resultType="MemberDto">
+		select * from member where member_code = #{member_code}
+	</select>
+	
+	<insert id="mbrRegister" parameterType="MemberDto">
+		insert into member values(
+			#{member_code}, #{member_name}, #{mobile_no}, #{address}, 
+			#{age}, #{sex}, 'Y', #{password}, 'N', sysdate(), 'N', 
+			#{stop_date,jdbcType=DATE}, 'N', 0, 0, 0, 0, 
+			0, 'SYSTEM', sysdate(),
+			'SYSTEM', sysdate()
+			<!-- #{member_code}, #{member_name}, #{mobile_no}, #{address}, 
+			#{age}, #{sex}, #{agree_yn}, #{password}, #{approval_yn}, sysdate(), 'N', 
+			DATE_format(#{stop_date,jdbcType=DATE}, '%Y-%m-%d %H:%i:%s'), 'N', 
+			DATE_format(#{admin_date,jdbcType=DATE}, '%Y-%m-%d %H:%i:%s'), 0, 0, 0, 
+			#{remark}, #{create_member}, sysdate(),
+			#{update_member}, sysdate() -->
+		)
+	</insert>
+	
+	<update id="modifyOne" parameterType="MemberModifyDto">
+		update member set 
+			member_name = #{member_name},
+			mobile_no = #{mobile_no},
+			address = #{address},
+			age = #{age},
+			sex = #{sex},
+			password = #{password},
+			update_member = #{member_code},
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
+
+</mapper>
