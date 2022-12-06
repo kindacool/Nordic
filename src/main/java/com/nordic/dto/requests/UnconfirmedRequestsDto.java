@@ -11,14 +11,8 @@ import lombok.Data;
 
 @Data
 @Alias("unconfirmedreq")
-public class UnconfirmedRequestsDto {
-	private int request_no;
-	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
-	private Timestamp create_date;
-	private int member_code;
+public class UnconfirmedRequestsDto extends GoodsReqDto{
 	private String member_name;
-	private int goods_no;
 	private String goods_name;
-	private int point;
-	private int avaiable_point;
+	private int available_point;
 }

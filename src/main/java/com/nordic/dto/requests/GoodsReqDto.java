@@ -6,10 +6,14 @@ import org.apache.ibatis.type.Alias;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Alias("goodsreq")
+@NoArgsConstructor
+@AllArgsConstructor
 public class GoodsReqDto {
 	private int request_no;
 	private int goods_no;

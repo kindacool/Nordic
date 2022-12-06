@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -14,7 +15,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -130,11 +134,15 @@ public class GoodsController {
 	}
 	
     //파일 url 호출
+	@Cacheable("goodsImage")
 	@ApiOperation(value="굿즈 사진 파일 url 호출")
     @GetMapping(value = "/image/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] fileView(@PathVariable String fileName) throws IOException {
+		log.info("cacheable 실행");
+
     	String path = "C:/file";
         InputStream in = new FileInputStream(path + "/" + fileName);
+        System.out.println("파일시스템" + in);
         return IOUtils.toByteArray(in);
     }
     

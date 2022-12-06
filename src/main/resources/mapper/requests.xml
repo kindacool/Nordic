@@ -25,8 +25,7 @@ refuse_yn = #{refuse_yn} where request_no = #{request_no}
 </update>
 
 <select id="findAllUnconfirmedRequest" resultType="unconfirmedreq">
-select a.request_no, a.create_date, a.member_code,c.member_name,
-a.goods_no,b.goods_name,a.point,c.total_point-c.req_point-c.use_point as available_point 
+select a.*,c.member_name,b.goods_name,c.total_point-c.req_point-c.use_point as available_point 
 from nordic.point_goods_req a inner join nordic.point_goods b on a.goods_no = b.goods_no 
 inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'N' order by a.create_date desc
 </select>
@@ -35,15 +34,26 @@ inner join nordic.member c on a.member_code = c.member_code where confirm_yn = '
 select * from point_goods_req order by create_date desc
 </select>
 
-<select id="findAllConfirmedRequest" resultType="goodsreq">
-select * from point_goods_req where confirm_yn = 'Y' order by create_date desc
+<select id="findAllConfirmedRequest" resultType="confirmedreq">
+select a.*,c.member_name,b.goods_name 
+from nordic.point_goods_req a inner join nordic.point_goods 
+b on a.goods_no = b.goods_no 
+inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'Y' order by a.update_date desc
 </select>
 
-<select id="findAllAcceptedRequest" resultType="acceptedreq">
-select a.request_no, a.create_date, a.member_code,c.member_name,a.goods_no,b.goods_name,
-a.point,a.confirm_yn,a.confirm_member from nordic.point_goods_req a inner join nordic.point_goods 
+<select id="findAllAcceptedRequest" resultType="confirmedreq">
+select a.*,c.member_name,b.goods_name
+from nordic.point_goods_req a inner join nordic.point_goods 
 b on a.goods_no = b.goods_no 
 inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'Y' and refuse_yn ='N'
-order by a.create_date desc
+order by a.update_date desc
+</select>
+
+<select id="findAllRejectedRequest" resultType="confirmedreq">
+select a.*,c.member_name,b.goods_name
+from nordic.point_goods_req a inner join nordic.point_goods 
+b on a.goods_no = b.goods_no 
+inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'Y' and refuse_yn ='Y'
+order by a.update_date desc
 </select>
 </mapper>

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.nordic.dto.requests.AcceptedRequestsDto;
+import com.nordic.dto.requests.ConfirmedRequestsDto;
 import com.nordic.dto.requests.GoodsReqDto;
 import com.nordic.dto.requests.UnconfirmedRequestsDto;
 
@@ -46,12 +46,17 @@ public class RequestsDao implements RequestsMapper{
 	}
 	
 	@Override
-	public List<GoodsReqDto> findAllConfirmedRequest() {
+	public List<ConfirmedRequestsDto> findAllConfirmedRequest() {
 		return requestsMapper.findAllConfirmedRequest();
 	}
 	
 	@Override
-	public List<AcceptedRequestsDto> findAllAcceptedRequest() {
+	public List<ConfirmedRequestsDto> findAllAcceptedRequest() {
 		return requestsMapper.findAllAcceptedRequest();
+	}
+	
+	@Override
+	public List<ConfirmedRequestsDto> findAllRejectedRequest() {
+		return requestsMapper.findAllRejectedRequest();
 	}
 }

@@ -15,7 +15,8 @@ import com.github.pagehelper.PageInfo;
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.goods.GoodsDto;
-import com.nordic.dto.requests.AcceptedRequestsDto;
+import com.nordic.dto.points.PointsDto;
+import com.nordic.dto.requests.ConfirmedRequestsDto;
 import com.nordic.dto.requests.GoodsReqDto;
 import com.nordic.dto.requests.UnconfirmedRequestsDto;
 import com.nordic.service.goods.GoodsService;
@@ -95,7 +96,7 @@ public class RequestsController {
 			defaultValue = "1") int pageNum) throws Exception{
 		log.info("확인 된 모든 요청 Controller 도착");
 		
-		List<GoodsReqDto> requestList = requestsService.findAllConfirmedRequest(pageNum);
+		List<ConfirmedRequestsDto> requestList = requestsService.findAllConfirmedRequest(pageNum);
 		return new ResponseDto("확인된 모든 요청", PageInfo.of(requestList));
 	}
 	
@@ -105,8 +106,18 @@ public class RequestsController {
 			defaultValue = "1") int pageNum) throws Exception{
 		log.info("지급된 모든 요청 Controller 도착");
 		
-		List<AcceptedRequestsDto> requestList = requestsService.findAllAcceptedRequest(pageNum);
+		List<ConfirmedRequestsDto> requestList = requestsService.findAllAcceptedRequest(pageNum);
 		return new ResponseDto("지급된 모든 요청", PageInfo.of(requestList));
+	}
+	
+	@GetMapping("/confirmed/n")
+	public ResponseDto findAllRejectedRequest(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) throws Exception{
+		log.info("지급된 모든 요청 Controller 도착");
+		
+		List<ConfirmedRequestsDto> requestList = requestsService.findAllRejectedRequest(pageNum);
+		return new ResponseDto("거절된 모든 요청", PageInfo.of(requestList));
 	}
 	
 	// 요청 수락
@@ -123,13 +134,24 @@ public class RequestsController {
 		goodsReqDto.setRequest_no(reqNo);
 		
 		requestsService.acceptRequest(goodsReqDto);
+		
+		// 포인트 req -> use
+		PointsDto pointDto = new PointsDto();
+		GoodsReqDto old = requestsService.findOneRequest(reqNo);
+		pointDto.setPoint(old.getPoint());
+		pointDto.setMember_code(old.getMember_code());
+
+		// member 테이블에 반영
+		// 처리할 포인트와 멤버코드를 가져감
+		pointsService.usedMemberPoints(pointDto);
+		
 		return new ResponseDto("요청 수락");
 	}
 	
 	// 요청 거절
 	@ApiOperation("굿즈 구매 요청 거절")
 	@PostMapping("/{reqNo}/n")
-	public ResponseDto rejectRequest(@PathVariable int reqNo, @RequestParam String remark) throws IOException{
+	public ResponseDto rejectRequest(@PathVariable int reqNo, @RequestParam(value="remark",required = false) String remark) throws IOException{
 		log.info("요청 거절 Controller 도착");
 		String master = "Yoo"; // 토큰 구현전까지 일시로
 		
@@ -143,6 +165,22 @@ public class RequestsController {
 		
 		requestsService.rejectRequest(goodsReqDto);
 		
+		// 포인트 use -> total
+		PointsDto pointDto = new PointsDto();
+		GoodsReqDto old = requestsService.findOneRequest(reqNo);
+		pointDto.setPoint(old.getPoint());
+		pointDto.setMember_code(old.getMember_code());
+
+		// member 테이블에 반영
+		// 처리할 포인트와 멤버코드를 가져감
+		pointsService.returnMemberPoints(pointDto);
+		
+		// 포인트 이력 테이블에도 반영
+		// use_yn y -> n
+		pointsService.deletePointHistory(reqNo);
+		
 		return new ResponseDto("요청 거절");
 	}
+	
+	
 }

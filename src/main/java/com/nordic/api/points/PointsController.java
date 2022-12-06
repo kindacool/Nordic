@@ -56,40 +56,40 @@ public class PointsController {
 		return new ResponseDto("포인트 테이블 등록 완료");
 	}
 	
-	// 굿즈 신청 승인 후 포인트 req -> use 로 옮기기
-	@PostMapping("/{reqNo}/y")
-	public ResponseDto usedMemberPoints(@PathVariable int reqNo) {
-		
-		PointsDto pointDto = new PointsDto();
-		GoodsReqDto goodsReqDto = requestsService.findOneRequest(reqNo);
-		pointDto.setPoint(goodsReqDto.getPoint());
-		pointDto.setMember_code(goodsReqDto.getMember_code());
-
-		// member 테이블에 반영
-		// 처리할 포인트와 멤버코드를 가져감
-		pointsService.usedMemberPoints(pointDto);
-		return new ResponseDto("req-> use 완료");
-	}
-	
-	// 굿즈 신청 거절 후 포인트 req -> total 로 옯기기
-	@PostMapping("/{reqNo}/n")
-	public ResponseDto returnMemberPoints(@PathVariable int reqNo) {
-		
-		PointsDto pointDto = new PointsDto();
-		GoodsReqDto goodsReqDto = requestsService.findOneRequest(reqNo);
-		pointDto.setPoint(goodsReqDto.getPoint());
-		pointDto.setMember_code(goodsReqDto.getMember_code());
-
-		// member 테이블에 반영
-		// 처리할 포인트와 멤버코드를 가져감
-		pointsService.returnMemberPoints(pointDto);
-		
-		// 포인트 이력 테이블에도 반영
-		// use_yn y -> n
-		pointsService.deletePointHistory(reqNo);
-		
-		return new ResponseDto("req-> total 완료");
-	}
+//	// 굿즈 신청 승인 후 포인트 req -> use 로 옮기기
+//	@PostMapping("/{reqNo}/y")
+//	public ResponseDto usedMemberPoints(@PathVariable int reqNo) {
+//		
+//		PointsDto pointDto = new PointsDto();
+//		GoodsReqDto goodsReqDto = requestsService.findOneRequest(reqNo);
+//		pointDto.setPoint(goodsReqDto.getPoint());
+//		pointDto.setMember_code(goodsReqDto.getMember_code());
+//
+//		// member 테이블에 반영
+//		// 처리할 포인트와 멤버코드를 가져감
+//		pointsService.usedMemberPoints(pointDto);
+//		return new ResponseDto("req-> use 완료");
+//	}
+//	
+//	// 굿즈 신청 거절 후 포인트 req -> total 로 옯기기
+//	@PostMapping("/{reqNo}/n")
+//	public ResponseDto returnMemberPoints(@PathVariable int reqNo) {
+//		
+//		PointsDto pointDto = new PointsDto();
+//		GoodsReqDto goodsReqDto = requestsService.findOneRequest(reqNo);
+//		pointDto.setPoint(goodsReqDto.getPoint());
+//		pointDto.setMember_code(goodsReqDto.getMember_code());
+//
+//		// member 테이블에 반영
+//		// 처리할 포인트와 멤버코드를 가져감
+//		pointsService.returnMemberPoints(pointDto);
+//		
+//		// 포인트 이력 테이블에도 반영
+//		// use_yn y -> n
+//		pointsService.deletePointHistory(reqNo);
+//		
+//		return new ResponseDto("req-> total 완료");
+//	}
 	
 	// 멤버별 포인트 (내포인트(가용포인트)) 구하기
 	@ApiOperation("내 포인트 확인")
