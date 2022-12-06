@@ -85,11 +85,50 @@ public class MemberApiController {
 	@GetMapping("/{member_code}")
 	public ResponseDto FindOne (@PathVariable String member_code) {
 		
-		log.info("회원 1명 조회");
 		MemberDto memberDto = memberService.findOne(member_code);
-		log.info(member_code + "의 정보 : " + memberDto);
+		ResponseDto result = new ResponseDto("회원"+memberDto.getMember_name()+" 정보 : ", memberDto);
 		
-		return new ResponseDto ("회원"+memberDto.getMember_name()+" 정보 : ", memberDto);
+		log.info("result: "+result);
+		log.info(memberDto.getMember_code()+" 조회하기");
+		
+		return result;
+	}
+	
+	/******************************** 회원정보수정 폼 이동 ********************************/
+	@ApiOperation(value = "회원 정보 수정 폼")
+	@GetMapping(value="/modifyForm/{member_code}")
+	public ResponseDto ModifyForm (@PathVariable String member_code) {
+		
+		//특정 회원 정보 db에서 찾아오기
+		MemberDto memberDto = memberService.findOne(member_code);
+		ResponseDto result = new ResponseDto("회원 "+memberDto.getMember_name()+" 정보 구하기 성공", memberDto);
+		
+		log.info("result: "+result);
+		log.info(memberDto.getMember_code()+" 수정 폼 실행");
+		
+		return result;
+	}
+	
+	/******************************** 회원정보수정 실행 ********************************/
+	@ApiOperation(value = "회원 정보 수정")
+//	@PutMapping(value="/modify")
+	@PutMapping(value="/modify/{member_code}")
+	public ResponseDto ModifyOne (@PathVariable String member_code, @RequestBody MemberModifyDto memberDto) {
+//	public ResponseDto ModifyOne (@RequestBody MemberModifyDto memberDto) {
+				
+		if (member_code.equals(memberDto.getMember_code())) {
+		//memberDto.getMember_name()으로 update SQL문 실행하기
+		int result = memberService.modifyOne(memberDto);
+		ResponseDto responseResult = new ResponseDto(memberDto.getMember_code()+" 수정 완료", result);
+			
+		log.info("responseResult: "+responseResult);
+
+		return responseResult;
+		} else {
+			ExceptionResponseDto excResDto = new ExceptionResponseDto<>("잘못된 접근입니다", HttpStatus.BAD_REQUEST);
+			
+			return excResDto;
+		}
 		
 	}
 	
@@ -97,7 +136,7 @@ public class MemberApiController {
 	@ApiOperation(value = "회원가입폼 이동")
 	@GetMapping("/registerForm")
 	public String RegisterForm ( ) {
-		return "http://172.30.1.68:5500/registerForm.html";	// 뷰 페이지와 연결을 어떻게??
+		return null;	// 뷰 페이지와 연결을 어떻게??
 	}
 	
 	/******************************** 아이디 중복 검사 ********************************/
@@ -138,31 +177,6 @@ public class MemberApiController {
 		log.info("회원이름 : " + memberDto.getMember_name());
 		
 		return new ResponseDto ("회원가입성공", memberDto.getMember_name());
-	}
-	
-	/******************************** 회원정보수정 폼 이동 ********************************/
-	@ApiOperation(value = "회원 정보 수정 폼")
-	@GetMapping(value="/modifyForm/{member_code}")
-	public ResponseDto ModifyForm (@PathVariable String member_code) {
-		log.info("회원 정보 수정 폼 진입");
-		
-		//특정 회원 정보 db에서 찾아오기
-		MemberDto memberDto = memberService.findOne(member_code);
-		
-		return new ResponseDto ("회원 정보 수정 폼 진입 성공, ", memberDto);
-	}
-	
-	/******************************** 회원정보수정 실행 ********************************/
-	@ApiOperation(value = "회원 정보 수정")
-	@PutMapping(value="/modify/{member_code}")
-	public ResponseDto ModifyOne (@PathVariable String member_code, @RequestBody MemberModifyDto memberDto) {
-		
-		log.info("회원 정보 수정 실행");
-		
-		//memberDto.getMember_name()으로 update SQL문 실행하기
-		int result = memberService.modifyOne(memberDto);
-		
-		return new ResponseDto("message", result);
 	}
 	
 	
