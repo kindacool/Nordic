@@ -1,0 +1,13 @@
+diff a/src/main/java/com/nordic/api/MemberApiController.java b/src/main/java/com/nordic/api/MemberApiController.java	(rejected hunks)
+@@ -123,11 +123,6 @@
+ 		log.info("responseResult: "+responseResult);
+ 
+ 		return responseResult;
+-		} else {
+-			ExceptionResponseDto excResDto = new ExceptionResponseDto<>("잘못된 접근입니다", HttpStatus.BAD_REQUEST);
+-			
+-			return excResDto;
+-		}
+ 		
+ 	}
+ 	

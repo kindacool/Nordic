@@ -116,6 +116,7 @@ public class MemberApiController {
 	public ResponseDto ModifyOne (@PathVariable String member_code, @RequestBody MemberModifyDto memberDto) {
 //	public ResponseDto ModifyOne (@RequestBody MemberModifyDto memberDto) {
 				
+		if (member_code.equals(memberDto.getMember_code())) {
 		//memberDto.getMember_name()으로 update SQL문 실행하기
 		int result = memberService.modifyOne(memberDto);
 		ResponseDto responseResult = new ResponseDto(memberDto.getMember_code()+" 수정 완료", result);
@@ -123,6 +124,11 @@ public class MemberApiController {
 		log.info("responseResult: "+responseResult);
 
 		return responseResult;
+		} else {
+			ExceptionResponseDto excResDto = new ExceptionResponseDto<>("잘못된 접근입니다", HttpStatus.BAD_REQUEST);
+			
+			return excResDto;
+		}
 		
 	}
 	
