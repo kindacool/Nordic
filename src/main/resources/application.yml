@@ -1,13 +1,6 @@
 server:
   port: 80
 
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://121.140.84.254:3306/nordic?serverTimezone=Asia/Seoul
-    username: student
-    password: asel1!
-
 logging.level:
   org.hibernate.SQL: debug
   org.hibernate.type: trace
