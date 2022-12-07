@@ -43,8 +43,13 @@ public class MemberRepository implements MemberMapper {
 	}
 	
 	@Override
-	public int modifyOne (MemberModifyDto memberDto) {
-		return memberMapper.modifyOne(memberDto);
+	public int modifyOne (MemberModifyDto memberModifyDto) {
+		return memberMapper.modifyOne(memberModifyDto);
+	}
+	
+	@Override
+	public int delOne (MemberDto memberDto) {
+		return memberMapper.delOne(memberDto);
 	}
 
 }

@@ -16,6 +16,7 @@ public interface MemberMapper {
 	List<MemberDto> findAdmins();
 	MemberDto findOne (String member_code);
 	int mbrRegister (MemberDto memberDto);
-	int modifyOne (MemberModifyDto memberDto);
+	int modifyOne (MemberModifyDto memberModifyDto);
+	int delOne (MemberDto memberDto);
 
 }

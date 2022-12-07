@@ -5,9 +5,11 @@ import org.apache.ibatis.type.Alias;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
+//@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel("MemberDto")
@@ -23,5 +25,5 @@ public class MemberModifyDto {
     private String password;		// 7. 비밀번호
     private String update_member;	// 8. 변경자
     private String update_date;		// 9. 변경일시
-
+    
 }

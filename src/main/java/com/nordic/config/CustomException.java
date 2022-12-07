@@ -1,6 +1,6 @@
 package com.nordic.config;
 
-public class ExceptionConfig extends Exception {
+public class CustomException extends Exception {
 
     public static final String ERR_0001 = "0001,알 수 없는 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.";
     public static final String ERR_0002 = "0002,알 수 없는 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.";
@@ -22,7 +22,7 @@ public class ExceptionConfig extends Exception {
     public static final String PC04_A15 = "0415,인증정보가 일치하지 않습니다.";
     public static final String NOT_FOUND_TEST = "NOT_FOUND_TEST,테스트 데이터를 찾을 수 없습니다.";
 
-    public ExceptionConfig (String msg) {
+    public CustomException (String msg) {
         super(msg);
     }
 	

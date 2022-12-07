@@ -13,8 +13,10 @@ import com.nordic.dto.member.MemberModifyDto;
 import com.nordic.repository.member.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberService {
 	
@@ -41,8 +43,12 @@ public class MemberService {
 		return memberRepository.mbrRegister(memberDto);
 	}
 	
-	public int modifyOne (MemberModifyDto memberDto) {
-		return memberRepository.modifyOne(memberDto);
+	public int modifyOne (MemberModifyDto memberModifyDto) {
+		return memberRepository.modifyOne(memberModifyDto);
+	}
+	
+	public int delOne (MemberDto memberDto) {
+		return memberRepository.delOne(memberDto);
 	}
 
 }

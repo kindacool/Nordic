@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.stereotype.Service;
 
-import com.nordic.config.ExceptionConfig;
+import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice(annotations = { RestController.class, Service.class } )
 public class ControllerAdvice {
 	
-	@ExceptionHandler(value = {Exception.class, ExceptionConfig.class} )
+	@ExceptionHandler(value = {Exception.class, CustomException.class} )
 	@ResponseStatus
 	public ResponseEntity<ExceptionResponseDto> errorHandler (Exception e) {
 		

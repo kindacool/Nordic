@@ -9,12 +9,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -111,20 +112,39 @@ public class MemberApiController {
 	
 	/******************************** 회원정보수정 실행 ********************************/
 	@ApiOperation(value = "회원 정보 수정")
-//	@PutMapping(value="/modify")
-	@PutMapping(value="/modify/{member_code}")
-	public ResponseDto ModifyOne (@PathVariable String member_code, @RequestBody MemberModifyDto memberDto) {
-//	public ResponseDto ModifyOne (@RequestBody MemberModifyDto memberDto) {
+	@PostMapping(value="/modify/{mC}")
+	public ResponseDto ModifyOne (@PathVariable(value = "mC") String mC, 
+								  @RequestBody MemberModifyDto memberModifyDto) {	// json을 Dto 형태로 받기
 				
+		log.info("프론트에서 넘어온 수정할 정보↓");
+		log.info(memberModifyDto.toString());
+//		
 		//memberDto.getMember_name()으로 update SQL문 실행하기
-		int result = memberService.modifyOne(memberDto);
-		ResponseDto responseResult = new ResponseDto(memberDto.getMember_code()+" 수정 완료", result);
-			
+		int result = memberService.modifyOne(memberModifyDto);
+		ResponseDto responseResult = new ResponseDto(memberModifyDto.getMember_code()+" 수정 완료", result);
+		
+		log.info("mC: "+mC);
 		log.info("responseResult: "+responseResult);
-
+		
 		return responseResult;
 		
 	}
+	
+	/******************************** 회원 탈퇴 (stop_yn, stop_date) ********************************/
+	@ApiOperation(value = "회원 탈퇴")
+	@PostMapping(value="/del/{member_code}")
+	public ResponseDto DelOne (@PathVariable String member_code) {
+		
+		log.info("진입");
+		
+		//회원 탈퇴 실행 - stop_yn, stop_date 컬럼 변경 update SQL문 실행
+		MemberDto memberDto = memberService.findOne(member_code);
+		int result = memberService.delOne(memberDto);
+		ResponseDto responseResult = new ResponseDto(memberDto.getMember_name()+ " 탈퇴 완료" , result);
+		
+		return responseResult;
+	}
+	
 	
 	/******************************** 회원가입 폼 이동 ********************************/
 	@ApiOperation(value = "회원가입폼 이동")

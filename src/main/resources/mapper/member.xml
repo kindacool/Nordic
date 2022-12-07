@@ -42,5 +42,12 @@
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
+	
+	<update id="delOne" parameterType="MemberDto">
+		update member set
+			stop_yn = 'Y',
+			stop_date = sysdate()
+		where member_code = #{member_code}
+	</update>
 
 </mapper>
