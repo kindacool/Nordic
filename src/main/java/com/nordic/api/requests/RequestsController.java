@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.aop.ThrowsAdvice;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +39,7 @@ public class RequestsController {
 	
 	@ApiOperation("굿즈 구매 요청")
 	@PostMapping("/{no}")
-	public ResponseDto createRequest(@PathVariable int no) throws IOException{
+	public ResponseDto createRequest(@PathVariable int no) throws Exception{
 		log.info("굿즈 요청 Controller 도착");
 		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
@@ -48,13 +49,14 @@ public class RequestsController {
 		
 		goodsReqDto.setPoint(oldPoint);
 		
-		String buyer = "10007"; // 토큰 구현전까지 일시로
+		String buyer = "10008"; // 토큰 구현전까지 일시로
 		goodsReqDto.setMember_code(buyer);
 		goodsReqDto.setCreate_member(buyer);
 		goodsReqDto.setUse_yn('Y');
 		if(pointsService.getAvailablePoints(buyer) < oldPoint) {
-			log.info("잔액 부족으로 굿즈 신청한다고 메세지 뿌리기");
-			return new ResponseDto("잔액 부족으로 실패");
+			throw new CustomException(CustomException.ERR_1234);
+			//return new ResponseDto("잔액 부족으로 실패");
+			//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Data");
 		} else {
 			requestsService.createRequest(goodsReqDto);
 		}
