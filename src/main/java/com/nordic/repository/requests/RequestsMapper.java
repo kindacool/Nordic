@@ -27,4 +27,8 @@ public interface RequestsMapper {
 	public List<ConfirmedRequestsDto> findAllAcceptedRequest();
 
 	List<ConfirmedRequestsDto> findAllRejectedRequest();
+
+	public List<GoodsReqDto> findRequestsByGoods(int no);
+
+	public List<GoodsReqDto> myRequests(String member_code);
 }

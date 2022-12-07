@@ -13,8 +13,15 @@ value (#{goods_name},#{point},#{goods_desc},#{image1,jdbcType=VARCHAR},#{image2,
 select * from point_goods where goods_no = #{no}
 </select>
 
-<select id="readAllGoods" resultType="goods">
-select * from point_goods order by create_date desc
+<select id="readAllGoods" parameterType="String" resultType="goods">
+select * from point_goods 
+<where>
+<if test="keyword != null">
+ goods_name like CONCAT('%',#{keyword},'%') OR
+ goods_desc like CONCAT('%',#{keyword},'%')
+</if>
+</where>
+order by create_date desc
 </select>
 
 <select id="readAvailableGoods" resultType="goods">

@@ -182,5 +182,32 @@ public class RequestsController {
 		return new ResponseDto("요청 거절");
 	}
 	
+	// 굿즈별 요청 목록
+	@ApiOperation("굿즈별 요청 목록")
+	@GetMapping("/goods/{no}")
+	public ResponseDto findRequestsByGoods(@PathVariable int no,
+	@RequestParam(value = "pageNum",
+	required = false,
+	defaultValue = "1") int pageNum) throws Exception{
+		log.info("굿즈별 요청 목록 Controller 도착");
+		
+		List<GoodsReqDto> requestList = requestsService.findRequestsByGoods(no, pageNum);
+		return new ResponseDto("굿즈별 요청 목록", PageInfo.of(requestList));
+	}
+	
+	// 내 요청 목록
+	@ApiOperation("내 요청 목록")
+	@GetMapping("/my")
+	public ResponseDto myRequests(@RequestParam(value = "pageNum",
+			required = false,
+			defaultValue = "1") int pageNum) throws Exception{
+		
+		log.info("내 요청 목록 Controller 도착");
+		
+		String member_code = "10007"; // 토큰 구현전까지 일시로
+		
+		List<GoodsReqDto> requestList = requestsService.myRequests(member_code, pageNum);
+		return new ResponseDto("내 요청 목록", requestList);
+	}	
 	
 }

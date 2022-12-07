@@ -58,6 +58,16 @@ public class RequestsService {
 		PageHelper.startPage(pageNum,10);
 		return requestsDao.findAllRejectedRequest();
 	}
+
+	public List<GoodsReqDto> findRequestsByGoods(int no, int pageNum) {
+		PageHelper.startPage(pageNum,10);
+		return requestsDao.findRequestsByGoods(no);
+	}
+
+	public List<GoodsReqDto> myRequests(String member_code, int pageNum) {
+		PageHelper.startPage(pageNum,10);
+		return requestsDao.myRequests(member_code);
+	}
 	
 
 }

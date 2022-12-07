@@ -28,9 +28,9 @@ public class GoodsService {
 		return goodsDao.readOneGoods(no);
 	}
 
-	public List<GoodsDto> readAllGoods(int pageNum) {
+	public List<GoodsDto> readAllGoods(int pageNum, String keyword) {
 		PageHelper.startPage(pageNum, 10);
-		return goodsDao.readAllGoods();
+		return goodsDao.readAllGoods(keyword);
 	}
 	
 	public void deleteGoods(int no) {

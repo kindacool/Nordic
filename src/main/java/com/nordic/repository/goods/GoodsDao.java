@@ -26,8 +26,9 @@ public class GoodsDao implements GoodsMapper{
 	}
 	
 	@Override
-	public List<GoodsDto> readAllGoods() {
-		return goodsMapper.readAllGoods();
+	public List<GoodsDto> readAllGoods(String keyword) {
+		System.out.println(keyword);
+		return goodsMapper.readAllGoods(keyword);
 	}
 	
 	@Override

@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
@@ -150,11 +152,12 @@ public class GoodsController {
 	@GetMapping("/all")
 	public ResponseDto readAllGoods(@RequestParam(value = "pageNum",
 			required = false,
-			defaultValue = "1") int pageNum) {
+			defaultValue = "1") int pageNum, 
+			@RequestParam(value="keyword", required = false) String keyword) {
 	
 		log.info("모든 굿즈 Controller 도착");
-		
-		List<GoodsDto> goodsList = goodsService.readAllGoods(pageNum);
+
+		List<GoodsDto> goodsList = goodsService.readAllGoods(pageNum, keyword);
 		
 		return new ResponseDto("전체목록", PageInfo.of(goodsList));
 	}

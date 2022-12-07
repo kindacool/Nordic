@@ -15,7 +15,7 @@ public interface GoodsMapper {
 
 	public GoodsDto readOneGoods(int goodsNo);
 	
-	public List<GoodsDto> readAllGoods();
+	public List<GoodsDto> readAllGoods(String keyword);
 	
 	public void deleteGoods(int no);
 	

@@ -59,4 +59,13 @@ public class RequestsDao implements RequestsMapper{
 	public List<ConfirmedRequestsDto> findAllRejectedRequest() {
 		return requestsMapper.findAllRejectedRequest();
 	}
+
+	@Override
+	public List<GoodsReqDto> findRequestsByGoods(int no) {
+		return requestsMapper.findRequestsByGoods(no);
+	}
+
+	public List<GoodsReqDto> myRequests(String member_code) {
+		return requestsMapper.myRequests(member_code);
+	}
 }
