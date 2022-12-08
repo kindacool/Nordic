@@ -2,7 +2,7 @@ package com.nordic.repository.member;
 
 import java.util.List;
 
-import org.mapstruct.Mapper;
+import org.apache.ibatis.annotations.Mapper;
 
 import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.dto.common.ResponseDto;

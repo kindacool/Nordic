@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mysql.cj.log.Log;
 import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.member.MemberDto;
