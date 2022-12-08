@@ -1,14 +1,9 @@
 package com.nordic.dto.member;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 import org.apache.ibatis.type.Alias;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;

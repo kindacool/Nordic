@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nordic.repository.points.PointsMapper">
+<insert id="minusPoint" parameterType="points">
+insert into point_history (make_gubun,member_code,point,request_no,use_yn,remark,create_member,update_member)
+ value (#{make_gubun},#{member_code},#{point},#{request_no},#{use_yn},#{remark,jdbcType=VARCHAR},#{create_member},#{update_member})
+</insert>
+
+<update id="updateMemberReqPoint" parameterType="points">
+update member set req_point = req_point + #{point} where member_code = #{member_code}
+</update>
+
+<select id="getMember" parameterType="String" resultType="MemberDto">
+select * from member where member_code = #{member_code}
+</select>
+
+<update id="updateMemberTotalPoint" parameterType="points">
+update member set total_point = total_point - #{point} where member_code = #{member_code}
+</update>
+
+<update id="usedMemberPoints" parameterType="points">
+update member set req_point = req_point - #{point}, use_point = use_point + #{point} 
+where member_code = #{member_code}
+</update>
+
+<update id="returnMemberPoints" parameterType="points">
+update member set req_point = req_point - #{point}, total_point = total_point + #{point} 
+where member_code = #{member_code}
+</update>
+
+<update id="deletePointHistory" parameterType="int">
+update point_history set use_yn = 'N' where request_no = #{request_no}
+</update>
+</mapper>

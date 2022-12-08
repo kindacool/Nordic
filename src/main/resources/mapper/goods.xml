@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nordic.repository.goods.GoodsMapper">
+<insert id="createGoods" parameterType="goods" useGeneratedKeys="true" keyProperty="goods_no">
+insert into point_goods (goods_name,point,goods_desc,image1,image2,image3,image4,image5,remark,create_member) 
+value (#{goods_name},#{point},#{goods_desc},#{image1,jdbcType=VARCHAR},#{image2,jdbcType=VARCHAR},
+#{image3,jdbcType=VARCHAR},#{image4,jdbcType=VARCHAR},#{image5,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{create_member})
+</insert>
+
+<select id="readOneGoods" parameterType="int" resultType="goods">
+select * from point_goods where goods_no = #{no}
+</select>
+
+<select id="readAllGoods" parameterType="String" resultType="goods">
+select * from point_goods 
+<where>
+<if test="keyword != null">
+ goods_name like CONCAT('%',#{keyword},'%') OR
+ goods_desc like CONCAT('%',#{keyword},'%')
+</if>
+</where>
+order by create_date desc
+</select>
+
+<select id="readAvailableGoods" resultType="goods">
+select * from point_goods where use_yn = 'Y' order by create_date desc
+</select>
+
+<delete id="deleteGoods" parameterType="int">
+update point_goods set use_yn = 'N' where goods_no = #{goods_no}
+</delete>
+
+<update id="updateGoods" parameterType="goods">
+update point_goods set goods_name = #{goods_name}, point=#{point}, goods_desc=#{goods_desc},
+remark=#{remark,jdbcType=VARCHAR}, update_member=#{update_member}, update_date = now() 
+where goods_no = #{goods_no}
+</update>
+
+<select id="getBestSellingGoods" resultType="bsgoods">
+select max(a.update_date) as last_date, min(a.update_date) as first_date, 
+count(*) cnt, a.goods_no, b.goods_name, b.point 
+from nordic.point_goods_req a inner join nordic.point_goods b on a.goods_no = b.goods_no 
+where confirm_yn = 'Y' and refuse_yn = 'N' group by goods_no order by cnt desc
+</select>
+
+</mapper>
