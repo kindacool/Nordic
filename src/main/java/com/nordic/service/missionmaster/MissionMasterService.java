@@ -1,4 +1,4 @@
-package com.nordic.service;
+package com.nordic.service.missionmaster;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

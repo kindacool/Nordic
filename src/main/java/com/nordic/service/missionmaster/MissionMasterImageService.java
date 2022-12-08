@@ -1,30 +1,24 @@
-package com.nordic.service;
+package com.nordic.service.missionmaster;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import com.nordic.dto.missionmasterbean.MissionMasterImageBean;
-import com.nordic.repository.missionmasterrepo.MissionMasterImageImp;
-import com.sun.tools.doclint.Entity;
-import jdk.internal.loader.Resource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-import org.json.simple.parser.JSONParser;
 
-import javax.servlet.ServletContext;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.List;
+import com.nordic.dto.missionmasterbean.MissionMasterImageBean;
+import com.nordic.repository.missionmasterrepo.MissionMasterImageImp;
 
 @Service
 public class MissionMasterImageService {
