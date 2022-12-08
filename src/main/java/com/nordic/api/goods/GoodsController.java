@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class GoodsController {
 	
 	@ApiOperation(value="굿즈 등록")
 	@PostMapping
-    public ResponseDto createGoods(@RequestPart(value="key") GoodsDto goodsDto, 
+    public ResponseDto createGoods(@Valid @RequestPart(value="key") GoodsDto goodsDto, 
     		@RequestPart(value="file", required = false) List<MultipartFile> fileList,
     		HttpSession session) throws Exception {
 		log.info("굿즈 등록 Controller 도착");
@@ -142,7 +143,7 @@ public class GoodsController {
     public @ResponseBody byte[] fileView(@PathVariable String fileName) throws IOException {
 		log.info("cacheable 실행");
 
-    	String path = "C:/file";
+    	String path = "C:/file"; // 파일이 저장된 로컬 폴더
         InputStream in = new FileInputStream(path + "/" + fileName);
         System.out.println("파일시스템" + in);
         return IOUtils.toByteArray(in);
@@ -186,7 +187,7 @@ public class GoodsController {
 	@ApiOperation(value="굿즈 수정")
 	@PutMapping("/{no}")
 	public ResponseDto updateGoods(@PathVariable int no, 
-			@RequestPart(value="key") GoodsDto goodsDto,
+			@Valid @RequestPart(value="key") GoodsDto goodsDto,
     		HttpSession session) throws Exception {
 		log.info("수정 Controller 도착");
 		System.out.println(no);

@@ -38,7 +38,7 @@ dependencies {
 	implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-cache
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache', version: '2.7.3'
-	
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 tasks.named('test') {

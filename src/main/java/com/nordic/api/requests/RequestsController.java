@@ -20,6 +20,7 @@ import com.nordic.dto.points.PointsDto;
 import com.nordic.dto.requests.ConfirmedRequestsDto;
 import com.nordic.dto.requests.GoodsReqDto;
 import com.nordic.dto.requests.UnconfirmedRequestsDto;
+import com.nordic.exception.NoBalanceException;
 import com.nordic.service.goods.GoodsService;
 import com.nordic.service.points.PointsService;
 import com.nordic.service.requests.RequestsService;
@@ -49,14 +50,13 @@ public class RequestsController {
 		
 		goodsReqDto.setPoint(oldPoint);
 		
-		String buyer = "10008"; // 토큰 구현전까지 일시로
+		String buyer = "10007"; // 토큰 구현전까지 일시로
 		goodsReqDto.setMember_code(buyer);
 		goodsReqDto.setCreate_member(buyer);
 		goodsReqDto.setUse_yn('Y');
 		if(pointsService.getAvailablePoints(buyer) < oldPoint) {
-			throw new CustomException(CustomException.ERR_1234);
-			//return new ResponseDto("잔액 부족으로 실패");
-			//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No Data");
+			// 예외처리 : 잔액이 부족합니다
+			throw new NoBalanceException(NoBalanceException.ERR_0001);
 		} else {
 			requestsService.createRequest(goodsReqDto);
 		}
@@ -64,7 +64,7 @@ public class RequestsController {
 	}
 	
 	@GetMapping("/{reqNo}")
-	public ResponseDto findOneRequest(@PathVariable int reqNo) throws IOException{
+	public ResponseDto findOneRequest(@PathVariable int reqNo) throws Exception{
 		log.info("요청 1개 상세정보 Controller 도착");
 		
 		GoodsReqDto goodsReqDto = requestsService.findOneRequest(reqNo);
