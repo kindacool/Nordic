@@ -25,21 +25,64 @@ public class MemberRepository implements MemberMapper {
 	}
 	
 	@Override
+	public List<MemberDto> totalPointAsc() {
+		return memberMapper.totalPointAsc();
+	}
+	
+	@Override
+	public List<MemberDto> totalPointDesc() {
+		return memberMapper.totalPointDesc();
+	}
+	
+	@Override
+	public List<MemberDto> reqPointAsc() {
+		return memberMapper.reqPointAsc();
+	}
+	
+	@Override
+	public List<MemberDto> reqPointDesc() {
+		return memberMapper.reqPointDesc();
+	}
+	
+	@Override
+	public List<MemberDto> usePointAsc() {
+		return memberMapper.usePointAsc();
+	}
+	
+	@Override
+	public List<MemberDto> usePointDesc() {
+		return memberMapper.usePointDesc();
+	}
+	
+	@Override
+	public List<MemberDto> approvalYList() {
+		log.info("레파지토리");
+		return memberMapper.approvalYList();
+	}
+	
+	@Override
+	public List<MemberDto> approvalNList() {
+		return memberMapper.approvalNList();
+	}
+	
+	@Override
 	public List<MemberDto> findAdmins() {
 		return memberMapper.findAdmins();
 	}
 	
 	@Override
 	public MemberDto findOne (String member_code) {
-		MemberDto memberDto = memberMapper.findOne(member_code);
-		log.info("memberDto : " + memberDto);
-		System.out.println("memberDto : " + memberDto);
-		return memberDto;
+		return memberMapper.findOne(member_code);
 	}
 	
 	@Override
 	public int mbrRegister (MemberDto memberDto) {
 		return memberMapper.mbrRegister(memberDto);
+	}
+	
+	@Override
+	public int admRegister (MemberDto memberDto) {
+		return memberMapper.admRegister(memberDto);
 	}
 	
 	@Override

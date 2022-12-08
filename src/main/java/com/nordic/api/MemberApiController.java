@@ -36,6 +36,7 @@ import com.nordic.dto.member.MemberModifyDto;
 import com.nordic.dto.member.SearchDto;
 import com.nordic.service.MemberService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,135 @@ public class MemberApiController {
 		
 		return result;
 	}
+	
+	/******************************** 전체포인트 오름차순 정렬 ********************************/
+	@ApiOperation("전체포인트 오름차순 정렬")
+	@GetMapping(value="/members/totalAsc/{pageNum}")
+	public ResponseDto TotalPointAsc(@PathVariable int pageNum) throws Exception {
 		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.totalPointAsc(pageNum));
+		ResponseDto result = new ResponseDto("전체포인트 오름차순 정렬 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("전체포인트 오름차순 정렬 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 전체포인트 내림차순 정렬 ********************************/
+	@ApiOperation("전체포인트 내림차순 정렬")
+	@GetMapping(value="/members/totalDesc/{pageNum}")
+	public ResponseDto TotalPointDesc(@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.totalPointDesc(pageNum));
+		ResponseDto result = new ResponseDto("전체포인트 내림차순 정렬 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("전체포인트 내림차순 정렬 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 가용포인트 오름차순 정렬 ********************************/
+	@ApiOperation("가용포인트 오름차순 정렬")
+	@GetMapping(value="/members/reqAsc/{pageNum}")
+	public ResponseDto ReqPointAsc(@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.reqPointAsc(pageNum));
+		ResponseDto result = new ResponseDto("가용포인트 오름차순 정렬 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("가용포인트 오름차순 정렬 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 가용포인트 내림차순 정렬 ********************************/
+	@ApiOperation("가용포인트 내림차순 정렬")
+	@GetMapping(value="/members/reqDesc/{pageNum}")
+	public ResponseDto ReqPointDesc (@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.reqPointDesc(pageNum));
+		ResponseDto result = new ResponseDto("가용포인트 내림차순 정렬 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("가용포인트 내림차순 정렬 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 사용포인트 오름차순 정렬 ********************************/
+	@ApiOperation("사용포인트 오름차순 정렬")
+	@GetMapping(value="/members/useAsc/{pageNum}")
+	public ResponseDto UsePointAsc(@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.usePointAsc(pageNum));
+		ResponseDto result = new ResponseDto("사용포인트 오름차순 정렬 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("사용포인트 오름차순 정렬 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 사용포인트 내림차순 정렬 ********************************/
+	@ApiOperation("사용포인트 내림차순 정렬")
+	@GetMapping(value="/members/useDesc/{pageNum}")
+	public ResponseDto UeqPointDesc(@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.usePointDesc(pageNum));
+		ResponseDto result = new ResponseDto("사용포인트 내림차순 정렬 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("사용포인트 내림차순 정렬 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 가입 승인 회원 조회  ********************************/
+	@ApiOperation("가입 승인 회원 조회")
+	@GetMapping(value="/members/approvalY/{pageNum}")
+	public ResponseDto approvalYList (@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.approvalYList(pageNum));
+		ResponseDto result = new ResponseDto("가입 승인 회원 조회 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("가입 승인 회원 조회 완료");
+		
+		return result;
+		
+	}
+	
+	/******************************** 가입 미승인 회원 조회  ********************************/
+	@ApiOperation("가입 미승인 회원 조회")
+	@GetMapping(value="/members/approvalN/{pageNum}")
+	public ResponseDto approvalNList (@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.approvalNList(pageNum));
+		ResponseDto result = new ResponseDto("가입 미승인 회원 조회 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("가입 미승인 회원 조회 완료");
+		
+		return result;
+		
+	}
+	
 	/******************************** 관리자 전체목록 조회 ********************************/
 	@ApiOperation(value="관리자 조회")
 	@GetMapping("/admins/{pageNum}")
@@ -84,7 +213,7 @@ public class MemberApiController {
 	/******************************** 특정 회원 1명 조회 ********************************/
 	@ApiOperation(value="특정 회원 1명 조회")
 	@GetMapping("/{member_code}")
-	public ResponseDto FindOne (@PathVariable String member_code) {
+	public ResponseDto FindOne (@PathVariable String member_code) throws Exception {
 		
 		MemberDto memberDto = memberService.findOne(member_code);
 		ResponseDto result = new ResponseDto("회원"+memberDto.getMember_name()+" 정보 : ", memberDto);
@@ -98,7 +227,7 @@ public class MemberApiController {
 	/******************************** 회원정보수정 폼 이동 ********************************/
 	@ApiOperation(value = "회원 정보 수정 폼")
 	@GetMapping(value="/modifyForm/{member_code}")
-	public ResponseDto ModifyForm (@PathVariable String member_code) {
+	public ResponseDto ModifyForm (@PathVariable String member_code) throws Exception {
 		
 		//특정 회원 정보 db에서 찾아오기
 		MemberDto memberDto = memberService.findOne(member_code);
@@ -114,7 +243,8 @@ public class MemberApiController {
 	@ApiOperation(value = "회원 정보 수정")
 	@PostMapping(value="/modify/{mC}")
 	public ResponseDto ModifyOne (@PathVariable(value = "mC") String mC, 
-								  @RequestBody MemberModifyDto memberModifyDto) {	// json을 Dto 형태로 받기
+								  @RequestBody MemberModifyDto memberModifyDto) 
+										  						throws Exception {	// json을 Dto 형태로 받기
 				
 		log.info("프론트에서 넘어온 수정할 정보↓");
 		log.info(memberModifyDto.toString());
@@ -133,7 +263,7 @@ public class MemberApiController {
 	/******************************** 회원 탈퇴 (stop_yn, stop_date) ********************************/
 	@ApiOperation(value = "회원 탈퇴")
 	@PostMapping(value="/del/{member_code}")
-	public ResponseDto DelOne (@PathVariable String member_code) {
+	public ResponseDto DelOne (@PathVariable String member_code) throws Exception {
 		
 		log.info("진입");
 		
@@ -149,14 +279,14 @@ public class MemberApiController {
 	/******************************** 회원가입 폼 이동 ********************************/
 	@ApiOperation(value = "회원가입폼 이동")
 	@GetMapping("/registerForm")
-	public String RegisterForm ( ) {
+	public String RegisterForm ( ) throws Exception {
 		return null;	// 뷰 페이지와 연결을 어떻게??
 	}
 	
 	/******************************** 아이디 중복 검사 ********************************/
 	@ApiOperation(value = "아이디 중복 검사")
 	@GetMapping("/registerForm/idCheck/{member_code}")
-	public ResponseDto IdCheck (@PathVariable String member_code) {
+	public ResponseDto IdCheck (@PathVariable String member_code) throws Exception {
 		
 		log.info("아이디 중복 검사 진입");
 		MemberDto memberDto = memberService.findOne(member_code);
@@ -178,14 +308,8 @@ public class MemberApiController {
 	/******************************** 회원가입 실행 ********************************/
 	@ApiOperation(value = "회원가입 실행")
 	@PostMapping(value="/register")
-	public ResponseDto NordicRegister(@RequestBody MemberDto memberDto) {
-//	public ResponseDto NordicRegister(@Validated @RequestBody MemberDto memberDto,
-//									  BindingResult result) {
-//
-//		if(result.hasErrors()) {
-//			ResponseDto response = new ResponseDto(result.toString(), HttpStatus.BAD_REQUEST);
-//			return response;
-//		}
+	public ResponseDto NordicRegister(@RequestBody MemberDto memberDto) 
+														throws Exception {
 		
 		int mbrRegister = memberService.mbrRegister(memberDto);
 		log.info("회원이름 : " + memberDto.getMember_name());
@@ -193,6 +317,13 @@ public class MemberApiController {
 		return new ResponseDto ("회원가입성공", memberDto.getMember_name());
 	}
 	
+	/******************************** 관리자 등록  ********************************/
+	/***************admin_yn, admin_date, update_member, update_date  ********/
+
+	
+//	@ApiOperation(value = "관리자 등록")
+//	@PostMapping(value= "/members/admRegister/{}")
+//	public ResponseDto admRegister (MemberDto memberDto)
 	
 //	@ApiOperation(value="검색으로 회원 조회")
 //	@GetMapping("/{keyword}")

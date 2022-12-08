@@ -28,6 +28,55 @@ public class MemberService {
 		return PageInfo.of(memberList);
 	}
 	
+	public PageInfo<MemberDto> totalPointAsc (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.totalPointAsc();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> totalPointDesc (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.totalPointDesc();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> reqPointAsc (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.reqPointAsc();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> reqPointDesc (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.reqPointDesc();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> usePointAsc (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.usePointAsc();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> usePointDesc (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.usePointDesc();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> approvalYList(int pageNum) {
+		log.info("서비스");
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.approvalYList();
+		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> approvalNList(int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.approvalNList();
+		return PageInfo.of(memberList);
+	}
+	
 	public PageInfo<MemberDto> findAdmins(int pageNum) {
 		PageHelper.startPage(pageNum, 10);
 		List<MemberDto> adminList = memberRepository.findAdmins();
@@ -41,6 +90,10 @@ public class MemberService {
 
 	public int mbrRegister (MemberDto memberDto) {
 		return memberRepository.mbrRegister(memberDto);
+	}
+	
+	public int admRegister (MemberDto memberDto) {
+		return memberRepository.admRegister(memberDto);
 	}
 	
 	public int modifyOne (MemberModifyDto memberModifyDto) {

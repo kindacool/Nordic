@@ -6,6 +6,44 @@
 		select * from member
 	</select>
 	
+	<select id="totalPointAsc" resultType="MemberDto">
+		select * from member 
+		order by total_point asc
+	</select>
+	
+	<select id="totalPointDesc" resultType="MemberDto">
+		select * from member 
+		order by total_point desc
+	</select>
+	
+	<select id="reqPointAsc" resultType="MemberDto">
+		select * from member 
+		order by req_point asc
+	</select>
+	
+	<select id="reqPointDesc" resultType="MemberDto">
+		select * from member 
+		order by req_point desc
+	</select>
+	
+	<select id="usePointAsc" resultType="MemberDto">
+		select * from member 
+		order by use_point asc
+	</select>
+	
+	<select id="usePointDesc" resultType="MemberDto">
+		select * from member 
+		order by use_point desc
+	</select>
+	
+	<select id="approvalYList" resultType="MemberDto">
+		select * from member where approval_yn = 'Y'
+	</select>
+	
+	<select id="approvalNList" resultType="MemberDto">
+		select * from member where approval_yn = 'N'
+	</select>
+	
 	<select id="findAdmins" resultType="MemberDto">
 		select * from member where admin_yn = 'Y'
 	</select>
@@ -17,8 +55,8 @@
 	<insert id="mbrRegister" parameterType="MemberDto">
 		insert into member values(
 			#{member_code}, #{member_name}, #{mobile_no}, #{address}, 
-			#{age}, #{sex}, 'Y', #{password}, 'N', sysdate(), 'N', 
-			#{stop_date,jdbcType=DATE}, 'N', 0, 0, 0, 0, 
+			#{age}, #{sex}, 'Y', #{password}, 'N', #{approval_date,jdbcType=DATE}, 'N', 
+			#{stop_date,jdbcType=DATE}, 'N', #{admin_date,jdbcType=DATE}, 0, 0, 0, 
 			0, 'SYSTEM', sysdate(),
 			'SYSTEM', sysdate()
 			<!-- #{member_code}, #{member_name}, #{mobile_no}, #{address}, 
@@ -30,6 +68,15 @@
 		)
 	</insert>
 	
+	<update id="admRegister" parameterType="MemberDto">
+		update member set
+			admin_yn = 'Y',
+			admin_date = sysdate(),
+			update_member = 'SYSTEM',
+			update_date = sysdsate()
+		where member_code = #{member_code}
+	</update>
+	
 	<update id="modifyOne" parameterType="MemberModifyDto">
 		update member set 
 			member_name = #{member_name},
@@ -38,7 +85,7 @@
 			age = #{age},
 			sex = #{sex},
 			password = #{password},
-			update_member = #{member_code},
+			update_member = 'SYSTEM',
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
@@ -46,8 +93,11 @@
 	<update id="delOne" parameterType="MemberDto">
 		update member set
 			stop_yn = 'Y',
-			stop_date = sysdate()
+			stop_date = sysdate(),
+			update_member = 'SYSTEM',
+			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
+
 
 </mapper>

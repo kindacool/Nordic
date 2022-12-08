@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.stereotype.Service;
 
 import com.nordic.config.CustomException;
@@ -42,4 +44,19 @@ public class ControllerAdvice {
 		
 	}
 	
+	  @ExceptionHandler(NoHandlerFoundException.class)
+	  @ResponseStatus(HttpStatus.NOT_FOUND)
+	  public ResponseEntity<ExceptionResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
+	
+	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("BAD_REQUEST", e.getMessage());
+	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
+	
+	  @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+	  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+	  public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(NoHandlerFoundException e) {
+	
+	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
+	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
+	  }
 }
