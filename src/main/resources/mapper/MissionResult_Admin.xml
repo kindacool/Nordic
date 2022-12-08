@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.mission_result.MissionResultFindMapper">
+	<resultMap type="hashMap" id="period">
+        <result javaType="java.lang.String" column="max" property="max"></result>
+        <result javaType="java.lang.String" column="min" property="min"></result>
+    </resultMap>
+	
+	<!-- 미션 수행 등록 전체 리스트  -->
+	<select id="findAllMission" resultType="com.nordic.dto.mission_result.MissionStatusDto"
+		parameterType="Map">
+		<![CDATA[
+		select mh.*, mm.mission_name 
+		from mission_history as mh join mission_master as mm 
+		on mh.mission_no = mm.mission_no
+		where mh.use_yn = 'Y' 
+			and mh.create_date >= #{start_date} and mh.create_date <= DATE_ADD(#{end_date}, INTERVAL 1 DAY)
+		order by update_date desc
+		]]>
+	</select>
+	
+	<!-- 미션 수행 미승인 리스트  -->
+	<select id="findNotConfirm" resultType="com.nordic.dto.mission_result.MissionStatusDto"
+		parameterType="Map">
+		<![CDATA[
+		select mh.*, mm.mission_name 
+		from mission_history as mh join mission_master as mm 
+		on mh.mission_no = mm.mission_no 
+		where mh.confirm_member is null
+			and mh.use_yn = 'Y' 
+			and mh.create_date >= #{start_date} and mh.create_date <= DATE_ADD(#{end_date}, INTERVAL 1 DAY)
+		order by update_date desc
+		]]>
+	</select>
+	
+	<!-- 미션 수행 상세 정보 -->
+	<select id="selectHistoryByNo" resultType="com.nordic.dto.mission_result.MissionHistoryDto" parameterType="int">
+		select * from mission_history where mission_history_no = #{mission_history_no}
+	</select>
+	
+	<!-- 미션 수행 이미지 -->
+	<select id="selectHistoryImg" resultType="com.nordic.dto.mission_result.MissionHistoryImageDto" parameterType="int">
+		select * from mission_history_image where mission_history_no = #{mission_history_no}
+	</select>
+	
+	<!-- 미션 상세 정보 -->
+	<select id="selectMasterByNo" resultType="com.nordic.dto.mission_result.MissionMasterDto" parameterType="int">
+		select * from mission_master where mission_no = #{mission_no}
+	</select>
+	
+	<!-- 미션 이미지 -->
+	<select id="selectMasterImg" resultType="com.nordic.dto.mission_result.MissionMasterImageDto" parameterType="int">
+		select * from mission_master_image where mission_no = #{mission_no}
+	</select>
+		
+	<!-- 유저 미션 수행 승인 -->
+	<update id="confirmMission" parameterType="com.nordic.dto.mission_result.MissionHistoryDto">
+		update mission_history set confirm_yn = 'Y', refuse_yn = "N", 
+		confirm_member = #{confirm_member}, remark = #{remark}
+		where mission_history_no = #{mission_history_no}
+	</update>
+	
+	<!-- 유저 미션 수행 거절 -->
+	<update id="refuseMission" parameterType="com.nordic.dto.mission_result.MissionHistoryDto">
+		update mission_history set refuse_yn = 'Y', confirm_yn = 'N',
+		confirm_member = #{confirm_member}, remark = #{remark}
+		where mission_history_no = #{mission_history_no}
+	</update>
+	
+	<!-- 포인트 정보 -->
+	<select id="selectPoint" parameterType="int" resultType="com.nordic.dto.mission_result.PointHistoryDto">
+		select * from point_history where point_no = #{point_no}
+	</select>
+	
+	<!-- 포인트 지급 -->
+	<insert id="insertPoint" useGeneratedKeys="true"
+		keyProperty="point_no" keyColumn="point_no"
+		parameterType="com.nordic.dto.mission_result.MissionHistoryDto">
+		INSERT INTO point_history
+		(make_gubun, member_code, point, 
+		mission_history_no, use_yn, create_member, create_date)
+		VALUES
+		('발생', #{member_code}, #{point},
+		 #{mission_history_no}, 'Y', #{create_member}, sysdate())
+	</insert>
+	
+	<!-- 포인트 정보 업데이트 -->
+	<update id="updateMemberPoint" parameterType="com.nordic.dto.mission_result.MissionHistoryDto">
+		update member set total_point = total_point + #{point} where member_code = #{member_code}
+	</update>
+	
+	<!-- 전체 기간 조회 -->
+	<select id="getPeriod" resultMap="period">
+		select DATE_FORMAT(max(update_date), '%y/%m/%d') as max, 
+		DATE_FORMAT(min(update_date), '%y/%m/%d') as min 
+		from mission_history
+		where use_yn = 'Y'
+	</select>
+	
+	<!-- 미승인된 미션 수  -->
+	<select id="countNewResult" resultType="int">
+		select count(*) from mission_history 
+		where confirm_member is null 
+		and use_yn = 'Y'
+	</select>
+</mapper>

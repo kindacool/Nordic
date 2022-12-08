@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.mission_result.MissionResultMapper">
+	
+	<!-- 미션 수행 등록  -->
+	<insert id="insertMission" useGeneratedKeys="true"
+		keyProperty="mission_history_no" keyColumn="mission_history_no"
+		parameterType="com.nordic.dto.mission_result.MissionHistoryDto">
+		INSERT INTO mission_history
+		(mission_no, member_code, point,
+		use_yn, create_member, create_date)
+		VALUES
+		(#{mission_no}, #{member_code}, #{point},
+		 'y', #{member_code}, sysdate())
+	</insert>
+	
+	<!-- 미션 수행 이미지 등록 -->
+	<insert id="insertMissionImage" useGeneratedKeys="true"
+		keyProperty="image_no" keyColumn="image_no"
+		parameterType="com.nordic.dto.mission_result.MissionHistoryImageDto">
+		INSERT INTO mission_history_image
+		(mission_history_no,
+		mission_no,confirm_file,
+		use_yn, create_member, create_date)
+		VALUES
+		(#{mission_history_no}, #{mission_no},
+		#{confirm_file}, 'y', #{create_member}, sysdate())
+	</insert>
+	
+	<!-- 포인트 조회 -->
+	<select id="getPoint" resultType="int" parameterType="int">
+		select point from mission_master where mission_no = #{mission_no}
+	</select>
+	
+	<!-- 미션 상세 정보 조회  -->
+	<select id="getMaster" parameterType="int" resultType="com.nordic.dto.mission_result.MissionMasterDto">
+		select * from mission_master where mission_no = #{mission_no}
+	</select>
+	
+	<!-- 미션 상세 정보 이미지 조회 -->
+	<select id="getMasterImg" parameterType="int" resultType="com.nordic.dto.mission_result.MissionMasterImageDto">
+		select * from mission_master_image where mission_no = #{mission_no}
+	</select>
+	
+	<!-- 미션 수행 정보 조회 -->
+	<select id="getHistory" parameterType="int" resultType="com.nordic.dto.mission_result.MissionHistoryDto">
+		select * from mission_history where mission_history_no = #{mission_history_no}
+	</select>
+	
+	<!-- 미션 수행 이미지 정보 조회 -->
+	<select id="getHistoryImg" parameterType="int" resultType="com.nordic.dto.mission_result.MissionHistoryImageDto">
+		select * from mission_history_image where image_no = #{image_no}
+	</select>
+	
+	<!-- 작성자로 미션 수행 이미지 조회 -->
+	<select id="getHistoryImgByMember" parameterType="Map"
+		resultType="com.nordic.dto.mission_result.MissionHistoryImageDto">
+		select * from mission_history_image 
+		where mission_no = #{mission_no} 
+			and create_member = #{member_code}
+		order by create_date limit 1
+	</select>
+	
+	<update id="updateMissionImage" parameterType="com.nordic.dto.mission_result.MissionHistoryImageDto">
+		<selectKey keyProperty="image_no" resultType="int" order="BEFORE">
+			select image_no from mission_history_image where create_member = #{update_member} and mission_no = #{mission_no}
+		</selectKey>
+		update mission_history_image 
+		set update_member = #{update_member}, update_date = sysdate(), confirm_file = #{confirm_file}
+		where mission_no = #{mission_no} and create_member = #{update_member} 
+	</update>
+	
+</mapper>
