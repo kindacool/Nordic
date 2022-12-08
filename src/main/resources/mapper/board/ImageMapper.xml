@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.nordic.repository.board.BoardImgDao">
+    <!--  이미지 파일등록  -->
+    <insert id="inputImage" parameterType="Map">
+        INSERT
+        INTO BOARD_IMAGE
+        (BOARD_NO,
+         IMAGE_FILE,
+         ORIGNAL_NAME,
+         CREATE_MEMBER)
+        VALUES (#{board_no}, #{image_file}, #{orignal_name}, #{create_member})
+    </insert>
+
+    <!--  이미지 파일삭제  -->
+    <update id="deleteImage" parameterType="Map">
+        UPDATE BOARD_IMAGE
+        SET
+            IMAGE_USE_YN = 'N',
+            REMARK = '삭제',
+            UPDATE_MEMBER = #{update_member},
+            UPDATE_DATE = CURRENT_DATE
+
+        <choose>
+            <when test=' board_image_no > 0 and board_image_no neq null '>
+                WHERE BOARD_IMAGE_NO = #{board_image_no}
+            </when>
+            <otherwise>
+                WHERE BOARD_NO = #{board_no}
+            </otherwise>
+        </choose>
+    </update>
+</mapper>
