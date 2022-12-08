@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.missionmasterrepo.MissionMasterImageImp">
+
+    <insert id="insertImage">
+        <selectKey resultType="int" keyProperty="mission_no" order="BEFORE">
+            select max(mission_no) from mission_master
+        </selectKey>
+        insert into mission_master_image (mission_no, confirm_file,use_yn, create_member,
+        create_date, update_date)
+        values (#{mission_no},#{confirm_file} ,'Y', #{create_member},
+        sysdate(), sysdate())
+    </insert>
+
+    <update id="updateImgByMissionNo">
+        update mission_master_image
+        set confirm_file  = #{confirm_file},
+            update_member = #{update_member},
+            update_date   = sysdate()
+        where mission_no = #{mission_no}
+    </update>
+
+</mapper>

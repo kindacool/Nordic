@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.missionmasterrepo.MissionMasterImp">
+
+    <select id="getAllData" resultType="com.nordic.dto.missionmasterbean.MissionMasterBean">
+        select *
+        from mission_master
+    </select>
+
+    <insert id="insertData" useGeneratedKeys="true" keyProperty="mission_no" keyColumn="mission_no">
+        insert into mission_master (mission_name, start_date, end_date, level_code, point, zip_code, address1,
+                                    address2, use_yn, remark, create_member, create_date, update_member, update_date)
+        values (#{mission_name}, #{start_date}, #{end_date}, #{level_code}, #{point}, #{zip_code},
+                #{address1}, #{address2}, 'Y', #{remark}, #{create_member}, sysdate(),
+                #{update_member}, sysdate())
+    </insert>
+
+    <update id="updateData">
+        update mission_master
+        SET point        = #{point},
+            mission_name= #{mission_name},
+            start_date=#{start_date},
+            end_date=#{end_date},
+            level_code=#{level_code},
+            zip_code=#{zip_code},
+            address1=#{address1},
+            address2=#{address2},
+            update_member=#{update_member},
+            update_date=sysdate()
+        where mission_no = #{mission_no}
+    </update>
+
+    <update id="deleteDataByMissionNo">
+        UPDATE mission_master a INNER JOIN mission_master_image b
+        ON a.MISSION_NO = b.MISSION_NO SET a.USE_YN='N', b.USE_YN='N', a.update_date =sysdate(), b.update_date =sysdate(), a.update_member=#{update_member}, b.update_member = #{update_member}
+        WHERE a.MISSION_NO=#{mission_no}
+    </update>
+
+    <select id="getDataByMissionNo" resultType="com.nordic.dto.missionmasterbean.MissionMasterBean">
+        select *
+        from mission_master
+        where mission_no = #{mission_no}
+    </select>
+
+    <select id="list" resultType="com.nordic.dto.missionmasterbean.MissionMasterListBean"
+            parameterType="com.nordic.dto.missionmasterbean.MissionSearchBean">
+        SELECT a.mission_no,
+               a.mission_name,
+               a.start_date,
+               a.end_date,
+               a.level_code,
+               a.point,
+               b.confirm_file,
+               (SELECT COUNT(*)
+                from mission_master a
+                         INNER JOIN mission_master_image b
+                where a.mission_no = b.mission_no
+                  AND a.USE_YN = "y") pagepart
+        from mission_master a
+                 inner join mission_master_image b
+        where a.mission_no = b.mission_no
+          AND a.USE_YN = "y"
+          and a.end_date > sysdate()
+        order BY mission_no desc
+    </select>
+
+
+</mapper>
