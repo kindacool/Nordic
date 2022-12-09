@@ -68,4 +68,12 @@ public class RequestsDao implements RequestsMapper{
 	public List<GoodsReqDto> myRequests(String member_code) {
 		return requestsMapper.myRequests(member_code);
 	}
+
+	public GoodsReqDto duplicateRequestsCheck(GoodsReqDto goodsReqDto) {
+		return requestsMapper.duplicateRequestsCheck(goodsReqDto);
+	}
+
+	public void cancelRequest(int reqNo) {
+		requestsMapper.cancelRequest(reqNo);
+	}
 }

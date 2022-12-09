@@ -9,7 +9,7 @@ value (#{goods_no}, #{member_code}, #{point},#{remark,jdbcType=VARCHAR},#{create
 </insert>
 
 <select id="fineOneRequest" parameterType="int" resultType="goodsreq">
-select * from point_goods_req where request_no = #{request_no}
+select * from point_goods_req where request_no = #{no}
 </select>
 
 <update id="acceptRequest" parameterType="goodsreq">
@@ -27,7 +27,8 @@ refuse_yn = #{refuse_yn} where request_no = #{request_no}
 <select id="findAllUnconfirmedRequest" resultType="unconfirmedreq">
 select a.*,c.member_name,b.goods_name,c.total_point-c.req_point-c.use_point as available_point 
 from nordic.point_goods_req a inner join nordic.point_goods b on a.goods_no = b.goods_no 
-inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'N' order by a.create_date desc
+inner join nordic.member c on a.member_code = c.member_code 
+where confirm_yn = 'N' and a.use_yn = 'Y' order by a.create_date desc
 </select>
 
 <select id="findAllRequest" resultType="goodsreq">
@@ -64,4 +65,13 @@ select * from point_goods_req where goods_no = #{no} order by create_date desc
 <select id="myRequests" parameterType="String" resultType="goodsreq">
 select * from point_goods_req where member_code = #{member_code} order by create_date desc
 </select>
+
+<select id="duplicateRequestsCheck" parameterType="goodsreq" resultType="goodsreq">
+select * from point_goods_req where goods_no = #{goods_no} and 
+member_code = #{member_code} and confirm_yn = 'N' and use_yn = 'Y'
+</select>
+
+<update id="cancelRequest" parameterType="int">
+update point_goods_req set use_yn = 'N' where request_no = #{reqNo}
+</update>
 </mapper>

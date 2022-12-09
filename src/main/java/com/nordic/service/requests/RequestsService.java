@@ -68,6 +68,14 @@ public class RequestsService {
 		PageHelper.startPage(pageNum,10);
 		return requestsDao.myRequests(member_code);
 	}
+
+	public GoodsReqDto duplicateRequestsCheck(GoodsReqDto goodsReqDto) {
+		return requestsDao.duplicateRequestsCheck(goodsReqDto);
+	}
+
+	public void cancelRequest(int reqNo) {
+		requestsDao.cancelRequest(reqNo);
+	}
 	
 
 }

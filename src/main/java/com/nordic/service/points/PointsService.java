@@ -42,4 +42,5 @@ public class PointsService {
 	public void deletePointHistory(int reqNo) {
 		pointsDao.deletePointHistory(reqNo);
 	}
+
 }

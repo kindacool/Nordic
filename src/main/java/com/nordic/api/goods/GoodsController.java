@@ -39,6 +39,7 @@ import com.github.pagehelper.PageInfo;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.goods.BestSellingGoodsDto;
 import com.nordic.dto.goods.GoodsDto;
+import com.nordic.exception.GoodsNotFoundException;
 import com.nordic.service.goods.GoodsService;
 
 import io.swagger.annotations.ApiOperation;
@@ -128,12 +129,17 @@ public class GoodsController {
 	
 	@ApiOperation(value="굿즈 상세정보")
 	@GetMapping("/{no}")
-	public ResponseDto readOneGoods(@PathVariable int no) throws IOException {
+	public ResponseDto readOneGoods(@PathVariable int no) throws Exception {
 	
 		log.info("하나의 굿즈 상세정보 Controller 도착");
 		GoodsDto goodsDto = goodsService.readOneGoods(no);
+		
+		if(goodsDto == null) {
+			throw new GoodsNotFoundException(GoodsNotFoundException.ERR_0002);
+		} else {
+			return new ResponseDto("상세정보", goodsDto);
+		}
 
-		return new ResponseDto("상세정보", goodsDto);
 	}
 	
     //파일 url 호출

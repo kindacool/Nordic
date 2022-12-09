@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.aop.ThrowsAdvice;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,8 @@ import com.nordic.dto.points.PointsDto;
 import com.nordic.dto.requests.ConfirmedRequestsDto;
 import com.nordic.dto.requests.GoodsReqDto;
 import com.nordic.dto.requests.UnconfirmedRequestsDto;
+import com.nordic.exception.CancleRequestException;
+import com.nordic.exception.DuplicateRequestsException;
 import com.nordic.exception.NoBalanceException;
 import com.nordic.service.goods.GoodsService;
 import com.nordic.service.points.PointsService;
@@ -38,6 +41,28 @@ public class RequestsController {
 	private final GoodsService goodsService;
 	private final PointsService pointsService;
 	
+	// 요청 중복검사(같은사람이 같은 상품 구매한적있는지 확인)
+	@ApiOperation("요청 중복검사")
+	@GetMapping("/check/{no}")
+	public ResponseDto duplicateRequestsCheck(@PathVariable int no) throws Exception{
+		log.info("중복 요청 체크 Controller 도착");
+		
+		String buyer = "10007"; // 토큰 구현전까지 일시로
+		
+		GoodsReqDto goodsReqDto = new GoodsReqDto();
+		goodsReqDto.setMember_code(buyer);
+		goodsReqDto.setGoods_no(no);
+		
+		GoodsReqDto checkGoodsReqDto = requestsService.duplicateRequestsCheck(goodsReqDto);
+		
+		if(checkGoodsReqDto != null) {
+			// 예외처리 : 같은 사람이 같은 상품을 신청한적 있는지 확인(미확인 상태인 신청만 확인)
+			throw new DuplicateRequestsException(DuplicateRequestsException.ERR_0003);
+		} else {
+			return new ResponseDto("중복 없음");
+		}
+	}
+	
 	@ApiOperation("굿즈 구매 요청")
 	@PostMapping("/{no}")
 	public ResponseDto createRequest(@PathVariable int no) throws Exception{
@@ -54,6 +79,7 @@ public class RequestsController {
 		goodsReqDto.setMember_code(buyer);
 		goodsReqDto.setCreate_member(buyer);
 		goodsReqDto.setUse_yn('Y');
+		
 		if(pointsService.getAvailablePoints(buyer) < oldPoint) {
 			// 예외처리 : 잔액이 부족합니다
 			throw new NoBalanceException(NoBalanceException.ERR_0001);
@@ -142,6 +168,7 @@ public class RequestsController {
 		GoodsReqDto old = requestsService.findOneRequest(reqNo);
 		pointDto.setPoint(old.getPoint());
 		pointDto.setMember_code(old.getMember_code());
+		pointDto.setUpdate_member(old.getMember_code());
 
 		// member 테이블에 반영
 		// 처리할 포인트와 멤버코드를 가져감
@@ -167,11 +194,12 @@ public class RequestsController {
 		
 		requestsService.rejectRequest(goodsReqDto);
 		
-		// 포인트 use -> total
+		// 포인트 req -> total
 		PointsDto pointDto = new PointsDto();
 		GoodsReqDto old = requestsService.findOneRequest(reqNo);
 		pointDto.setPoint(old.getPoint());
 		pointDto.setMember_code(old.getMember_code());
+		pointDto.setUpdate_member(old.getMember_code());
 
 		// member 테이블에 반영
 		// 처리할 포인트와 멤버코드를 가져감
@@ -212,4 +240,37 @@ public class RequestsController {
 		return new ResponseDto("내 요청 목록", requestList);
 	}	
 	
+	// 요청 취소
+	@ApiOperation("요청 취소")
+	@DeleteMapping("/{reqNo}")
+	public ResponseDto cancelRequest(@PathVariable int reqNo) {
+		log.info("요청 취소 Controller 도착");
+		
+		GoodsReqDto old = requestsService.findOneRequest(reqNo);
+		if(old.getUse_yn() == 'N') {
+			// 예외 처리 : 이미 취소된 요청입니다
+			throw new CancleRequestException(CancleRequestException.ERR_0004);
+		} else {
+			if(old.getConfirm_yn() == 'Y') {
+				// 예외 처리 throw 이미 처리된 요청은 취소하실 수 없습니다
+				throw new CancleRequestException(CancleRequestException.ERR_0005);
+			} else {
+				// 요청 테이블 요청 N 으로 바꾸기
+				requestsService.cancelRequest(reqNo);
+				
+				// 멤버테이블 req -> total 로 돌리기
+				PointsDto pointDto = new PointsDto();
+				pointDto.setPoint(old.getPoint());
+				pointDto.setMember_code(old.getMember_code());
+				pointDto.setUpdate_member(old.getMember_code());
+				pointsService.returnMemberPoints(pointDto);
+				
+				
+				// 포인트 테이블 포인트 히스토리 'N' 로 바꾸기
+				pointsService.deletePointHistory(reqNo);
+				
+				return new ResponseDto("요청 취소 완료");
+			}
+		}
+	}
 }

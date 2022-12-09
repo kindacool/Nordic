@@ -31,4 +31,8 @@ public interface RequestsMapper {
 	public List<GoodsReqDto> findRequestsByGoods(int no);
 
 	public List<GoodsReqDto> myRequests(String member_code);
+
+	public GoodsReqDto duplicateRequestsCheck(GoodsReqDto goodsReqDto);
+
+	public void cancelRequest(int reqNo);
 }

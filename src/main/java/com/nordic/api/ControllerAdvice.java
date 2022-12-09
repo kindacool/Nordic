@@ -15,6 +15,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
+import com.nordic.exception.CancleRequestException;
+import com.nordic.exception.DuplicateRequestsException;
+import com.nordic.exception.GoodsNotFoundException;
 import com.nordic.exception.NoBalanceException;
 
 import java.io.FileNotFoundException;
@@ -88,5 +91,29 @@ public class ControllerAdvice {
 
       ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("파일을 찾을 수 없습니다", e.getMessage());
       return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
+  }
+  
+  @ExceptionHandler(GoodsNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(GoodsNotFoundException e) {
+
+      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("GoodsNotFound", e.getMessage());
+      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
+  }
+  
+  @ExceptionHandler(DuplicateRequestsException.class)
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(DuplicateRequestsException e) {
+	  
+	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("DuplicateRequests", e.getMessage());
+	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+  }
+  
+  @ExceptionHandler(CancleRequestException.class)
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<ExceptionResponseDto> handleCancleRequestException(CancleRequestException e) {
+	  
+	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("CancelRequestsException", e.getMessage());
+	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
   }
 }
