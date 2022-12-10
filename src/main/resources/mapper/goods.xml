@@ -34,7 +34,10 @@ update point_goods set use_yn = 'N' where goods_no = #{goods_no}
 
 <update id="updateGoods" parameterType="goods">
 update point_goods set goods_name = #{goods_name}, point=#{point}, goods_desc=#{goods_desc},
-remark=#{remark,jdbcType=VARCHAR}, update_member=#{update_member}, update_date = now() 
+remark=#{remark,jdbcType=VARCHAR}, image1=#{image1,jdbcType=VARCHAR}, 
+image2=#{image2,jdbcType=VARCHAR}, image3=#{image3,jdbcType=VARCHAR},
+image4=#{image4,jdbcType=VARCHAR}, image5=#{image5,jdbcType=VARCHAR},
+update_member=#{update_member}, update_date = now() 
 where goods_no = #{goods_no}
 </update>
 

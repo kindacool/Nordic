@@ -35,11 +35,12 @@ where confirm_yn = 'N' and a.use_yn = 'Y' order by a.create_date desc
 select * from point_goods_req order by create_date desc
 </select>
 
-<select id="findAllConfirmedRequest" resultType="confirmedreq">
+<select id="findAllConfirmedRequest" parameterType="String" resultType="confirmedreq">
 select a.*,c.member_name,b.goods_name 
 from nordic.point_goods_req a inner join nordic.point_goods 
 b on a.goods_no = b.goods_no 
-inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'Y' order by a.update_date desc
+inner join nordic.member c on a.member_code = c.member_code where confirm_yn = 'Y' 
+order by a.update_date desc
 </select>
 
 <select id="findAllAcceptedRequest" resultType="confirmedreq">
@@ -63,7 +64,10 @@ select * from point_goods_req where goods_no = #{no} order by create_date desc
 </select>
 
 <select id="myRequests" parameterType="String" resultType="goodsreq">
-select * from point_goods_req where member_code = #{member_code} order by create_date desc
+select a.*,c.member_name,b.goods_name 
+from nordic.point_goods_req a inner join nordic.point_goods 
+b on a.goods_no = b.goods_no 
+inner join nordic.member c on a.member_code = c.member_code where a.member_code = #{member_code} order by a.create_date desc
 </select>
 
 <select id="duplicateRequestsCheck" parameterType="goodsreq" resultType="goodsreq">

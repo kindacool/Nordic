@@ -18,6 +18,7 @@ import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.exception.CancleRequestException;
 import com.nordic.exception.DuplicateRequestsException;
 import com.nordic.exception.GoodsNotFoundException;
+import com.nordic.exception.ImageInvalidFormatException;
 import com.nordic.exception.NoBalanceException;
 
 import java.io.FileNotFoundException;
@@ -115,5 +116,13 @@ public class ControllerAdvice {
 	  
 	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("CancelRequestsException", e.getMessage());
 	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+  }
+  
+  @ExceptionHandler(ImageInvalidFormatException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<ExceptionResponseDto> handleImageFormatException(ImageInvalidFormatException e) {
+	  
+	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ImageFormatException", e.getMessage());
+	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
   }
 }

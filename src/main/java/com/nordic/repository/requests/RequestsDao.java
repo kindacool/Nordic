@@ -46,8 +46,8 @@ public class RequestsDao implements RequestsMapper{
 	}
 	
 	@Override
-	public List<ConfirmedRequestsDto> findAllConfirmedRequest() {
-		return requestsMapper.findAllConfirmedRequest();
+	public List<ConfirmedRequestsDto> findAllConfirmedRequest(String yn) {
+		return requestsMapper.findAllConfirmedRequest(yn);
 	}
 	
 	@Override

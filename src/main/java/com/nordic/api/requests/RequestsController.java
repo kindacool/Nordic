@@ -118,35 +118,46 @@ public class RequestsController {
 		return new ResponseDto("확인 안된 모든 요청", PageInfo.of(requestList));
 	}
 	
-	@GetMapping("/confirmed")
+	@GetMapping(value= {"/confirmed","/confirmed/{yn}"})
 	public ResponseDto findAllConfirmedRequest(@RequestParam(value = "pageNum",
 			required = false,
-			defaultValue = "1") int pageNum) throws Exception{
+			defaultValue = "1") int pageNum,
+			@PathVariable(value="yn",required = false) String yn) throws Exception{
 		log.info("확인 된 모든 요청 Controller 도착");
+		System.out.println(yn);
+		List<ConfirmedRequestsDto> requestList;
 		
-		List<ConfirmedRequestsDto> requestList = requestsService.findAllConfirmedRequest(pageNum);
+		if(yn == null){
+			requestList = requestsService.findAllConfirmedRequest(pageNum, yn);
+		} else if(yn.equals("n")) {
+			requestList = requestsService.findAllRejectedRequest(pageNum);
+		} else if(yn.equals("y")) {
+			requestList = requestsService.findAllAcceptedRequest(pageNum);
+		} else {
+			throw new Exception("bad requests");
+		}
 		return new ResponseDto("확인된 모든 요청", PageInfo.of(requestList));
 	}
 	
-	@GetMapping("/confirmed/y")
-	public ResponseDto findAllAcceptedRequest(@RequestParam(value = "pageNum",
-			required = false,
-			defaultValue = "1") int pageNum) throws Exception{
-		log.info("지급된 모든 요청 Controller 도착");
-		
-		List<ConfirmedRequestsDto> requestList = requestsService.findAllAcceptedRequest(pageNum);
-		return new ResponseDto("지급된 모든 요청", PageInfo.of(requestList));
-	}
-	
-	@GetMapping("/confirmed/n")
-	public ResponseDto findAllRejectedRequest(@RequestParam(value = "pageNum",
-			required = false,
-			defaultValue = "1") int pageNum) throws Exception{
-		log.info("지급된 모든 요청 Controller 도착");
-		
-		List<ConfirmedRequestsDto> requestList = requestsService.findAllRejectedRequest(pageNum);
-		return new ResponseDto("거절된 모든 요청", PageInfo.of(requestList));
-	}
+//	@GetMapping("/confirmed/y")
+//	public ResponseDto findAllAcceptedRequest(@RequestParam(value = "pageNum",
+//			required = false,
+//			defaultValue = "1") int pageNum) throws Exception{
+//		log.info("지급된 모든 요청 Controller 도착");
+//		
+//		List<ConfirmedRequestsDto> requestList = requestsService.findAllAcceptedRequest(pageNum);
+//		return new ResponseDto("지급된 모든 요청", PageInfo.of(requestList));
+//	}
+//	
+//	@GetMapping("/confirmed/n")
+//	public ResponseDto findAllRejectedRequest(@RequestParam(value = "pageNum",
+//			required = false,
+//			defaultValue = "1") int pageNum) throws Exception{
+//		log.info("지급된 모든 요청 Controller 도착");
+//		
+//		List<ConfirmedRequestsDto> requestList = requestsService.findAllRejectedRequest(pageNum);
+//		return new ResponseDto("거절된 모든 요청", PageInfo.of(requestList));
+//	}
 	
 	// 요청 수락
 	@ApiOperation("굿즈 구매 요청 수락")

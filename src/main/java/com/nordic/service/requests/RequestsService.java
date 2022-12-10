@@ -44,9 +44,9 @@ public class RequestsService {
 		return requestsDao.findAllRequest();
 	}
 
-	public List<ConfirmedRequestsDto> findAllConfirmedRequest(int pageNum) {
+	public List<ConfirmedRequestsDto> findAllConfirmedRequest(int pageNum, String yn) {
 		PageHelper.startPage(pageNum,10);
-		return requestsDao.findAllConfirmedRequest();
+		return requestsDao.findAllConfirmedRequest(yn);
 	}
 
 	public List<ConfirmedRequestsDto> findAllAcceptedRequest(int pageNum) {

@@ -3,7 +3,9 @@ package com.nordic.dto.goods;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 import org.apache.ibatis.type.Alias;

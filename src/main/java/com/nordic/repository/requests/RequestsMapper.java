@@ -22,7 +22,7 @@ public interface RequestsMapper {
 
 	public List<GoodsReqDto> findAllRequest();
 
-	List<ConfirmedRequestsDto> findAllConfirmedRequest();
+	List<ConfirmedRequestsDto> findAllConfirmedRequest(String yn);
 
 	public List<ConfirmedRequestsDto> findAllAcceptedRequest();
 

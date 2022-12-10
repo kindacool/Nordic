@@ -46,10 +46,10 @@ public class GoodsService {
 		return goodsDao.readAvailableGoods();
 	}
 
-	@Cacheable("bestGoods")
+	//@Cacheable("bestGoods")
 	public List<BestSellingGoodsDto> getBestSellingGoods(int pageNum) {
 		PageHelper.startPage(pageNum, 10);
-		log.info("cacheable 실행");
+		//log.info("cacheable 실행");
 		return goodsDao.getBestSellingGoods();
 	}
 
