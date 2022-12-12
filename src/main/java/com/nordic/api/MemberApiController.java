@@ -1,22 +1,14 @@
 package com.nordic.api;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,17 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.mysql.cj.log.Log;
-import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.member.MemberModifyDto;
 import com.nordic.dto.member.SearchDto;
 import com.nordic.service.MemberService;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -166,7 +153,7 @@ public class MemberApiController {
 	/******************************** 가입 승인 회원 조회  ********************************/
 	@ApiOperation("가입 승인 회원 조회")
 	@GetMapping(value="/members/approvalY/{pageNum}")
-	public ResponseDto approvalYList (@PathVariable int pageNum) throws Exception {
+	public ResponseDto ApprovalYList (@PathVariable int pageNum) throws Exception {
 		
 		Map<String, Object> memberObj = new HashMap<>();
 		memberObj.put("data", memberService.approvalYList(pageNum));
@@ -182,7 +169,7 @@ public class MemberApiController {
 	/******************************** 가입 미승인 회원 조회  ********************************/
 	@ApiOperation("가입 미승인 회원 조회")
 	@GetMapping(value="/members/approvalN/{pageNum}")
-	public ResponseDto approvalNList (@PathVariable int pageNum) throws Exception {
+	public ResponseDto ApprovalNList (@PathVariable int pageNum) throws Exception {
 		
 		Map<String, Object> memberObj = new HashMap<>();
 		memberObj.put("data", memberService.approvalNList(pageNum));
@@ -192,6 +179,98 @@ public class MemberApiController {
 		log.info("가입 미승인 회원 조회 완료");
 		
 		return result;
+		
+	}
+
+	/******************************** 가입 승인 실행 ********************************/
+	@ApiOperation(value = "가입 승인 실행")
+	@PostMapping (value = "/members/doApproval/{mC}")
+	public ResponseDto DoApproval (@PathVariable(value="mC") String mC) throws Exception {
+		
+		MemberDto memberDto = memberService.findOne(mC);
+		//가입 승인 실행 - approval_yn, approval_date 컬럼 변경 update SQL문 실행
+		int result = memberService.doApproval(memberDto);
+		ResponseDto responseResult = new ResponseDto(memberDto.getMember_name()+ " 가입 승인 완료" , result);
+		
+		return responseResult;
+		
+	}
+	
+	/******************************** 탈퇴 회원 목록 조회 ********************************/
+	@ApiOperation(value = "탈퇴 회원 목록")
+	@GetMapping(value = "members/delMemList/{pageNum}")
+	public ResponseDto DelMemList(@PathVariable int pageNum) throws Exception {
+		
+		Map<String, Object> memberObj = new HashMap<>();
+		memberObj.put("data", memberService.delMemList(pageNum));
+		ResponseDto result = new ResponseDto("탈퇴 회원 목록 조회 성공", memberObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("탈퇴 회원 목록 조회 완료");
+		
+		return result;
+	}
+	
+	/******************************** 회원 탈퇴 실행 ********************************/
+	@ApiOperation(value = "회원 탈퇴 실행")
+	@PostMapping(value="/del/{mC}")
+	public ResponseDto DelOne (@PathVariable(value="mC") String mC) throws Exception {
+		
+		log.info("회원 탈퇴 진입");
+		
+		MemberDto memberDto = memberService.findOne(mC);
+		//회원 탈퇴 실행 - stop_yn, stop_date 컬럼 변경 update SQL문 실행
+		int result = memberService.delOne(memberDto);
+		ResponseDto responseResult = new ResponseDto(memberDto.getMember_name()+ " 탈퇴 완료" , result);
+		
+		return responseResult;
+	}
+	
+	/******************************** 회원 탈퇴 철회  ********************************/
+	@ApiOperation(value = "회원 탈퇴 철회")
+	@PostMapping(value="members/undoDelete/{mC}")
+	public ResponseDto UndoDelete (@PathVariable(value="mC") String mC) throws Exception {
+		
+		log.info("회원 탈퇴 철회 진입");
+		
+		MemberDto memberDto = memberService.findOne(mC);
+		//회원 탈퇴 실행 - stop_yn, stop_date 컬럼 변경 update SQL문 실행
+		int result = memberService.undoDelete(memberDto);
+		ResponseDto responseResult = new ResponseDto(memberDto.getMember_name()+ " 탈퇴 철회 완료" , result);
+		
+		return responseResult;
+	}
+	
+	/******************************** 관리자 승인 실행 ********************************/
+	@ApiOperation(value = "관리자 승인 실행")
+	@PostMapping (value = "/members/doAdmin/{mC}")
+	public ResponseDto DoAdmin (@PathVariable(value="mC") String mC) throws Exception {
+		
+		MemberDto memberDto = memberService.findOne(mC);
+		//관리자 승인 실행 - admin_yn, admin_date 컬럼 변경 update SQL문 실행
+		int result = memberService.doAdmin(memberDto);
+		ResponseDto responseResult = new ResponseDto(memberDto.getAdmin_yn()+ " 관리자 승인 완료" , result);
+		
+		return responseResult;
+		
+	}
+	
+	/******************************** 관리자 해제 실행 ********************************/
+	@ApiOperation(value = "관리자 해제 실행")
+	@PostMapping (value = "/members/doUnadmin/{mC}")
+	public ResponseDto DoUnadmin (@PathVariable(value="mC") String mC) throws Exception {
+		
+		log.info("관리자 해제 진입");
+		
+		MemberDto memberDto = memberService.findOne(mC);
+
+		//관리자 해제 실행 - admin_yn, admin_date 컬럼 변경 update SQL문 실행
+		int result = memberService.doUnadmin(memberDto);
+		log.info("int result : "+result);
+		ResponseDto responseResult = new ResponseDto(memberDto.getAdmin_yn()+ " 관리자 해제 완료" , result);
+		log.info("관리자 해제");
+		
+		return responseResult;
 		
 	}
 	
@@ -248,7 +327,7 @@ public class MemberApiController {
 				
 		log.info("프론트에서 넘어온 수정할 정보↓");
 		log.info(memberModifyDto.toString());
-//		
+
 		//memberDto.getMember_name()으로 update SQL문 실행하기
 		int result = memberService.modifyOne(memberModifyDto);
 		ResponseDto responseResult = new ResponseDto(memberModifyDto.getMember_code()+" 수정 완료", result);
@@ -259,22 +338,6 @@ public class MemberApiController {
 		return responseResult;
 		
 	}
-	
-	/******************************** 회원 탈퇴 (stop_yn, stop_date) ********************************/
-	@ApiOperation(value = "회원 탈퇴")
-	@PostMapping(value="/del/{member_code}")
-	public ResponseDto DelOne (@PathVariable String member_code) throws Exception {
-		
-		log.info("진입");
-		
-		//회원 탈퇴 실행 - stop_yn, stop_date 컬럼 변경 update SQL문 실행
-		MemberDto memberDto = memberService.findOne(member_code);
-		int result = memberService.delOne(memberDto);
-		ResponseDto responseResult = new ResponseDto(memberDto.getMember_name()+ " 탈퇴 완료" , result);
-		
-		return responseResult;
-	}
-	
 	
 	/******************************** 회원가입 폼 이동 ********************************/
 	@ApiOperation(value = "회원가입폼 이동")
@@ -317,23 +380,26 @@ public class MemberApiController {
 		return new ResponseDto ("회원가입성공", memberDto.getMember_name());
 	}
 	
-	/******************************** 관리자 등록  ********************************/
-	/***************admin_yn, admin_date, update_member, update_date  ********/
-
-	
-//	@ApiOperation(value = "관리자 등록")
-//	@PostMapping(value= "/members/admRegister/{}")
-//	public ResponseDto admRegister (MemberDto memberDto)
-	
-//	@ApiOperation(value="검색으로 회원 조회")
-//	@GetMapping("/{keyword}")
-//	public ResponseDto SearchMember(@PathVariable SearchDto searchDto) {
-//		log.info("serachMember");
-//		
-//		List<MemberDto> memberDto = memberService.searchMember(searchDto);
-//		
-//		return new ResponseDto();
-//		
-//	}
+	/******************************** 검색으로 회원 조회 ********************************/
+	@ApiOperation(value="검색으로 회원 조회")
+	@GetMapping("/members/{search}/{keyword}/{pageNum}")
+	public ResponseDto SearchMember(@PathVariable int pageNum, 
+									@PathVariable String search,
+									@PathVariable String keyword) throws Exception {
+		
+		SearchDto searchDto = new SearchDto();
+		searchDto.setSearch(search); searchDto.setKeyword(keyword);
+		log.info(searchDto.toString());
+		
+		Map<String, Object> adminObj = new HashMap<>();
+		adminObj.put("data", memberService.doSearch(pageNum, searchDto));
+		ResponseDto result = new ResponseDto("검색 목록 구하기 성공", adminObj.get("data"));
+		
+		log.info("result: "+result);
+		log.info("검색 목록 구하기 완료");
+		
+		return result;
+		
+	}
 	
 }

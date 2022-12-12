@@ -1,7 +1,6 @@
 package com.nordic.dto.common;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class ResponseDto<T> {
@@ -10,7 +9,15 @@ public class ResponseDto<T> {
     private final String error = null;
     private String message;
     private T data;
-    
+
+    public ResponseDto(T data) {
+        this.data = data;
+    }
+
+    public ResponseDto(String message) {
+        this.message = message;
+    }
+
     public ResponseDto(String message, T data) {
         this.message = message;
         this.data = data;

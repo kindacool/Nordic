@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nordic.repository.member.MemberMapper">
 
+
+
 	<select id="findAll" resultType="MemberDto">
 		select * from member
 	</select>
@@ -44,6 +46,46 @@
 		select * from member where approval_yn = 'N'
 	</select>
 	
+	<update id="doApproval" parameterType="MemberDto">
+		update member set
+			approval_yn = 'Y',
+			approval_date = sysdate(),
+			remark = '가입승인',
+			admin_yn = 'N',
+			stop_yn = 'N',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
+	
+	<select id="delMemList" resultType="MemberDto">
+		select * from member where stop_yn = 'Y'
+	</select>
+	
+	<update id="doAdmin" parameterType="MemberDto">
+		update member set
+			admin_yn = 'Y',
+			admin_date = sysdate(),
+			approval_yn = 'Y',
+			stop_yn = 'N',
+			remark = '관리자 등록',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
+	
+	<update id="doUnadmin" parameterType="MemberDto">
+		update member set
+			admin_yn = 'N',
+			admin_date = #{admin_date, jdbcType=DATE},
+			approval_yn = 'Y',
+			stop_yn = 'N',
+			remark = '관리자 해제',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = ${member_code}
+	</update>
+	
 	<select id="findAdmins" resultType="MemberDto">
 		select * from member where admin_yn = 'Y'
 	</select>
@@ -55,10 +97,10 @@
 	<insert id="mbrRegister" parameterType="MemberDto">
 		insert into member values(
 			#{member_code}, #{member_name}, #{mobile_no}, #{address}, 
-			#{age}, #{sex}, 'Y', #{password}, 'N', #{approval_date,jdbcType=DATE}, 'N', 
+			#{age}, #{sex}, 'Y', hex(aes_encrypt(#{password}, 'nordicW')), 'N', #{approval_date,jdbcType=DATE}, 'N', 
 			#{stop_date,jdbcType=DATE}, 'N', #{admin_date,jdbcType=DATE}, 0, 0, 0, 
-			0, 'SYSTEM', sysdate(),
-			'SYSTEM', sysdate()
+			0, #{member_code}, sysdate(),
+			'관리자', sysdate()
 			<!-- #{member_code}, #{member_name}, #{mobile_no}, #{address}, 
 			#{age}, #{sex}, #{agree_yn}, #{password}, #{approval_yn}, sysdate(), 'N', 
 			DATE_format(#{stop_date,jdbcType=DATE}, '%Y-%m-%d %H:%i:%s'), 'N', 
@@ -68,15 +110,6 @@
 		)
 	</insert>
 	
-	<update id="admRegister" parameterType="MemberDto">
-		update member set
-			admin_yn = 'Y',
-			admin_date = sysdate(),
-			update_member = 'SYSTEM',
-			update_date = sysdsate()
-		where member_code = #{member_code}
-	</update>
-	
 	<update id="modifyOne" parameterType="MemberModifyDto">
 		update member set 
 			member_name = #{member_name},
@@ -84,20 +117,49 @@
 			address = #{address},
 			age = #{age},
 			sex = #{sex},
-			password = #{password},
-			update_member = 'SYSTEM',
+			password = hex(aes_encrypt(#{password}, 'nordicW')),
+			remark = '회원정보수정',
+			update_member = '관리자',
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
 	
 	<update id="delOne" parameterType="MemberDto">
 		update member set
+			approval_yn = 'N',
+			approval_date = #{approval_date},
 			stop_yn = 'Y',
 			stop_date = sysdate(),
-			update_member = 'SYSTEM',
+			admin_yn = 'N',
+			admin_date = sysdate(),
+			remark = '탈퇴',
+			update_member = '관리자',
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
+	
+	<update id="undoDelete" parameterType="MemberDto">
+		update member set
+			approval_yn = 'N',
+			approval_date = #{approval_date, jdbcType=DATE},
+			stop_yn = 'N',
+			stop_date = #{stop_date, jdbcType=DATE},
+			admin_yn = 'N',
+			admin_date = #{admin_date,jdbcType=DATE},
+			remark = '탈퇴 철회',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
+	
+	<select id="doSearch" parameterType="SearchDto" resultType="MemberDto">
+		select * from member
+		<where>
+			<if test="keyword != null and search != null">
+				${search} like CONCAT('%',#{keyword},'%')
+			</if>
+		</where>
+	</select>
 
 
 </mapper>

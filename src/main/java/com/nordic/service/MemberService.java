@@ -1,5 +1,6 @@
 package com.nordic.service;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.member.MemberModifyDto;
+import com.nordic.dto.member.SearchDto;
 import com.nordic.repository.member.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -65,7 +67,6 @@ public class MemberService {
 	}
 	
 	public PageInfo<MemberDto> approvalYList(int pageNum) {
-		log.info("서비스");
 		PageHelper.startPage(pageNum, 10);
 		List<MemberDto> memberList = memberRepository.approvalYList();
 		return PageInfo.of(memberList);
@@ -75,6 +76,24 @@ public class MemberService {
 		PageHelper.startPage(pageNum, 10);
 		List<MemberDto> memberList = memberRepository.approvalNList();
 		return PageInfo.of(memberList);
+	}
+	
+	public PageInfo<MemberDto> delMemList (int pageNum) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberList = memberRepository.delMemList();
+		return PageInfo.of(memberList);
+	}
+	
+	public int doApproval (MemberDto memberDto) {
+		return memberRepository.doApproval(memberDto);
+	}
+	
+	public int doAdmin (MemberDto memberDto) {
+		return memberRepository.doAdmin(memberDto);
+	}
+	
+	public int doUnadmin (MemberDto memberDto) {
+		return memberRepository.doUnadmin(memberDto);
 	}
 	
 	public PageInfo<MemberDto> findAdmins(int pageNum) {
@@ -92,16 +111,23 @@ public class MemberService {
 		return memberRepository.mbrRegister(memberDto);
 	}
 	
-	public int admRegister (MemberDto memberDto) {
-		return memberRepository.admRegister(memberDto);
-	}
-	
 	public int modifyOne (MemberModifyDto memberModifyDto) {
 		return memberRepository.modifyOne(memberModifyDto);
 	}
 	
 	public int delOne (MemberDto memberDto) {
 		return memberRepository.delOne(memberDto);
+	}
+	
+	public int undoDelete (MemberDto memberDto) {
+		return memberRepository.undoDelete(memberDto);
+	}
+	
+	public PageInfo<MemberDto> doSearch(int pageNum, 
+										SearchDto searchDto) {
+		PageHelper.startPage(pageNum, 10);
+		List<MemberDto> memberDto = memberRepository.doSearch(searchDto);
+		return PageInfo.of(memberDto);
 	}
 
 }
