@@ -1,6 +1,7 @@
 package com.nordic.service.requests;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -34,9 +35,9 @@ public class RequestsService {
 		requestsDao.rejectRequest(goodsReqDto);
 	}
 
-	public List<UnconfirmedRequestsDto> findAllUnconfirmedRequest(int pageNum) {
+	public List<UnconfirmedRequestsDto> findAllUnconfirmedRequest(int pageNum, Map<String, Object> map) {
 		PageHelper.startPage(pageNum,10);
-		return requestsDao.findAllUnconfirmedRequest();
+		return requestsDao.findAllUnconfirmedRequest(map);
 	}
 
 	public List<GoodsReqDto> findAllRequest(int pageNum) {
@@ -44,19 +45,9 @@ public class RequestsService {
 		return requestsDao.findAllRequest();
 	}
 
-	public List<ConfirmedRequestsDto> findAllConfirmedRequest(int pageNum, String yn) {
+	public List<ConfirmedRequestsDto> findAllConfirmedRequest(int pageNum, Map<String, Object> map) {
 		PageHelper.startPage(pageNum,10);
-		return requestsDao.findAllConfirmedRequest(yn);
-	}
-
-	public List<ConfirmedRequestsDto> findAllAcceptedRequest(int pageNum) {
-		PageHelper.startPage(pageNum,10);
-		return requestsDao.findAllAcceptedRequest();
-	}
-	
-	public List<ConfirmedRequestsDto> findAllRejectedRequest(int pageNum) {
-		PageHelper.startPage(pageNum,10);
-		return requestsDao.findAllRejectedRequest();
+		return requestsDao.findAllConfirmedRequest(map);
 	}
 
 	public List<GoodsReqDto> findRequestsByGoods(int no, int pageNum) {
@@ -64,7 +55,7 @@ public class RequestsService {
 		return requestsDao.findRequestsByGoods(no);
 	}
 
-	public List<GoodsReqDto> myRequests(String member_code, int pageNum) {
+	public List<ConfirmedRequestsDto> myRequests(String member_code, int pageNum) {
 		PageHelper.startPage(pageNum,10);
 		return requestsDao.myRequests(member_code);
 	}

@@ -1,7 +1,12 @@
 package com.nordic.api.requests;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.aop.ThrowsAdvice;
 import org.springframework.http.HttpStatus;
@@ -108,13 +113,20 @@ public class RequestsController {
 		return new ResponseDto("모든 요청", PageInfo.of(requestList));
 	}
 	
-	@GetMapping("/unconfirmed")
+	@GetMapping(value = {"/unconfirmed", "/unconfirmed/{all}"})
 	public ResponseDto findAllUnconfirmedRequest(@RequestParam(value = "pageNum",
 			required = false,
-			defaultValue = "1") int pageNum) throws Exception{
+			defaultValue = "1") int pageNum,
+			@RequestParam(value="search", required = false) String search,
+			@RequestParam(value="keyword", required = false) String keyword,
+			@PathVariable(value="all", required = false) String all) throws Exception{
 		log.info("확인 안된 모든 요청 Controller 도착");
 		
-		List<UnconfirmedRequestsDto> requestList = requestsService.findAllUnconfirmedRequest(pageNum);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("search", search);
+		map.put("keyword", keyword);
+		map.put("all", all);
+		List<UnconfirmedRequestsDto> requestList = requestsService.findAllUnconfirmedRequest(pageNum,map);
 		return new ResponseDto("확인 안된 모든 요청", PageInfo.of(requestList));
 	}
 	
@@ -122,42 +134,39 @@ public class RequestsController {
 	public ResponseDto findAllConfirmedRequest(@RequestParam(value = "pageNum",
 			required = false,
 			defaultValue = "1") int pageNum,
+			@RequestParam(value="start", required = false) String start,
+			@RequestParam(value="end", required = false) String end,
+			@RequestParam(value="search", required = false) String search,
+			@RequestParam(value="keyword", required = false) String keyword,
 			@PathVariable(value="yn",required = false) String yn) throws Exception{
 		log.info("확인 된 모든 요청 Controller 도착");
-		System.out.println(yn);
+		//System.out.println(yn);
+		log.info(search + " : " + keyword);
+		
+
+		if(start == "" || end == "") {
+			start = "0001-01-01";
+			end = "9999-12-31";
+		} 
+		// String으로 들어오는 날짜 데이터 변환
+		LocalDateTime startDateTime = LocalDate.parse(start, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(0, 0, 0);
+		LocalDateTime endDateTime = LocalDate.parse(end, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atTime(23, 59, 59);
+		
+		
+		System.out.println(startDateTime);
+		System.out.println(endDateTime);
 		List<ConfirmedRequestsDto> requestList;
 		
-		if(yn == null){
-			requestList = requestsService.findAllConfirmedRequest(pageNum, yn);
-		} else if(yn.equals("n")) {
-			requestList = requestsService.findAllRejectedRequest(pageNum);
-		} else if(yn.equals("y")) {
-			requestList = requestsService.findAllAcceptedRequest(pageNum);
-		} else {
-			throw new Exception("bad requests");
-		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("search", search);
+		map.put("keyword", keyword);
+		map.put("yn", yn);
+		map.put("start", startDateTime);
+		map.put("end", endDateTime);
+		requestList = requestsService.findAllConfirmedRequest(pageNum, map);
+
 		return new ResponseDto("확인된 모든 요청", PageInfo.of(requestList));
 	}
-	
-//	@GetMapping("/confirmed/y")
-//	public ResponseDto findAllAcceptedRequest(@RequestParam(value = "pageNum",
-//			required = false,
-//			defaultValue = "1") int pageNum) throws Exception{
-//		log.info("지급된 모든 요청 Controller 도착");
-//		
-//		List<ConfirmedRequestsDto> requestList = requestsService.findAllAcceptedRequest(pageNum);
-//		return new ResponseDto("지급된 모든 요청", PageInfo.of(requestList));
-//	}
-//	
-//	@GetMapping("/confirmed/n")
-//	public ResponseDto findAllRejectedRequest(@RequestParam(value = "pageNum",
-//			required = false,
-//			defaultValue = "1") int pageNum) throws Exception{
-//		log.info("지급된 모든 요청 Controller 도착");
-//		
-//		List<ConfirmedRequestsDto> requestList = requestsService.findAllRejectedRequest(pageNum);
-//		return new ResponseDto("거절된 모든 요청", PageInfo.of(requestList));
-//	}
 	
 	// 요청 수락
 	@ApiOperation("굿즈 구매 요청 수락")
@@ -247,8 +256,8 @@ public class RequestsController {
 		
 		String member_code = "10007"; // 토큰 구현전까지 일시로
 		
-		List<GoodsReqDto> requestList = requestsService.myRequests(member_code, pageNum);
-		return new ResponseDto("내 요청 목록", requestList);
+		List<ConfirmedRequestsDto> requestList = requestsService.myRequests(member_code, pageNum);
+		return new ResponseDto("내 요청 목록", PageInfo.of(requestList));
 	}	
 	
 	// 요청 취소

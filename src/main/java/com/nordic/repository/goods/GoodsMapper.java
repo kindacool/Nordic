@@ -1,6 +1,7 @@
 package com.nordic.repository.goods;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,13 +16,13 @@ public interface GoodsMapper {
 
 	public GoodsDto readOneGoods(int goodsNo);
 	
-	public List<GoodsDto> readAllGoods(String keyword);
+	public List<GoodsDto> readAllGoods(Map<String, Object> map);
 	
 	public void deleteGoods(int no);
 	
 	public void updateGoods(GoodsDto goodsDto);
 	
-	public List<GoodsDto> readAvailableGoods();
+	public List<GoodsDto> readAvailableGoods(String keyword);
 
 	public List<BestSellingGoodsDto> getBestSellingGoods();
 	

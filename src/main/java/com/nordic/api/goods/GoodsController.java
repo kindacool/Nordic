@@ -170,27 +170,36 @@ public class GoodsController {
     }
     
 	@ApiOperation(value="모든 굿즈(삭제된 굿즈 포함) 목록")
-	@GetMapping("/all")
+	@GetMapping(value= {"/all","/all/{yn}"})
 	public ResponseDto readAllGoods(@RequestParam(value = "pageNum",
 			required = false,
-			defaultValue = "1") int pageNum, 
+			defaultValue = "1") int pageNum,
+			@PathVariable(value="yn",required = false) String yn,
+			@RequestParam(value="search", required = false) String search,
 			@RequestParam(value="keyword", required = false) String keyword) {
-	
+		
 		log.info("모든 굿즈 Controller 도착");
-
-		List<GoodsDto> goodsList = goodsService.readAllGoods(pageNum, keyword);
+		log.info(search + " : "+ keyword);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("yn",yn);
+		map.put("search",search);
+		map.put("keyword",keyword);
+		List<GoodsDto> goodsList = goodsService.readAllGoods(pageNum, map);
 		
 		return new ResponseDto("전체목록", PageInfo.of(goodsList));
 	}
 	
 	@ApiOperation(value="구매가능상태 굿즈 목록")
 	@GetMapping("/avail")
-	public ResponseDto readAvailableGoods(@RequestParam(value = "pageNum",
+	public ResponseDto readAvailableGoods(
+			@RequestParam(value="keyword", required = false) String keyword,
+			@RequestParam(value = "pageNum",
 			required = false,
 			defaultValue = "1") int pageNum) {
 		log.info("구매가능 굿즈 Controller 도착");
 		
-		List<GoodsDto> goodsList = goodsService.readAvailableGoods(pageNum);
+		List<GoodsDto> goodsList = goodsService.readAvailableGoods(pageNum, keyword);
 		
 		return new ResponseDto("구매가능한 굿즈 목록", PageInfo.of(goodsList));
 	}

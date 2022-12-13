@@ -38,4 +38,5 @@ public class GoodsDto {
 	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
 	private Timestamp update_date;
 	
+	private int cnt;
 }

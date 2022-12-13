@@ -1,6 +1,7 @@
 package com.nordic.repository.goods;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -26,9 +27,8 @@ public class GoodsDao implements GoodsMapper{
 	}
 	
 	@Override
-	public List<GoodsDto> readAllGoods(String keyword) {
-		System.out.println(keyword);
-		return goodsMapper.readAllGoods(keyword);
+	public List<GoodsDto> readAllGoods(Map<String, Object> map) {
+		return goodsMapper.readAllGoods(map);
 	}
 	
 	@Override
@@ -42,8 +42,8 @@ public class GoodsDao implements GoodsMapper{
 	}
 
 	@Override
-	public List<GoodsDto> readAvailableGoods() {
-		return goodsMapper.readAvailableGoods();
+	public List<GoodsDto> readAvailableGoods(String keyword) {
+		return goodsMapper.readAvailableGoods(keyword);
 	}
 	
 	@Override
