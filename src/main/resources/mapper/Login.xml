@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.login.LoginMapper">
+    <select id="findByMemberCode" resultType="com.nordic.dto.member.MemberDto">
+        SELECT member_code, member_name, password, admin_yn
+        FROM member
+        WHERE member_code = #{member_code}
+    </select>
+</mapper>

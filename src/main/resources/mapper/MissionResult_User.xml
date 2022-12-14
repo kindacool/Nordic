@@ -57,16 +57,33 @@
 		resultType="com.nordic.dto.mission_result.MissionHistoryImageDto">
 		select * from mission_history_image 
 		where mission_no = #{mission_no} 
-			and create_member = #{member_code}
+			and create_member = #{member_code} and use_yn = 'Y'
 		order by create_date limit 1
 	</select>
 	
+	<!-- 미션 수행 이미지 수정 -->
 	<update id="updateMissionImage" parameterType="com.nordic.dto.mission_result.MissionHistoryImageDto">
-		<selectKey keyProperty="image_no" resultType="int" order="BEFORE">
-			select image_no from mission_history_image where create_member = #{update_member} and mission_no = #{mission_no}
+		<selectKey keyProperty="image_no" resultType="int" order="AFTER">
+			select image_no from mission_history_image where create_member = #{update_member} and mission_no = #{mission_no} and use_yn = 'Y'
 		</selectKey>
 		update mission_history_image 
 		set update_member = #{update_member}, update_date = sysdate(), confirm_file = #{confirm_file}
+		where mission_no = #{mission_no} and create_member = #{update_member} 
+	</update>
+	
+	<!-- 미션 수행 이미지 삭제 -->
+	<update id="deleteMissionImage" parameterType="com.nordic.dto.mission_result.MissionHistoryImageDto">
+		<selectKey keyProperty="image_no" resultType="int" order="BEFORE">
+			select image_no from mission_history_image where create_member = #{update_member} and mission_no = #{mission_no} and use_yn = 'Y'
+		</selectKey>
+		update mission_history_image 
+		set update_member = #{update_member}, update_date = sysdate(), use_yn = 'N'
+		where mission_no = #{mission_no} and create_member = #{update_member} 
+	</update>
+	
+	<update id="deleteMission" parameterType="com.nordic.dto.mission_result.MissionHistoryImageDto">
+		update mission_history
+		set update_member = #{update_member}, update_date = sysdate(), use_yn = 'N'
 		where mission_no = #{mission_no} and create_member = #{update_member} 
 	</update>
 	

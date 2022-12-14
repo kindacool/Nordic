@@ -51,8 +51,17 @@ public class MissionResultDao {
 	/* 미션 사진 수정 */
 	public MissionHistoryImageDto updateUserMissionImage(MissionHistoryImageDto image) {
 		mrmapper.updateMissionImage(image);
-		System.out.println(image.getImage_no());
 		return mrmapper.getHistoryImg(image.getImage_no());
+	}
+	
+	/* 미션 사진 삭제 */
+	public MissionHistoryImageDto deleteUserMissionImage(MissionHistoryImageDto image) {
+		mrmapper.deleteMissionImage(image);
+		return mrmapper.getHistoryImg(image.getImage_no());
+	}
+
+	public void deleteUserMission(MissionHistoryImageDto image) {
+		mrmapper.deleteMission(image);
 	}
 	
 }

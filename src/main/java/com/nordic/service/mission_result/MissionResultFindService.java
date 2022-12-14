@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.relational.core.sql.Not;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.nordic.api.mission_result.MissionResultFindController;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.mission_result.MissionHistoryDetailDto;
 import com.nordic.dto.mission_result.MissionHistoryDto;
@@ -15,10 +17,13 @@ import com.nordic.dto.mission_result.MissionMasterDto;
 import com.nordic.dto.mission_result.MissionMasterImageDto;
 import com.nordic.dto.mission_result.MissionStatusDto;
 import com.nordic.dto.mission_result.PointHistoryDto;
+import com.nordic.exception.NotConfirmException;
 import com.nordic.repository.mission_result.MissionResultFindDao;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MissionResultFindService {
@@ -41,6 +46,8 @@ public class MissionResultFindService {
 		if (end_date==null || end_date.isEmpty()) {
 			end_date = (String) total.get("max");
 		}
+		
+		log.info("=== start_date : "+start_date+" ~ end_date : "+end_date+" ===");
 		
 		Map period = new HashMap();
 		period.put("start_date", start_date);
@@ -82,12 +89,12 @@ public class MissionResultFindService {
 		// 이미 처리가 완료된 건
 		MissionHistoryDto historyMission = msdao.selectHistoryByNo(mission_history_no);
 		if (historyMission.getConfirm_member() != null) {
-			throw new Exception("처리 완료");
+			throw new NotConfirmException(NotConfirmException.MRF_0001);
 		}
 		
 		// 거절 사유가 입력되지 않은 건
 		if(check==2 && remark.equals("")) {
-			throw new Exception("거절 사유 미입력");
+			throw new NotConfirmException(NotConfirmException.MRF_0002);
 		}
 		
 		MissionHistoryDto updateMission = new MissionHistoryDto();

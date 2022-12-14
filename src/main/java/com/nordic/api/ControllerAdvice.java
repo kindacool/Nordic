@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
+import com.nordic.exception.ExpireException;
+import com.nordic.exception.NotConfirmException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,4 +61,20 @@ public class ControllerAdvice {
 	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
 	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
 	  }
+	  
+	  @ExceptionHandler(NotConfirmException.class)
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  public ResponseEntity<ExceptionResponseDto> handleNotConfirmException(NotConfirmException e) {
+		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("NotConfirm", e.getMessage());
+		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
+	  
+	  @ExceptionHandler(ExpireException.class)
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  public ResponseEntity<ExceptionResponseDto> handleExpireException(ExpireException e) {
+		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ExpireMission", e.getMessage());
+		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
+	  
+	  
 }
