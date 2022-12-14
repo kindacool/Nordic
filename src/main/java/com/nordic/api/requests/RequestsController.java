@@ -175,6 +175,12 @@ public class RequestsController {
 		log.info("요청 수락 Controller 도착");
 		String master = "Yoo"; // 토큰 구현전까지 일시로
 		
+		GoodsReqDto old = requestsService.findOneRequest(reqNo);
+		if(old.getUse_yn() == 'N') {
+			// 예외 처리 : 이미 취소된 요청입니다
+			throw new CancleRequestException(CancleRequestException.ERR_0006);
+		} 
+		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
 		goodsReqDto.setConfirm_yn('Y');
 		goodsReqDto.setConfirm_member(master);
@@ -185,7 +191,6 @@ public class RequestsController {
 		
 		// 포인트 req -> use
 		PointsDto pointDto = new PointsDto();
-		GoodsReqDto old = requestsService.findOneRequest(reqNo);
 		pointDto.setPoint(old.getPoint());
 		pointDto.setMember_code(old.getMember_code());
 		pointDto.setUpdate_member(old.getMember_code());
@@ -200,8 +205,15 @@ public class RequestsController {
 	// 요청 거절
 	@ApiOperation("굿즈 구매 요청 거절")
 	@PostMapping("/{reqNo}/n")
-	public ResponseDto rejectRequest(@PathVariable int reqNo, @RequestParam(value="remark",required = false) String remark) throws IOException{
+	public ResponseDto rejectRequest(@PathVariable int reqNo, @RequestParam(value="remark",required = false) String remark) throws Exception{
 		log.info("요청 거절 Controller 도착");
+		
+		GoodsReqDto old = requestsService.findOneRequest(reqNo);
+		if(old.getUse_yn() == 'N') {
+			// 예외 처리 : 이미 취소된 요청입니다
+			throw new CancleRequestException(CancleRequestException.ERR_0006);
+		} 
+		
 		String master = "Yoo"; // 토큰 구현전까지 일시로
 		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
@@ -216,7 +228,6 @@ public class RequestsController {
 		
 		// 포인트 req -> total
 		PointsDto pointDto = new PointsDto();
-		GoodsReqDto old = requestsService.findOneRequest(reqNo);
 		pointDto.setPoint(old.getPoint());
 		pointDto.setMember_code(old.getMember_code());
 		pointDto.setUpdate_member(old.getMember_code());

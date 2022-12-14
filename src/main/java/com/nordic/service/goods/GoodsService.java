@@ -43,7 +43,7 @@ public class GoodsService {
 	}
 
 	public List<GoodsDto> readAvailableGoods(int pageNum, String keyword) {
-		PageHelper.startPage(pageNum, 10);
+		PageHelper.startPage(pageNum, 12);
 		return goodsDao.readAvailableGoods(keyword);
 	}
 
