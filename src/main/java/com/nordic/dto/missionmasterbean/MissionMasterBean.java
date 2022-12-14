@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import java.util.Date;
 
 @Data
-@Setter
-@Getter
 public class MissionMasterBean {
 
     private int mission_no;
