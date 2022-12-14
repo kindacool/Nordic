@@ -2,47 +2,83 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nordic.repository.member.MemberMapper">
 
+
+
 	<select id="findAll" resultType="MemberDto">
 		select * from member
 	</select>
 	
-	<select id="totalPointAsc" resultType="MemberDto">
-		select * from member 
-		order by total_point asc
+	<select id="pointArrange" parameterType="String" resultType="MemberDto">
+		select * from member
+
+		<if test="pointArrange == 'totalasc' ">
+			order by total_point asc
+		</if>
+		<if test="pointArrange == 'totaldesc' ">
+			order by total_point desc
+		</if>
+		<if test="pointArrange == 'reqasc' ">
+			order by req_point asc
+		</if>
+		<if test="pointArrange == 'reqdesc' ">
+			order by req_point desc
+		</if>
+		<if test="pointArrange == 'useasc' ">
+			order by use_point asc
+		</if>
+		<if test="pointArrange == 'usedesc' ">
+			order by use_point desc
+		</if>
 	</select>
 	
-	<select id="totalPointDesc" resultType="MemberDto">
-		select * from member 
-		order by total_point desc
+	<select id="memberState" parameterType="String" resultType="MemberDto">
+		select * from member where
+		<if test="memberState == 'approvaly' ">
+			approval_yn = 'Y'
+		</if>
+		<if test="memberState == 'approvaln' ">
+			approval_yn = 'N'
+		</if>
+		<if test="memberState == 'delmember' ">
+			stop_yn = 'Y'
+		</if>
 	</select>
 	
-	<select id="reqPointAsc" resultType="MemberDto">
-		select * from member 
-		order by req_point asc
-	</select>
+	<update id="doApproval" parameterType="MemberDto">
+		update member set
+			approval_yn = 'Y',
+			approval_date = sysdate(),
+			remark = '가입승인',
+			admin_yn = 'N',
+			stop_yn = 'N',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
 	
-	<select id="reqPointDesc" resultType="MemberDto">
-		select * from member 
-		order by req_point desc
-	</select>
+	<update id="doAdmin" parameterType="MemberDto">
+		update member set
+			admin_yn = 'Y',
+			admin_date = sysdate(),
+			approval_yn = 'Y',
+			stop_yn = 'N',
+			remark = '관리자 등록',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
 	
-	<select id="usePointAsc" resultType="MemberDto">
-		select * from member 
-		order by use_point asc
-	</select>
-	
-	<select id="usePointDesc" resultType="MemberDto">
-		select * from member 
-		order by use_point desc
-	</select>
-	
-	<select id="approvalYList" resultType="MemberDto">
-		select * from member where approval_yn = 'Y'
-	</select>
-	
-	<select id="approvalNList" resultType="MemberDto">
-		select * from member where approval_yn = 'N'
-	</select>
+	<update id="doUnadmin" parameterType="MemberDto">
+		update member set
+			admin_yn = 'N',
+			admin_date = #{admin_date, jdbcType=DATE},
+			approval_yn = 'Y',
+			stop_yn = 'N',
+			remark = '관리자 해제',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = ${member_code}
+	</update>
 	
 	<select id="findAdmins" resultType="MemberDto">
 		select * from member where admin_yn = 'Y'
@@ -57,8 +93,8 @@
 			#{member_code}, #{member_name}, #{mobile_no}, #{address}, 
 			#{age}, #{sex}, 'Y', #{password}, 'N', #{approval_date,jdbcType=DATE}, 'N', 
 			#{stop_date,jdbcType=DATE}, 'N', #{admin_date,jdbcType=DATE}, 0, 0, 0, 
-			0, 'SYSTEM', sysdate(),
-			'SYSTEM', sysdate()
+			0, #{member_code}, sysdate(),
+			#{member_code}, sysdate()
 			<!-- #{member_code}, #{member_name}, #{mobile_no}, #{address}, 
 			#{age}, #{sex}, #{agree_yn}, #{password}, #{approval_yn}, sysdate(), 'N', 
 			DATE_format(#{stop_date,jdbcType=DATE}, '%Y-%m-%d %H:%i:%s'), 'N', 
@@ -68,15 +104,6 @@
 		)
 	</insert>
 	
-	<update id="admRegister" parameterType="MemberDto">
-		update member set
-			admin_yn = 'Y',
-			admin_date = sysdate(),
-			update_member = 'SYSTEM',
-			update_date = sysdsate()
-		where member_code = #{member_code}
-	</update>
-	
 	<update id="modifyOne" parameterType="MemberModifyDto">
 		update member set 
 			member_name = #{member_name},
@@ -85,19 +112,48 @@
 			age = #{age},
 			sex = #{sex},
 			password = #{password},
-			update_member = 'SYSTEM',
+			remark = '회원정보수정',
+			update_member = '관리자',
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
 	
 	<update id="delOne" parameterType="MemberDto">
 		update member set
+			approval_yn = 'N',
+			approval_date = #{approval_date},
 			stop_yn = 'Y',
 			stop_date = sysdate(),
-			update_member = 'SYSTEM',
+			admin_yn = 'N',
+			admin_date = sysdate(),
+			remark = '탈퇴',
+			update_member = '관리자',
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
+	
+	<update id="undoDelete" parameterType="MemberDto">
+		update member set
+			approval_yn = 'N',
+			approval_date = #{approval_date, jdbcType=DATE},
+			stop_yn = 'N',
+			stop_date = #{stop_date, jdbcType=DATE},
+			admin_yn = 'N',
+			admin_date = #{admin_date,jdbcType=DATE},
+			remark = '탈퇴 철회',
+			update_member = '관리자',
+			update_date = sysdate()
+		where member_code = #{member_code}
+	</update>
+	
+	<select id="doSearch" parameterType="SearchDto" resultType="MemberDto">
+		select * from member
+		<where>
+			<if test="keyword != null and search != null">
+				${search} like CONCAT('%',#{keyword},'%')
+			</if>
+		</where>
+	</select>
 
 
 </mapper>

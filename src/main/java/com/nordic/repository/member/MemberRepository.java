@@ -1,5 +1,6 @@
 package com.nordic.repository.member;
 
+import java.lang.reflect.Member;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,7 @@ import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.member.MemberModifyDto;
+import com.nordic.dto.member.SearchDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,44 +27,28 @@ public class MemberRepository implements MemberMapper {
 	}
 	
 	@Override
-	public List<MemberDto> totalPointAsc() {
-		return memberMapper.totalPointAsc();
+	public List<MemberDto> pointArrange(String pointArrange) {
+		return memberMapper.pointArrange(pointArrange);
 	}
 	
 	@Override
-	public List<MemberDto> totalPointDesc() {
-		return memberMapper.totalPointDesc();
+	public List<MemberDto> memberState (String memberState) {
+		return memberMapper.memberState(memberState);
+	}
+
+	@Override
+	public int doApproval (MemberDto memberDto) {
+		return memberMapper.doApproval(memberDto);
 	}
 	
 	@Override
-	public List<MemberDto> reqPointAsc() {
-		return memberMapper.reqPointAsc();
+	public int doAdmin (MemberDto memberDto) {
+		return memberMapper.doAdmin(memberDto);
 	}
 	
 	@Override
-	public List<MemberDto> reqPointDesc() {
-		return memberMapper.reqPointDesc();
-	}
-	
-	@Override
-	public List<MemberDto> usePointAsc() {
-		return memberMapper.usePointAsc();
-	}
-	
-	@Override
-	public List<MemberDto> usePointDesc() {
-		return memberMapper.usePointDesc();
-	}
-	
-	@Override
-	public List<MemberDto> approvalYList() {
-		log.info("레파지토리");
-		return memberMapper.approvalYList();
-	}
-	
-	@Override
-	public List<MemberDto> approvalNList() {
-		return memberMapper.approvalNList();
+	public int doUnadmin (MemberDto memberDto) {
+		return memberMapper.doUnadmin(memberDto);
 	}
 	
 	@Override
@@ -81,11 +67,6 @@ public class MemberRepository implements MemberMapper {
 	}
 	
 	@Override
-	public int admRegister (MemberDto memberDto) {
-		return memberMapper.admRegister(memberDto);
-	}
-	
-	@Override
 	public int modifyOne (MemberModifyDto memberModifyDto) {
 		return memberMapper.modifyOne(memberModifyDto);
 	}
@@ -94,5 +75,26 @@ public class MemberRepository implements MemberMapper {
 	public int delOne (MemberDto memberDto) {
 		return memberMapper.delOne(memberDto);
 	}
+	
+	@Override
+	public int undoDelete (MemberDto memberDto) {
+		return memberMapper.undoDelete(memberDto);
+	}
+	
+	@Override
+	public List<MemberDto> doSearch (SearchDto searchDto) {
+		return memberMapper.doSearch(searchDto);
+	}
+	
+//	@Override
+//	public void createMember(MemberDto memberDto) {
+//        memberMapper.createMember(memberDto);
+//    }
+//
+//    @Override
+//    public int getNewCode() {
+//        int newCode = memberMapper.getNewCode();
+//        return newCode;
+//    }
 
 }

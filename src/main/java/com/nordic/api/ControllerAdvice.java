@@ -2,6 +2,8 @@ package com.nordic.api;
 
 import java.io.FileNotFoundException;
 
+import org.apache.ibatis.binding.BindingException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BeanPropertyBindingResult;
 
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
@@ -93,7 +97,8 @@ public class ControllerAdvice {
 	  @ExceptionHandler(NoHandlerFoundException.class)
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
 	  public ResponseEntity<ExceptionResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
-	
+		  
+		  log.info("NoHandlerFoundException");
 	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("BAD_REQUEST", e.getMessage());
 	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
 	  }
@@ -102,6 +107,7 @@ public class ControllerAdvice {
 	  @ResponseStatus(HttpStatus.UNAUTHORIZED)
 	  public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(NoHandlerFoundException e) {
 	
+		  log.info("UNAUTHORIZED");
 	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
 	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
 	  }
@@ -118,5 +124,13 @@ public class ControllerAdvice {
 	  public ResponseEntity<ExceptionResponseDto> handleExpireException(ExpireException e) {
 		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ExpireMission", e.getMessage());
 		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
+		  
+	  @ExceptionHandler(BindingException.class)
+	  public ResponseEntity<ExceptionResponseDto> handleBeanPropertyBindingResult (BindingException e) {
+		  
+		  log.info("BindingException");
+		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("값을 입력해주세요", e.getMessage());
+		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.METHOD_NOT_ALLOWED);
 	  }
 }

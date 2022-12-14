@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
-
 @Component
 public class TokenProvider implements InitializingBean {
 
@@ -77,6 +76,7 @@ public class TokenProvider implements InitializingBean {
 
       User principal = new User(claims.getSubject(), "", authorities);
       System.out.println("principal = " + principal);
+
       UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(principal, token, authorities);
       System.out.println("usernamePasswordAuthenticationToken = " + usernamePasswordAuthenticationToken);
       

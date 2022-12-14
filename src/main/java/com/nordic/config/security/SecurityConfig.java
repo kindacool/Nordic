@@ -1,5 +1,10 @@
 package com.nordic.config.security;
 
+import com.nordic.jwt.JwtAccessDeniedHandler;
+import com.nordic.jwt.JwtAuthenticationEntryPoint;
+import com.nordic.jwt.JwtSecurityConfig;
+import com.nordic.jwt.TokenProvider;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -59,7 +64,6 @@ public class SecurityConfig {
                 .csrf().disable()
 
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
@@ -83,8 +87,8 @@ public class SecurityConfig {
                 .antMatchers("/api/member/**").permitAll()
                 .antMatchers("**").permitAll()
                 .antMatchers("/api/admin/mission/result/image/**").permitAll()
+                .antMatchers("/**").permitAll()
                 .anyRequest().authenticated()
-
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
 
