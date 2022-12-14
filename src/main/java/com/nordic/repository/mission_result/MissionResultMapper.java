@@ -37,6 +37,10 @@ public interface MissionResultMapper {
 	public MissionHistoryImageDto getHistoryImgByMember(Map confirm);
 	
 	/* 미션 수행 이미지 수정 */
-	public MissionHistoryImageDto updateMissionImage(MissionHistoryImageDto image);
+	public int updateMissionImage(MissionHistoryImageDto image);
+	
+	/* 미션 수행 이미지 삭제 */
+	public int deleteMissionImage(MissionHistoryImageDto image);
 
+	public void deleteMission(MissionHistoryImageDto image);
 }

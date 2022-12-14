@@ -16,6 +16,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.exception.NoBalanceException;
+import com.nordic.exception.ExpireException;
+import com.nordic.exception.NotConfirmException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -88,4 +90,33 @@ public class ControllerAdvice {
       return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
   }
 
+	  @ExceptionHandler(NoHandlerFoundException.class)
+	  @ResponseStatus(HttpStatus.NOT_FOUND)
+	  public ResponseEntity<ExceptionResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
+	
+	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("BAD_REQUEST", e.getMessage());
+	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
+	
+	  @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+	  @ResponseStatus(HttpStatus.UNAUTHORIZED)
+	  public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(NoHandlerFoundException e) {
+	
+	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
+	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
+	  }
+	  
+	  @ExceptionHandler(NotConfirmException.class)
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  public ResponseEntity<ExceptionResponseDto> handleNotConfirmException(NotConfirmException e) {
+		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("NotConfirm", e.getMessage());
+		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
+	  
+	  @ExceptionHandler(ExpireException.class)
+	  @ResponseStatus(HttpStatus.BAD_REQUEST)
+	  public ResponseEntity<ExceptionResponseDto> handleExpireException(ExpireException e) {
+		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ExpireMission", e.getMessage());
+		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	  }
 }

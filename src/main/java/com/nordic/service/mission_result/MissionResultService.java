@@ -2,6 +2,7 @@ package com.nordic.service.mission_result;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -14,10 +15,13 @@ import com.nordic.dto.mission_result.MissionHistoryDto;
 import com.nordic.dto.mission_result.MissionHistoryImageDto;
 import com.nordic.dto.mission_result.MissionMasterDto;
 import com.nordic.dto.mission_result.MissionMasterImageDto;
+import com.nordic.exception.ExpireException;
 import com.nordic.repository.mission_result.MissionResultDao;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MissionResultService {
@@ -28,16 +32,17 @@ public class MissionResultService {
 	public MissionHistoryDetailDto getDetail(int mission_no, String member_code) {
 		MissionMasterDto master = mrdao.getMaster(mission_no);
 		MissionMasterImageDto master_img = mrdao.getMasterImg(mission_no);
+		
 		/* 이미 등록한 미션이 있는지 확인 */
 		Map confirm = new HashMap();
 		confirm.put("mission_no", mission_no);
 		confirm.put("member_code", member_code);
 		
 		MissionHistoryImageDto history_img = new MissionHistoryImageDto();
+		
 		try {
 			history_img = mrdao.confirmHistoryImg(confirm);
-		} catch (NullPointerException e) {
-		}
+		} catch (NullPointerException e) {}
 		
 		return new MissionHistoryDetailDto(master, master_img, history_img);
 	}
@@ -95,12 +100,23 @@ public class MissionResultService {
 		return mission_history;
  	}
 	
+	/* 날짜 비교 */
+	public int compareDate(int mission_no) {
+		Date deadline = mrdao.getMaster(mission_no).getEnd_date();
+		Date today = new Date();
+		
+		return deadline.compareTo(today);
+	}
+	
 	/* 미션 수행 사진 수정 */
-	public MissionHistoryImageDto updateResult(String member_code, int mission_no, MultipartFile file) throws IOException {
+	public MissionHistoryImageDto updateResult(String member_code, int mission_no, MultipartFile file) throws Exception {	
+		int result = compareDate(mission_no);
+		if (result < 0) {
+			throw new ExpireException(ExpireException.MR_0003);
+		} 
 		
 		/* 사진 업로드 */
 		String newfilename = uploadMissionResultImage(file);
-		System.out.println(newfilename);
 		
 		MissionHistoryImageDto image = new MissionHistoryImageDto();
 		image.setMission_no(mission_no);
@@ -108,6 +124,23 @@ public class MissionResultService {
 		image.setConfirm_file(newfilename);
 		
 		return mrdao.updateUserMissionImage(image);
+	}
+	
+	/* 미션 수행 사진 삭제 */
+	public MissionHistoryImageDto deleteResult(String member_code, int mission_no) throws Exception {
+		int result = compareDate(mission_no);
+		if (result < 0) {
+			throw new ExpireException(ExpireException.MR_0003);
+		}
+		
+		MissionHistoryImageDto image = new MissionHistoryImageDto();
+		image.setMission_no(mission_no);
+		image.setUpdate_member(member_code);
+		
+		mrdao.deleteUserMission(image);
+		image = mrdao.deleteUserMissionImage(image);
+		
+		return image;
 	}
 
 }
