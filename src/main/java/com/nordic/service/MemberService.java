@@ -3,6 +3,7 @@ package com.nordic.service;
 import java.lang.reflect.Member;
 import java.util.List;
 
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberService {
 	
+//	private final PasswordEncoder passwordEncoder;
 	private final MemberRepository memberRepository;
 	
 	public PageInfo<MemberDto> findAll(int pageNum) {
@@ -30,57 +32,15 @@ public class MemberService {
 		return PageInfo.of(memberList);
 	}
 	
-	public PageInfo<MemberDto> totalPointAsc (int pageNum) {
+	public PageInfo<MemberDto> pointArrange (int pageNum, String pointArrange) {
 		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.totalPointAsc();
+		List<MemberDto> memberList = memberRepository.pointArrange(pointArrange);
 		return PageInfo.of(memberList);
 	}
 	
-	public PageInfo<MemberDto> totalPointDesc (int pageNum) {
+	public PageInfo<MemberDto> memberState (int pageNum, String memberState) {
 		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.totalPointDesc();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> reqPointAsc (int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.reqPointAsc();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> reqPointDesc (int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.reqPointDesc();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> usePointAsc (int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.usePointAsc();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> usePointDesc (int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.usePointDesc();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> approvalYList(int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.approvalYList();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> approvalNList(int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.approvalNList();
-		return PageInfo.of(memberList);
-	}
-	
-	public PageInfo<MemberDto> delMemList (int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		List<MemberDto> memberList = memberRepository.delMemList();
+		List<MemberDto> memberList = memberRepository.memberState(memberState);
 		return PageInfo.of(memberList);
 	}
 	
@@ -129,5 +89,5 @@ public class MemberService {
 		List<MemberDto> memberDto = memberRepository.doSearch(searchDto);
 		return PageInfo.of(memberDto);
 	}
-
+	
 }

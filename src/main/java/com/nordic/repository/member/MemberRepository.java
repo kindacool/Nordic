@@ -27,50 +27,15 @@ public class MemberRepository implements MemberMapper {
 	}
 	
 	@Override
-	public List<MemberDto> totalPointAsc() {
-		return memberMapper.totalPointAsc();
+	public List<MemberDto> pointArrange(String pointArrange) {
+		return memberMapper.pointArrange(pointArrange);
 	}
 	
 	@Override
-	public List<MemberDto> totalPointDesc() {
-		return memberMapper.totalPointDesc();
+	public List<MemberDto> memberState (String memberState) {
+		return memberMapper.memberState(memberState);
 	}
-	
-	@Override
-	public List<MemberDto> reqPointAsc() {
-		return memberMapper.reqPointAsc();
-	}
-	
-	@Override
-	public List<MemberDto> reqPointDesc() {
-		return memberMapper.reqPointDesc();
-	}
-	
-	@Override
-	public List<MemberDto> usePointAsc() {
-		return memberMapper.usePointAsc();
-	}
-	
-	@Override
-	public List<MemberDto> usePointDesc() {
-		return memberMapper.usePointDesc();
-	}
-	
-	@Override
-	public List<MemberDto> approvalYList() {
-		return memberMapper.approvalYList();
-	}
-	
-	@Override
-	public List<MemberDto> approvalNList() {
-		return memberMapper.approvalNList();
-	}
-	
-	@Override
-	public List<MemberDto> delMemList() {
-		return memberMapper.delMemList();
-	}
-	
+
 	@Override
 	public int doApproval (MemberDto memberDto) {
 		return memberMapper.doApproval(memberDto);
@@ -120,5 +85,16 @@ public class MemberRepository implements MemberMapper {
 	public List<MemberDto> doSearch (SearchDto searchDto) {
 		return memberMapper.doSearch(searchDto);
 	}
+	
+//	@Override
+//	public void createMember(MemberDto memberDto) {
+//        memberMapper.createMember(memberDto);
+//    }
+//
+//    @Override
+//    public int getNewCode() {
+//        int newCode = memberMapper.getNewCode();
+//        return newCode;
+//    }
 
 }

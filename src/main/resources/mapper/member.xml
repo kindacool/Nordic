@@ -8,42 +8,40 @@
 		select * from member
 	</select>
 	
-	<select id="totalPointAsc" resultType="MemberDto">
-		select * from member 
-		order by total_point asc
+	<select id="pointArrange" parameterType="String" resultType="MemberDto">
+		select * from member
+
+		<if test="pointArrange == 'totalasc' ">
+			order by total_point asc
+		</if>
+		<if test="pointArrange == 'totaldesc' ">
+			order by total_point desc
+		</if>
+		<if test="pointArrange == 'reqasc' ">
+			order by req_point asc
+		</if>
+		<if test="pointArrange == 'reqdesc' ">
+			order by req_point desc
+		</if>
+		<if test="pointArrange == 'useasc' ">
+			order by use_point asc
+		</if>
+		<if test="pointArrange == 'usedesc' ">
+			order by use_point desc
+		</if>
 	</select>
 	
-	<select id="totalPointDesc" resultType="MemberDto">
-		select * from member 
-		order by total_point desc
-	</select>
-	
-	<select id="reqPointAsc" resultType="MemberDto">
-		select * from member 
-		order by req_point asc
-	</select>
-	
-	<select id="reqPointDesc" resultType="MemberDto">
-		select * from member 
-		order by req_point desc
-	</select>
-	
-	<select id="usePointAsc" resultType="MemberDto">
-		select * from member 
-		order by use_point asc
-	</select>
-	
-	<select id="usePointDesc" resultType="MemberDto">
-		select * from member 
-		order by use_point desc
-	</select>
-	
-	<select id="approvalYList" resultType="MemberDto">
-		select * from member where approval_yn = 'Y'
-	</select>
-	
-	<select id="approvalNList" resultType="MemberDto">
-		select * from member where approval_yn = 'N'
+	<select id="memberState" parameterType="String" resultType="MemberDto">
+		select * from member where
+		<if test="memberState == 'approvaly' ">
+			approval_yn = 'Y'
+		</if>
+		<if test="memberState == 'approvaln' ">
+			approval_yn = 'N'
+		</if>
+		<if test="memberState == 'delmember' ">
+			stop_yn = 'Y'
+		</if>
 	</select>
 	
 	<update id="doApproval" parameterType="MemberDto">
@@ -57,10 +55,6 @@
 			update_date = sysdate()
 		where member_code = #{member_code}
 	</update>
-	
-	<select id="delMemList" resultType="MemberDto">
-		select * from member where stop_yn = 'Y'
-	</select>
 	
 	<update id="doAdmin" parameterType="MemberDto">
 		update member set
@@ -97,10 +91,10 @@
 	<insert id="mbrRegister" parameterType="MemberDto">
 		insert into member values(
 			#{member_code}, #{member_name}, #{mobile_no}, #{address}, 
-			#{age}, #{sex}, 'Y', hex(aes_encrypt(#{password}, 'nordicW')), 'N', #{approval_date,jdbcType=DATE}, 'N', 
+			#{age}, #{sex}, 'Y', #{password}, 'N', #{approval_date,jdbcType=DATE}, 'N', 
 			#{stop_date,jdbcType=DATE}, 'N', #{admin_date,jdbcType=DATE}, 0, 0, 0, 
 			0, #{member_code}, sysdate(),
-			'관리자', sysdate()
+			#{member_code}, sysdate()
 			<!-- #{member_code}, #{member_name}, #{mobile_no}, #{address}, 
 			#{age}, #{sex}, #{agree_yn}, #{password}, #{approval_yn}, sysdate(), 'N', 
 			DATE_format(#{stop_date,jdbcType=DATE}, '%Y-%m-%d %H:%i:%s'), 'N', 
@@ -117,7 +111,7 @@
 			address = #{address},
 			age = #{age},
 			sex = #{sex},
-			password = hex(aes_encrypt(#{password}, 'nordicW')),
+			password = #{password},
 			remark = '회원정보수정',
 			update_member = '관리자',
 			update_date = sysdate()
