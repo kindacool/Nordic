@@ -19,6 +19,10 @@ import org.springframework.validation.BeanPropertyBindingResult;
 
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
+import com.nordic.exception.CancleRequestException;
+import com.nordic.exception.DuplicateRequestsException;
+import com.nordic.exception.GoodsNotFoundException;
+import com.nordic.exception.ImageInvalidFormatException;
 import com.nordic.exception.NoBalanceException;
 import com.nordic.exception.ExpireException;
 import com.nordic.exception.NotConfirmException;
@@ -94,6 +98,7 @@ public class ControllerAdvice {
       return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
   }
 
+
 	  @ExceptionHandler(NoHandlerFoundException.class)
 	  @ResponseStatus(HttpStatus.NOT_FOUND)
 	  public ResponseEntity<ExceptionResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
@@ -133,4 +138,38 @@ public class ControllerAdvice {
 		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("값을 입력해주세요", e.getMessage());
 		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.METHOD_NOT_ALLOWED);
 	  }
+
+  
+  @ExceptionHandler(GoodsNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(GoodsNotFoundException e) {
+
+      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("GoodsNotFound", e.getMessage());
+      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
+  }
+  
+  @ExceptionHandler(DuplicateRequestsException.class)
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(DuplicateRequestsException e) {
+	  
+	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("DuplicateRequests", e.getMessage());
+	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+  }
+  
+  @ExceptionHandler(CancleRequestException.class)
+  @ResponseStatus(HttpStatus.OK)
+  public ResponseEntity<ExceptionResponseDto> handleCancleRequestException(CancleRequestException e) {
+	  
+	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("CancelRequestsException", e.getMessage());
+	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+  }
+  
+  @ExceptionHandler(ImageInvalidFormatException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<ExceptionResponseDto> handleImageFormatException(ImageInvalidFormatException e) {
+	  
+	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ImageFormatException", e.getMessage());
+	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+  }
+
 }

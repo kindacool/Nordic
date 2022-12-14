@@ -1,6 +1,7 @@
 package com.nordic.service.goods;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -28,9 +29,9 @@ public class GoodsService {
 		return goodsDao.readOneGoods(no);
 	}
 
-	public List<GoodsDto> readAllGoods(int pageNum, String keyword) {
+	public List<GoodsDto> readAllGoods(int pageNum, Map<String, Object> map) {
 		PageHelper.startPage(pageNum, 10);
-		return goodsDao.readAllGoods(keyword);
+		return goodsDao.readAllGoods(map);
 	}
 	
 	public void deleteGoods(int no) {
@@ -41,15 +42,15 @@ public class GoodsService {
 		goodsDao.updateGoods(goodsDto);
 	}
 
-	public List<GoodsDto> readAvailableGoods(int pageNum) {
-		PageHelper.startPage(pageNum, 10);
-		return goodsDao.readAvailableGoods();
+	public List<GoodsDto> readAvailableGoods(int pageNum, String keyword) {
+		PageHelper.startPage(pageNum, 12);
+		return goodsDao.readAvailableGoods(keyword);
 	}
 
-	@Cacheable("bestGoods")
+	//@Cacheable("bestGoods")
 	public List<BestSellingGoodsDto> getBestSellingGoods(int pageNum) {
 		PageHelper.startPage(pageNum, 10);
-		log.info("cacheable 실행");
+		//log.info("cacheable 실행");
 		return goodsDao.getBestSellingGoods();
 	}
 

@@ -1,6 +1,7 @@
 package com.nordic.repository.requests;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -36,8 +37,8 @@ public class RequestsDao implements RequestsMapper{
 	}
 
 	@Override
-	public List<UnconfirmedRequestsDto> findAllUnconfirmedRequest() {
-		return requestsMapper.findAllUnconfirmedRequest();
+	public List<UnconfirmedRequestsDto> findAllUnconfirmedRequest(Map<String, Object> map) {
+		return requestsMapper.findAllUnconfirmedRequest(map);
 	}
 	
 	@Override
@@ -46,26 +47,24 @@ public class RequestsDao implements RequestsMapper{
 	}
 	
 	@Override
-	public List<ConfirmedRequestsDto> findAllConfirmedRequest() {
-		return requestsMapper.findAllConfirmedRequest();
+	public List<ConfirmedRequestsDto> findAllConfirmedRequest(Map<String, Object> map) {
+		return requestsMapper.findAllConfirmedRequest(map);
 	}
 	
-	@Override
-	public List<ConfirmedRequestsDto> findAllAcceptedRequest() {
-		return requestsMapper.findAllAcceptedRequest();
-	}
-	
-	@Override
-	public List<ConfirmedRequestsDto> findAllRejectedRequest() {
-		return requestsMapper.findAllRejectedRequest();
-	}
-
 	@Override
 	public List<GoodsReqDto> findRequestsByGoods(int no) {
 		return requestsMapper.findRequestsByGoods(no);
 	}
 
-	public List<GoodsReqDto> myRequests(String member_code) {
+	public List<ConfirmedRequestsDto> myRequests(String member_code) {
 		return requestsMapper.myRequests(member_code);
+	}
+
+	public GoodsReqDto duplicateRequestsCheck(GoodsReqDto goodsReqDto) {
+		return requestsMapper.duplicateRequestsCheck(goodsReqDto);
+	}
+
+	public void cancelRequest(int reqNo) {
+		requestsMapper.cancelRequest(reqNo);
 	}
 }

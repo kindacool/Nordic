@@ -13,19 +13,43 @@ value (#{goods_name},#{point},#{goods_desc},#{image1,jdbcType=VARCHAR},#{image2,
 select * from point_goods where goods_no = #{no}
 </select>
 
-<select id="readAllGoods" parameterType="String" resultType="goods">
-select * from point_goods 
+<select id="readAllGoods" parameterType="Map" resultType="goods">
+select a.*, count(request_no) as cnt 
+from nordic.point_goods a left join nordic.point_goods_req b on a.goods_no = b.goods_no 
 <where>
-<if test="keyword != null">
- goods_name like CONCAT('%',#{keyword},'%') OR
- goods_desc like CONCAT('%',#{keyword},'%')
-</if>
+<choose>
+<when test='search != null and keyword != null and search == "goods_name"'>
+ a.goods_name like CONCAT('%',#{keyword},'%')
+</when>
+<when test='search != null and keyword != null and search == "create_member"'>
+ a.create_member like CONCAT('%',#{keyword},'%')
+</when>
+<when test='search != null and keyword != null and search == "update_member"'>
+ a.update_member like CONCAT('%',#{keyword},'%')
+</when>
+<otherwise>
+<choose>
+<when test='yn != null and yn == "y"'>
+ a.use_yn = 'Y'
+</when>
+<when test='yn != null and yn == "n"'>
+ a.use_yn = 'N'
+</when>
+</choose>
+</otherwise>
+</choose>
 </where>
-order by create_date desc
+group by goods_no 
+order by a.create_date desc
 </select>
 
 <select id="readAvailableGoods" resultType="goods">
-select * from point_goods where use_yn = 'Y' order by create_date desc
+select * from point_goods where use_yn = 'Y' 
+<if test='keyword != null'>
+and goods_name like CONCAT('%',#{keyword},'%') or
+goods_desc like CONCAT('%',#{keyword},'%')
+</if>
+order by create_date desc
 </select>
 
 <delete id="deleteGoods" parameterType="int">
@@ -34,7 +58,10 @@ update point_goods set use_yn = 'N' where goods_no = #{goods_no}
 
 <update id="updateGoods" parameterType="goods">
 update point_goods set goods_name = #{goods_name}, point=#{point}, goods_desc=#{goods_desc},
-remark=#{remark,jdbcType=VARCHAR}, update_member=#{update_member}, update_date = now() 
+remark=#{remark,jdbcType=VARCHAR}, image1=#{image1,jdbcType=VARCHAR}, 
+image2=#{image2,jdbcType=VARCHAR}, image3=#{image3,jdbcType=VARCHAR},
+image4=#{image4,jdbcType=VARCHAR}, image5=#{image5,jdbcType=VARCHAR},
+update_member=#{update_member}, update_date = now() 
 where goods_no = #{goods_no}
 </update>
 

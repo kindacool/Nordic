@@ -3,7 +3,9 @@ package com.nordic.dto.goods;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
 import org.apache.ibatis.type.Alias;
@@ -36,4 +38,5 @@ public class GoodsDto {
 	@JsonFormat(pattern = "yyyy-MM-dd a HH:mm:ss", timezone = "Asia/Seoul")
 	private Timestamp update_date;
 	
+	private int cnt;
 }

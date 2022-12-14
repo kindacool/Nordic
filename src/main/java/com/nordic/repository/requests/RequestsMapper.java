@@ -1,6 +1,7 @@
 package com.nordic.repository.requests;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -18,17 +19,17 @@ public interface RequestsMapper {
 
 	public void rejectRequest(GoodsReqDto goodsReqDto);
 
-	List<UnconfirmedRequestsDto> findAllUnconfirmedRequest();
+	List<UnconfirmedRequestsDto> findAllUnconfirmedRequest(Map<String, Object> map);
 
 	public List<GoodsReqDto> findAllRequest();
 
-	List<ConfirmedRequestsDto> findAllConfirmedRequest();
-
-	public List<ConfirmedRequestsDto> findAllAcceptedRequest();
-
-	List<ConfirmedRequestsDto> findAllRejectedRequest();
+	List<ConfirmedRequestsDto> findAllConfirmedRequest(Map<String, Object> map);
 
 	public List<GoodsReqDto> findRequestsByGoods(int no);
 
-	public List<GoodsReqDto> myRequests(String member_code);
+	public List<ConfirmedRequestsDto> myRequests(String member_code);
+
+	public GoodsReqDto duplicateRequestsCheck(GoodsReqDto goodsReqDto);
+
+	public void cancelRequest(int reqNo);
 }

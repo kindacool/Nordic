@@ -9,7 +9,7 @@ insert into point_history (make_gubun,member_code,point,request_no,use_yn,remark
 </insert>
 
 <update id="updateMemberReqPoint" parameterType="points">
-update member set req_point = req_point + #{point} where member_code = #{member_code}
+update member set req_point = req_point + #{point}, update_member = #{update_member}, update_date = now() where member_code = #{member_code}
 </update>
 
 <select id="getMember" parameterType="String" resultType="MemberDto">
@@ -17,16 +17,18 @@ select * from member where member_code = #{member_code}
 </select>
 
 <update id="updateMemberTotalPoint" parameterType="points">
-update member set total_point = total_point - #{point} where member_code = #{member_code}
+update member set total_point = total_point - #{point} , update_member = #{update_member}, update_date = now() where member_code = #{member_code}
 </update>
 
 <update id="usedMemberPoints" parameterType="points">
-update member set req_point = req_point - #{point}, use_point = use_point + #{point} 
+update member set req_point = req_point - #{point}, use_point = use_point + #{point}
+, update_member = #{update_member}, update_date = now() 
 where member_code = #{member_code}
 </update>
 
 <update id="returnMemberPoints" parameterType="points">
 update member set req_point = req_point - #{point}, total_point = total_point + #{point} 
+, update_member = #{update_member}, update_date = now() 
 where member_code = #{member_code}
 </update>
 
