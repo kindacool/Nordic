@@ -15,7 +15,8 @@ public interface MissionMasterImp {
     void updateData(MissionMasterBean mmb);
     void deleteDataByMissionNo(int mission_no , String update_member) ;
     MissionMasterBean getDataByMissionNo(int mission_no);
-
     List<MissionMasterListBean> list(MissionSearchBean msb);
+    List<MissionMasterBean> topfive();
+    List<MissionMasterBean> search(MissionSearchBean msb);
 
 }

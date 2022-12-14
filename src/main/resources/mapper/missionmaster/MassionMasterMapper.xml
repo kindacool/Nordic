@@ -47,7 +47,7 @@
         SELECT a.mission_no,
                a.mission_name,
                a.start_date,
-               a.end_date,
+               date_add(a.end_date, interval +1 day)end_date,
                a.level_code,
                a.point,
                b.confirm_file,
@@ -55,13 +55,38 @@
                 from mission_master a
                          INNER JOIN mission_master_image b
                 where a.mission_no = b.mission_no
-                  AND a.USE_YN = "y") pagepart
+                  AND a.USE_YN = "y"
+                  AND b.USE_YN = "y")               pagepart
         from mission_master a
                  inner join mission_master_image b
         where a.mission_no = b.mission_no
           AND a.USE_YN = "y"
-          and a.end_date > sysdate()
+          AND b.USE_YN = "y"
+          and date_add(a.end_date, interval +1 day) >= sysdate()
         order BY mission_no desc
+    </select>
+
+    <select id="topfive" resultType="MissionMasterBean">
+        SELECT a.*
+        FROM (SELECT (mission_master.END_DATE - mission_master.START_DATE) top, mission_master.* FROM mission_master) a
+        WHERE a.USE_YN = 'Y'
+        ORDER BY a.top DESC;
+    </select>
+
+    <select id="search" resultType="MissionMasterBean">
+        <if test="second != null">
+            SELECT *
+            FROM mission_master
+            WHERE START_date >= #{first}
+            AND #{second} >= end_Date
+            and use_yn = "y"
+        </if>
+        <if test="second == null">
+            <![CDATA[
+            select *
+            from mission_master where mission_name LIKE concat('%',#{first},'%') and use_yn="Y" and end_date >= sysdate()
+            ]]>
+        </if>
     </select>
 
 
