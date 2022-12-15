@@ -28,7 +28,7 @@
             REPLY_YN = #{board.reply_yn},
             FIX_YN = 'Y',
             UPDATE_MEMBER = #{board.update_member},
-            UPDATE_DATE = CURRENT_DATE
+            UPDATE_DATE = CURRENT_TIMESTAMP
 
         WHERE BOARD_NO = #{board_no}
     </update>
@@ -40,7 +40,7 @@
             USE_YN = 'N',
             REMARK = '삭제',
             UPDATE_MEMBER = #{update_member},
-            UPDATE_DATE = CURRENT_DATE
+            UPDATE_DATE = CURRENT_TIMESTAMP
 
         WHERE BOARD_NO = #{board_no}
     </update>
@@ -53,7 +53,6 @@
             ON bm.BOARD_NO = bi.BOARD_NO
 
         WHERE bm.BOARD_NO = #{board_no}
-        AND bi.USE_YN = 'Y'
     </select>
 
     <!--  소개 / 기원 불러오기  -->
@@ -64,11 +63,12 @@
             ON bm.BOARD_NO = bi.BOARD_NO
 
         WHERE bm.BOARD_GROUP = #{board_group}
+          AND bm.USE_YN = 'Y'
     </select>
 
     <!--  게시글 전체목록  -->
     <select id="loadBoardList" resultType="com.nordic.dto.board.BoardMasterDto">
-        SELECT bm.*, bi.IMAGE_FILE
+        SELECT bm.*, bi.IMAGE_FILE, bi.IMAGE_USE_YN
         FROM BOARD_MASTER bm
         LEFT OUTER JOIN BOARD_IMAGE bi
             ON bm.BOARD_NO = bi.BOARD_NO

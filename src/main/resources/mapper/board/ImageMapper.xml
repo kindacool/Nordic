@@ -9,8 +9,9 @@
         (BOARD_NO,
          IMAGE_FILE,
          ORIGNAL_NAME,
+         IMAGE_USE_YN,
          CREATE_MEMBER)
-        VALUES (#{board_no}, #{image_file}, #{orignal_name}, #{create_member})
+        VALUES (#{board_no}, #{image_file}, #{orignal_name}, 'Y', #{create_member})
     </insert>
 
     <!--  이미지 파일삭제  -->
@@ -20,7 +21,7 @@
             IMAGE_USE_YN = 'N',
             REMARK = '삭제',
             UPDATE_MEMBER = #{update_member},
-            UPDATE_DATE = CURRENT_DATE
+            UPDATE_DATE = CURRENT_TIMESTAMP
 
         <choose>
             <when test=' board_image_no > 0 and board_image_no neq null '>
