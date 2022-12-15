@@ -2,6 +2,7 @@ package com.nordic.service.board;
 
 import com.nordic.dto.board.BoardMasterDto;
 import com.nordic.repository.board.BoardDao;
+import jdk.internal.org.jline.utils.Log;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -4,6 +4,7 @@ import com.nordic.dto.board.BoardMasterDto;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.service.board.BoardImgUploadService;
 import com.nordic.service.board.BoardService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ public class IntroduceController {
     private final BoardImgUploadService uploadService;
 
     // 소개 작성
+    @ApiOperation(value = "메인 소개 작성하기", notes = "작성에 필요한 값을 받아 소개 글을 작성한다.")
     @PostMapping("/intro")
     public ResponseDto inputIntro(@RequestPart("board") BoardMasterDto board,
                                   @RequestPart(value = "files", required = false)List<MultipartFile> files) throws Exception{
@@ -55,6 +57,7 @@ public class IntroduceController {
     }
 
     // 소개 불러오기
+    @ApiOperation(value = "메인 소개 불러오기", notes = "작성된 소개 글 데이터를 불러온다.")
     @GetMapping("/intro")
     public ResponseDto loadIntro() throws Exception {
         String board_group = "소개";
@@ -64,6 +67,7 @@ public class IntroduceController {
     }
 
     // 소개 수정
+    @ApiOperation(value = "메인 소개 수정하기", notes = "필요한 값을 받아 작성된 소개 글 데이터를 수정한다.")
     @PutMapping(value = "/intro/{board_no}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseDto modifyIntro(@PathVariable(value = "board_no") int board_no,
                                    @RequestPart(name = "board") BoardMasterDto board,
@@ -94,6 +98,7 @@ public class IntroduceController {
     }
 
     // 소개 삭제
+    @ApiOperation(value = "메인 소개 수정하기", notes = "고유넘버 값을 받아 작성된 소개 글 데이터를 삭제한다.")
     @DeleteMapping("/intro/{board_no}/{update_member}")
     public ResponseDto deleteBoard(@PathVariable(value = "board_no") int board_no,
                                    @PathVariable(value = "update_member") String update_member) throws Exception {

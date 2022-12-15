@@ -4,6 +4,7 @@ import com.nordic.dto.board.BoardMasterDto;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.service.board.BoardImgUploadService;
 import com.nordic.service.board.BoardService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -25,6 +26,7 @@ public class OriginController {
     private final BoardImgUploadService uploadService;
 
     // 기원 작성
+    @ApiOperation(value = "기원 작성하기", notes = "작성에 필요한 값을 받아 기원 글을 작성한다.")
     @PostMapping("/origin")
     public ResponseDto inputIntro(@RequestPart("board") BoardMasterDto board,
                                   @RequestPart("files") List<MultipartFile> files) throws Exception{
@@ -54,6 +56,7 @@ public class OriginController {
     }
 
     // 기원 불러오기
+    @ApiOperation(value = "기원 불러오기", notes = "작성된 기원 글 데이터를 불러온다.")
     @GetMapping("/origin")
     public ResponseDto loadIntro() throws Exception {
         String board_group = "기원";
@@ -63,6 +66,7 @@ public class OriginController {
     }
 
     // 기원 수정
+    @ApiOperation(value = "기원 수정하기", notes = "필요한 값을 받아 작성된 기원 글 데이터를 수정한다.")
     @PutMapping("/origin/{board_no}")
     public ResponseDto modifyIntro(@PathVariable(value = "board_no") int board_no,
                                    @RequestPart("board") BoardMasterDto board,
@@ -93,6 +97,7 @@ public class OriginController {
     }
 
     // 기원 삭제
+    @ApiOperation(value = "기원 삭제하기", notes = "고유넘버 값을 받아 작성된 기원 글 데이터를 삭제한다.")
     @DeleteMapping("/origin/{board_no}/{update_member}")
     public ResponseDto deleteBoard(@PathVariable(value = "board_no") int board_no,
                                    @PathVariable(value = "update_member") String update_member) throws Exception {

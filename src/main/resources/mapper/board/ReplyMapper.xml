@@ -3,7 +3,7 @@
 
 <mapper namespace="com.nordic.repository.board.BoardReplyDao">
     <!--  댓글 작성  -->
-    <insert id="inputReply">
+    <insert id="inputReply" parameterType="Map">
         INSERT
         INTO BOARD_REPLY
             (BOARD_NO,
@@ -14,23 +14,33 @@
     </insert>
 
     <!--  작성된 댓글 목록  -->
-    <select id="loadReplyList">
+    <select id="loadReplyList" resultType="com.nordic.dto.board.BoardReplyDto">
         SELECT *
         FROM BOARD_REPLY
 
         WHERE BOARD_NO = #{board_no}
+        ORDER BY REPLY_NO
     </select>
 
     <!--  댓글 수정  -->
-    <update id="modifyReply">
+    <update id="modifyReply" parameterType="Map">
         UPDATE BOARD_REPLY
         SET
             REPLY_DESC = #{reply_desc},
             UPDATE_MEMBER = #{update_member},
-            UPDATE_DATE = CURRENT_DATE
+            UPDATE_DATE = CURRENT_TIMESTAMP
 
         WHERE REPLY_NO = #{reply_no}
     </update>
 
     <!--  댓글 삭제  -->
+    <update id="deleteReply" parameterType="Map">
+        UPDATE BOARD_REPLY
+        SET
+            REMARK = '삭제',
+            UPDATE_MEMBER = #{update_member},
+            UPDATE_DATE = CURRENT_TIMESTAMP
+
+        WHERE REPLY_NO = #{reply_no}
+    </update>
 </mapper>

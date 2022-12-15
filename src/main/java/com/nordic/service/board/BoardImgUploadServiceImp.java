@@ -21,22 +21,22 @@ import java.util.UUID;
 @Service
 public class BoardImgUploadServiceImp implements BoardImgUploadService{
 
-    @Value("${file.dir}")
-    private String FILE_DIR;
     private final BoardImgDao dao;
 
     @Override
     public List upload(List<MultipartFile> files) throws IOException {
+        String PATH = System.getProperty("user.dir") + "/src/main/resources/static/img/board/";
+        log.info("path - {}", PATH);
         log.info("multiFiles - {}", files);
         List<String> image_file = new ArrayList<>();
-        File isDir = new File(FILE_DIR);
+        File isDir = new File(PATH);
 
         if(!isDir.exists()) isDir.mkdirs();
         for(MultipartFile file : files) {
             String originalName = file.getOriginalFilename();
             String uuid = UUID.randomUUID().toString();
             String extension = originalName.substring(originalName.lastIndexOf("."));
-            String randomName = FILE_DIR + uuid + extension;
+            String randomName = PATH + uuid + extension;
             file.transferTo(new File(randomName));
             log.info("randomName - {}", randomName);
 
