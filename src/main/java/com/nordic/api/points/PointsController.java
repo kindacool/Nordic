@@ -17,7 +17,11 @@ import com.nordic.service.goods.GoodsService;
 import com.nordic.service.points.PointsService;
 import com.nordic.service.requests.RequestsService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import springfox.documentation.annotations.ApiIgnore;
@@ -32,6 +36,7 @@ public class PointsController {
 	//private final CustomUserDetailsService customeservice;
 
 	// 굿즈신청 후 포인트 빼기
+	@ApiIgnore
 	@PostMapping("/{reqNo}/minus")
 	public ResponseDto minusPoints(@PathVariable int reqNo) {
 		
@@ -93,7 +98,7 @@ public class PointsController {
 //	}
 	
 	// 멤버별 포인트 (내포인트(가용포인트)) 구하기
-	@ApiOperation("내 포인트 확인")
+	@ApiOperation(value="내 포인트 확인", notes="이용자 / 내 포인트 확인")
 	@GetMapping("mypoint")
 	public ResponseDto getMyPoint() {
 		String member_code = "10007"; // 토큰 구현전까지 일시로

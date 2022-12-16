@@ -39,9 +39,14 @@ import com.nordic.exception.GoodsNotFoundException;
 import com.nordic.exception.ImageInvalidFormatException;
 import com.nordic.service.goods.GoodsService;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 @Slf4j
@@ -53,12 +58,15 @@ public class GoodsController {
 	private final GoodsService goodsService;
 	//private final CustomUserDetailsService customeservice;
 	
-	@ApiOperation(value="굿즈 등록")
+	@ApiOperation(value="포인트 상품 등록", notes = "관리자 권한 / create form 을 통한 상품 등록")
+	@ApiResponses({
+		@ApiResponse(responseCode = "400", description = "빈값 허용 불가 / 이미지가 아닌 파일은 업로드 불가능 합니다")
+	})
 	@PostMapping
     public ResponseDto createGoods(@Valid @RequestPart(value="key") GoodsDto goodsDto, 
     		@RequestPart(value="file", required = false) List<MultipartFile> fileList,
     		//@RequestPart(value="fileOrder", required = false) List<Integer> fileOrder,
-    		HttpSession session) throws Exception {
+    		@ApiIgnore HttpSession session) throws Exception {
 		log.info("굿즈 등록 Controller 도착");
 		//System.out.println(fileOrder);
 		String writer = "Lee"; // 토큰 구현전까지 일시로
@@ -141,7 +149,13 @@ public class GoodsController {
         return new ResponseDto("굿즈가 등록되었습니다.", goodsDto);
     }
 	
-	@ApiOperation(value="굿즈 상세정보")
+	@ApiOperation(value="포인트 상품 상세정보", notes = "관리자, 이용자 / 포인트 상품 1개 상세정보 보기")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="no", value="포인트 상품 번호")
+	})
+	@ApiResponses({
+		@ApiResponse(responseCode = "404", description = "포인트 상품이 없습니다")
+	})
 	@GetMapping("/{no}")
 	public ResponseDto readOneGoods(@PathVariable int no) throws Exception {
 	
@@ -158,7 +172,13 @@ public class GoodsController {
 	
     //파일 url 호출
 	//@Cacheable(value="goodsImage", key="image")
-	@ApiOperation(value="굿즈 사진 파일 url 호출")
+	@ApiOperation(value="포인트 상품 사진 파일 url 호출", notes="관리자, 이용자 / 포인트 상품 사진 파일 url")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="fileName", value="파일명")
+	})
+	@ApiResponses({
+		@ApiResponse(responseCode = "404", description = "이미지 파일이 없습니다")
+	})
     @GetMapping(value = "/image/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] fileView(@PathVariable String fileName) throws IOException {
 		//log.info("cacheable 실행");
@@ -171,7 +191,13 @@ public class GoodsController {
         return temp;
     }
     
-	@ApiOperation(value="모든 굿즈(삭제된 굿즈 포함) 목록")
+	@ApiOperation(value="모든 포인트 상품 목록", notes="관리자 / 모든 포인트 상품 보기")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="yn", value="모든 포인트 상품 () / 사용가능한 포인트 상품만(y) / 삭제된 포인트 상품만(n)", required = false),
+		@ApiImplicitParam(name="pageNum", value="페이지 번호", required = false, defaultValue = "1"),
+		@ApiImplicitParam(name="search", value="검색기준", required = false),
+		@ApiImplicitParam(name="keyword", value="검색어", required = false)
+	})
 	@GetMapping(value= {"/all","/all/{yn}"})
 	public ResponseDto readAllGoods(@RequestParam(value = "pageNum",
 			required = false,
@@ -192,7 +218,11 @@ public class GoodsController {
 		return new ResponseDto("전체목록", PageInfo.of(goodsList));
 	}
 	
-	@ApiOperation(value="구매가능상태 굿즈 목록")
+	@ApiOperation(value="구매 가능한 포인트 상품 목록", notes="이용자 / 구매 가능한 모든 상품 보기")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="pageNum", value="페이지 번호", required = false, defaultValue = "1"),
+		@ApiImplicitParam(name="keyword", value="검색어", required = false)
+	})
 	@GetMapping("/avail")
 	public ResponseDto readAvailableGoods(
 			@RequestParam(value="keyword", required = false) String keyword,
@@ -207,10 +237,22 @@ public class GoodsController {
 	}
 	
 	//@CacheEvict(value="goodsImage", key="image")
-	@ApiOperation(value="굿즈 삭제")
+	@ApiOperation(value="포인트 상품 삭제", notes="관리자 / 포인트 상품 삭제")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="no", value="포인트 상품 번호", dataType="int")
+	})
+	@ApiResponses({
+		@ApiResponse(responseCode = "404", description = "이미 삭제된 상품입니다")
+	})
 	@DeleteMapping("/{no}")
 	public ResponseDto deleteGoods(@PathVariable int no) {
 		log.info("삭제 Controller 도착");
+		
+		GoodsDto old = goodsService.readOneGoods(no);
+		
+		if(old.getUse_yn() == 'N') {
+			throw new GoodsNotFoundException(GoodsNotFoundException.ERR_0010);
+		} else {
 		
 		// 수정자 정보
 		String writer = "Kim"; // 토큰 구현전까지 일시로
@@ -222,19 +264,26 @@ public class GoodsController {
 		
 		goodsService.deleteGoods(goodsDto);
 		return new ResponseDto("굿즈가 삭제되었습니다.", no);
+		}
 	}
 	
 	//@CacheEvict(value="goodsImage", key="image")
-	@ApiOperation(value="굿즈 수정")
+	@ApiOperation(value="포인트 상품 수정", notes="관리자 / 포인트 상품 수정")
+	@ApiResponses({
+		@ApiResponse(responseCode = "404", description = "빈값 허용 불가 / 이미지가 아닌 파일은 업로드 불가능 합니다 / 이미 삭제된 상품입니다")
+	})
 	@PutMapping("/{no}")
 	public ResponseDto updateGoods(@PathVariable int no, 
 			@Valid @RequestPart(value="key") GoodsDto goodsDto,
 			@RequestPart(value="file", required = false) List<MultipartFile> fileList,
 			@RequestPart(value="fileOrder", required = false) List<Integer> fileOrder,
-    		HttpSession session) throws Exception {
+			@ApiIgnore HttpSession session) throws Exception {
 		log.info("수정 Controller 도착");
-		System.out.println(no);
-		System.out.println(fileOrder);
+		
+		GoodsDto old = goodsService.readOneGoods(no);
+		if(old.getUse_yn() == 'N') {
+			throw new GoodsNotFoundException(GoodsNotFoundException.ERR_0010);
+		}
 		
 		// 수정자 정보
 		String writer = "Kim"; // 토큰 구현전까지 일시로
@@ -242,7 +291,6 @@ public class GoodsController {
 		goodsDto.setUpdate_member(writer);
 		goodsDto.setGoods_no(no);
 		
-		GoodsDto old = goodsService.readOneGoods(no);
 		// 먼저 기존에 있던 걸 그대로 넣고
 		goodsDto.setImage1(old.getImage1());
 		goodsDto.setImage2(old.getImage2());
@@ -373,7 +421,10 @@ public class GoodsController {
 	}
 	
 	// Best Selling Goods 
-	@ApiOperation(value="가장 많이 팔린 굿즈")
+	@ApiOperation(value="가장 많이 지급된 포인트 상품", notes = "관리자 / 가장 많이 지급된 포인트 상품 보기")
+	@ApiImplicitParams({
+		@ApiImplicitParam(name="pageNum", value="페이지 번호", required = false, defaultValue = "1")
+	})
 	@GetMapping("/best")
 	public ResponseDto getBestSellingGoods(@RequestParam(value = "pageNum",
 			required = false,
