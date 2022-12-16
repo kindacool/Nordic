@@ -20,6 +20,6 @@ public interface PointsMapper {
 
 	void returnMemberPoints(PointsDto pointDto);
 
-	void deletePointHistory(int reqNo);
+	void deletePointHistory(PointsDto pointDto);
 
 }

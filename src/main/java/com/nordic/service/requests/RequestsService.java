@@ -64,8 +64,8 @@ public class RequestsService {
 		return requestsDao.duplicateRequestsCheck(goodsReqDto);
 	}
 
-	public void cancelRequest(int reqNo) {
-		requestsDao.cancelRequest(reqNo);
+	public void cancelRequest(GoodsReqDto goodsReqDto) {
+		requestsDao.cancelRequest(goodsReqDto);
 	}
 	
 

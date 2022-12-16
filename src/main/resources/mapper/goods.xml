@@ -52,8 +52,8 @@ goods_desc like CONCAT('%',#{keyword},'%')
 order by create_date desc
 </select>
 
-<delete id="deleteGoods" parameterType="int">
-update point_goods set use_yn = 'N' where goods_no = #{goods_no}
+<delete id="deleteGoods" parameterType="goods">
+update point_goods set use_yn = 'N', update_member = #{update_member}, update_date = now() where goods_no = #{goods_no}
 </delete>
 
 <update id="updateGoods" parameterType="goods">

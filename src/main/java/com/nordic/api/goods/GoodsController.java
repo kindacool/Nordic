@@ -51,6 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GoodsController {
 
 	private final GoodsService goodsService;
+	//private final CustomUserDetailsService customeservice;
 	
 	@ApiOperation(value="굿즈 등록")
 	@PostMapping
@@ -61,6 +62,7 @@ public class GoodsController {
 		log.info("굿즈 등록 Controller 도착");
 		//System.out.println(fileOrder);
 		String writer = "Lee"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		goodsDto.setCreate_member(writer);
 		
 		if(fileList != null) {
@@ -210,7 +212,15 @@ public class GoodsController {
 	public ResponseDto deleteGoods(@PathVariable int no) {
 		log.info("삭제 Controller 도착");
 		
-		goodsService.deleteGoods(no);
+		// 수정자 정보
+		String writer = "Kim"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
+		
+		GoodsDto goodsDto = new GoodsDto();
+		goodsDto.setUpdate_member(writer);
+		goodsDto.setGoods_no(no);
+		
+		goodsService.deleteGoods(goodsDto);
 		return new ResponseDto("굿즈가 삭제되었습니다.", no);
 	}
 	
@@ -228,6 +238,7 @@ public class GoodsController {
 		
 		// 수정자 정보
 		String writer = "Kim"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		goodsDto.setUpdate_member(writer);
 		goodsDto.setGoods_no(no);
 		

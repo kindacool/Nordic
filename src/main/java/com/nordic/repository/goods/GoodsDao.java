@@ -32,8 +32,8 @@ public class GoodsDao implements GoodsMapper{
 	}
 	
 	@Override
-	public void deleteGoods(int no) {
-		goodsMapper.deleteGoods(no);
+	public void deleteGoods(GoodsDto goodsDTO) {
+		goodsMapper.deleteGoods(goodsDTO);
 	}
 	
 	@Override

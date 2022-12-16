@@ -29,6 +29,7 @@ import com.nordic.dto.requests.UnconfirmedRequestsDto;
 import com.nordic.exception.CancleRequestException;
 import com.nordic.exception.DuplicateRequestsException;
 import com.nordic.exception.NoBalanceException;
+import com.nordic.repository.requests.RequestsDao;
 import com.nordic.service.goods.GoodsService;
 import com.nordic.service.points.PointsService;
 import com.nordic.service.requests.RequestsService;
@@ -45,6 +46,7 @@ public class RequestsController {
 	private final RequestsService requestsService;
 	private final GoodsService goodsService;
 	private final PointsService pointsService;
+	//private final CustomUserDetailsService customeservice;
 	
 	// 요청 중복검사(같은사람이 같은 상품 구매한적있는지 확인)
 	@ApiOperation("요청 중복검사")
@@ -53,6 +55,7 @@ public class RequestsController {
 		log.info("중복 요청 체크 Controller 도착");
 		
 		String buyer = "10007"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
 		goodsReqDto.setMember_code(buyer);
@@ -81,6 +84,7 @@ public class RequestsController {
 		goodsReqDto.setPoint(oldPoint);
 		
 		String buyer = "10007"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		goodsReqDto.setMember_code(buyer);
 		goodsReqDto.setCreate_member(buyer);
 		goodsReqDto.setUse_yn('Y');
@@ -174,6 +178,7 @@ public class RequestsController {
 	public ResponseDto acceptRequest(@PathVariable int reqNo) throws IOException{
 		log.info("요청 수락 Controller 도착");
 		String master = "Yoo"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsReqDto old = requestsService.findOneRequest(reqNo);
 		if(old.getUse_yn() == 'N') {
@@ -193,7 +198,6 @@ public class RequestsController {
 		PointsDto pointDto = new PointsDto();
 		pointDto.setPoint(old.getPoint());
 		pointDto.setMember_code(old.getMember_code());
-		pointDto.setUpdate_member(old.getMember_code());
 
 		// member 테이블에 반영
 		// 처리할 포인트와 멤버코드를 가져감
@@ -215,6 +219,7 @@ public class RequestsController {
 		} 
 		
 		String master = "Yoo"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
 		goodsReqDto.setConfirm_yn('Y');
@@ -230,7 +235,7 @@ public class RequestsController {
 		PointsDto pointDto = new PointsDto();
 		pointDto.setPoint(old.getPoint());
 		pointDto.setMember_code(old.getMember_code());
-		pointDto.setUpdate_member(old.getMember_code());
+		pointDto.setUpdate_member(master);
 
 		// member 테이블에 반영
 		// 처리할 포인트와 멤버코드를 가져감
@@ -238,7 +243,9 @@ public class RequestsController {
 		
 		// 포인트 이력 테이블에도 반영
 		// use_yn y -> n
-		pointsService.deletePointHistory(reqNo);
+		pointDto.setRequest_no(reqNo);
+		pointDto.setRemark("요청 거절");
+		pointsService.deletePointHistory(pointDto);
 		
 		return new ResponseDto("요청 거절");
 	}
@@ -266,6 +273,7 @@ public class RequestsController {
 		log.info("내 요청 목록 Controller 도착");
 		
 		String member_code = "10007"; // 토큰 구현전까지 일시로
+		//(String) customeservice.getUserInfo().get("member_code");
 		
 		List<ConfirmedRequestsDto> requestList = requestsService.myRequests(member_code, pageNum);
 		return new ResponseDto("내 요청 목록", PageInfo.of(requestList));
@@ -287,7 +295,11 @@ public class RequestsController {
 				throw new CancleRequestException(CancleRequestException.ERR_0005);
 			} else {
 				// 요청 테이블 요청 N 으로 바꾸기
-				requestsService.cancelRequest(reqNo);
+				GoodsReqDto goodsReqDto = new GoodsReqDto();
+				goodsReqDto.setRequest_no(reqNo);
+				goodsReqDto.setUpdate_member(old.getMember_code());
+				goodsReqDto.setRemark("요청 취소");
+				requestsService.cancelRequest(goodsReqDto);
 				
 				// 멤버테이블 req -> total 로 돌리기
 				PointsDto pointDto = new PointsDto();
@@ -296,9 +308,10 @@ public class RequestsController {
 				pointDto.setUpdate_member(old.getMember_code());
 				pointsService.returnMemberPoints(pointDto);
 				
-				
+				pointDto.setRequest_no(reqNo);
+				pointDto.setRemark("요청 취소");
 				// 포인트 테이블 포인트 히스토리 'N' 로 바꾸기
-				pointsService.deletePointHistory(reqNo);
+				pointsService.deletePointHistory(pointDto);
 				
 				return new ResponseDto("요청 취소 완료");
 			}

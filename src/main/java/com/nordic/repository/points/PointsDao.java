@@ -37,8 +37,8 @@ public class PointsDao implements PointsMapper{
 		pointsMapper.returnMemberPoints(pointDto);
 	}
 	@Override
-	public void deletePointHistory(int reqNo) {
-		pointsMapper.deletePointHistory(reqNo);
+	public void deletePointHistory(PointsDto pointDto) {
+		pointsMapper.deletePointHistory(pointDto);
 	}
 
 }

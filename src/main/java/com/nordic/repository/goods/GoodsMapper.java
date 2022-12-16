@@ -18,7 +18,7 @@ public interface GoodsMapper {
 	
 	public List<GoodsDto> readAllGoods(Map<String, Object> map);
 	
-	public void deleteGoods(int no);
+	public void deleteGoods(GoodsDto goodsDTO);
 	
 	public void updateGoods(GoodsDto goodsDto);
 	

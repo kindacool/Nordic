@@ -39,8 +39,8 @@ public class PointsService {
 		pointsDao.returnMemberPoints(pointDto);
 	}
 
-	public void deletePointHistory(int reqNo) {
-		pointsDao.deletePointHistory(reqNo);
+	public void deletePointHistory(PointsDto pointDto) {
+		pointsDao.deletePointHistory(pointDto);
 	}
 
 }

@@ -34,8 +34,8 @@ public class GoodsService {
 		return goodsDao.readAllGoods(map);
 	}
 	
-	public void deleteGoods(int no) {
-		goodsDao.deleteGoods(no);
+	public void deleteGoods(GoodsDto goodsDTO) {
+		goodsDao.deleteGoods(goodsDTO);
 	}
 	
 	public void updateGoods(GoodsDto goodsDto) {
