@@ -10,7 +10,6 @@
 	
 	<select id="pointArrange" parameterType="String" resultType="MemberDto">
 		select * from member
-
 		<if test="pointArrange == 'totalasc' ">
 			order by total_point asc
 		</if>

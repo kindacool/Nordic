@@ -1,4 +1,4 @@
-package com.nordic.service;
+package com.nordic.service.member;
 
 import java.lang.reflect.Member;
 import java.util.List;

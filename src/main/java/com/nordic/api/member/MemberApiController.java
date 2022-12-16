@@ -1,4 +1,4 @@
-package com.nordic.api;
+package com.nordic.api.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,7 @@ import com.nordic.dto.common.ResponseDto;
 import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.member.MemberModifyDto;
 import com.nordic.dto.member.SearchDto;
-import com.nordic.service.MemberService;
+import com.nordic.service.member.MemberService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -236,13 +236,6 @@ public class MemberApiController {
 		
 	}
 	
-	/******************************** 회원가입 폼 이동 ********************************/
-	@ApiOperation(value = "회원가입폼 이동")
-	@GetMapping("/registerForm")
-	public String RegisterForm ( ) throws Exception {
-		return null;	// 뷰 페이지와 연결을 어떻게??
-	}
-	
 	/******************************** 아이디 중복 검사 ********************************/
 	@ApiOperation(value = "아이디 중복 검사")
 	@GetMapping("/registerForm/idCheck/{member_code}")
@@ -276,6 +269,7 @@ public class MemberApiController {
 		memberDto.setPassword(passwordEncoder.encode(inputPassword));
 		
 		int mbrRegister = memberService.mbrRegister(memberDto);
+		System.out.println("mbrRegister: "+mbrRegister);
 		log.info("회원이름 : " + memberDto.getMember_name());
 		
 		return new ResponseDto ("회원가입성공", memberDto.getMember_name());
