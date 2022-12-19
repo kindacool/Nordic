@@ -83,7 +83,13 @@ public class MissionMasterService {
 
     public List<MissionMasterBean> search(MissionSearchBean msb){
       PageHelper.startPage(msb.getPageNum(), msb.getPageSize());
+
+      if(msb.getSecond().equals("undefined")){
+          msb.setSecond(null);
+        }
+
       List<MissionMasterBean> list = mmd.search(msb);
+        System.out.println("service "+msb);
       return list;
     }
 }

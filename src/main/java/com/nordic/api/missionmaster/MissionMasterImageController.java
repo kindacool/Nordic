@@ -13,6 +13,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
+@RequestMapping("/api")
 public class MissionMasterImageController {
 
     @Autowired
@@ -59,19 +60,4 @@ public class MissionMasterImageController {
     public List<MissionMasterImageBean> getImgAll() {
         return mmis.getImgAll();
     }
-
-    //test
-    @GetMapping("/plzwork/{mission_no}")
-    public String[] plzwork(@PathVariable int mission_no) throws Exception {
-        return mmis.plzwork(mission_no);
-    }
-
-    //test2
-    @GetMapping(value = "/plzwork2/{mission_no}" )
-    public String plzwork2(@PathVariable int mission_no) throws Exception {
-        System.out.println("contoller : "+mission_no);
-        System.out.println(mmis.plzwork2(mission_no));
-        return mmis.plzwork2(mission_no);
-    }
-
 }

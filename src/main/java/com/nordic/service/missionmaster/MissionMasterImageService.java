@@ -184,40 +184,5 @@ public class MissionMasterImageService {
         return mmi.getImgAll();
     }
 
-//이미지 처리----------------------------------------------------------
-    // path를 사용하는 방식
-    public String[] plzwork(int mission_no) throws Exception {
-        String name = mmi.getImgByMissionNo(mission_no);
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(name);
-        JSONArray jsonArray = (JSONArray) jsonObject.get("picture");
-        String[] stringArr = new String[jsonArray.size()];
-        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\IntelliJWorkSpace\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
-        for(int a =0; a<jsonArray.size();a++){
-            jsonObject = (JSONObject)jsonArray.get(a);
-            stringArr[a] = path+jsonObject.get(Integer.toString(a));
-            System.out.println("stringArr[a] : "+ stringArr[a]);
-        }
-        return stringArr;
-    }
-
-
-    //path를 사용하는 방법
-    public String plzwork2(int mission_no) throws Exception {
-        String name = mmi.getImgByMissionNo(mission_no);
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(name);
-        JSONArray jsonArray = (JSONArray) jsonObject.get("picture");
-        String[] stringArr = new String[jsonArray.size()];
-        String path = "C:/Users/hwangjoonsoung/Desktop/IntelliJWorkSpace/Nordic/src/main/resources/static/img/missionmaster/";
-        for(int a =0; a<jsonArray.size();a++){
-            jsonObject = (JSONObject)jsonArray.get(a);
-            stringArr[a] = path+jsonObject.get(Integer.toString(a));
-            System.out.println("stringArr[a] : "+ stringArr[a]);
-        }
-        String returnString = Arrays.toString(stringArr);
-        System.out.println(returnString);
-        return returnString;
-    }
 
 }

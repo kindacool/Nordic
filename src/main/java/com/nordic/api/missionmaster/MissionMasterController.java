@@ -15,6 +15,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
+@RequestMapping("/api")
 public class MissionMasterController {
 
     @Autowired
@@ -48,6 +49,7 @@ public class MissionMasterController {
     //mission list
     @GetMapping(value = "/list")
     public List<MissionMasterListBean> list(MissionSearchBean msb) throws ParseException, IOException {
+        System.out.println(msb);
         System.out.println(msb.getPageSize());
         System.out.println(msb.getPageNum());
         return mms.list(msb);
@@ -59,11 +61,6 @@ public class MissionMasterController {
         System.out.println("msb : " + msb);
         return mms.search(msb);
     }
-    /*{
-    "first" : "관악",
-    "pageNum" : 1
-}
-*/
 
     @GetMapping("/topfive")
     public List<MissionMasterBean> topfive() {
