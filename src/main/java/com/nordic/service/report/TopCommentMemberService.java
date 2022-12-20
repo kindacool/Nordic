@@ -15,8 +15,8 @@ public class TopCommentMemberService {
 	private final TopCommentMemberDao tcmdao;
 	
 	/* 조회-최대 댓글 쓴 유저 */
-	public List<String> getTopCommentMember(Map date) {
-		return tcmdao.getTopCommentMember(date);
+	public List<String> getTopCommentMember() {
+		return tcmdao.getTopCommentMember();
 	}
 	
 }

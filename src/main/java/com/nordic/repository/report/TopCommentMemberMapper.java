@@ -10,6 +10,6 @@ import com.nordic.dto.report.TopCommentMemberDto;
 public interface TopCommentMemberMapper {
 	
 	/* 조회-최대 댓글 쓴 유저 */
-	List<String> getTopCommentMember(Map date);
+	List<String> getTopCommentMember();
 	
 }

@@ -126,14 +126,4 @@ public class MissionResultFindController {
 		log.info("=== 포인트 지급 : "+point_history.getPoint()+" ===");
 		return new ResponseDto("포인트 지급 완료", point_history);
 	}
-	
-	/* 이미지 불러오기 */
-	@ApiOperation(value = "이미지 불러오기")
-	@GetMapping( value="/image/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
-	public @ResponseBody byte[] ImageView(@PathVariable String fileName) throws Exception {
-		log.info("=== fileName = "+fileName+" ===");
-		String res = System.getProperty("user.dir") + "/src/main/resources/static/img/mission/"+fileName;
-		InputStream in = new FileInputStream(res);
-		return IOUtils.toByteArray(in);
-	}
 }

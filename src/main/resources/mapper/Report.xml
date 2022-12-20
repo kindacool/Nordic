@@ -2,14 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nordic.repository.report.TopCommentMemberMapper">
 	<!-- 조회-최대 댓글 쓴 유저 -->
-	<select id="getTopCommentMember" parameterType="Map"
-		resultType="String">
-		<![CDATA[
+	<select id="getTopCommentMember" resultType="String">
 			SELECT create_member FROM board_reply 
-			where create_date >= #{start_date}
-			and create_date <= #{end_date}
 			group by create_member 
-			ORDER BY count(*) DESC LIMIT 5
-		]]>
+			ORDER BY count(*) DESC LIMIT 3
 	</select>
 </mapper>

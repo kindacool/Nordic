@@ -14,8 +14,8 @@ public class TopCommentMemberDao {
 	private final TopCommentMemberMapper tcmmapper;
 	
 	/* 조회-최대 댓글 쓴 유저 */
-	public List<String> getTopCommentMember(Map date) {
-		return tcmmapper.getTopCommentMember(date);
+	public List<String> getTopCommentMember() {
+		return tcmmapper.getTopCommentMember();
 	}
 	
 	
