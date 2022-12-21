@@ -1,9 +1,12 @@
 package com.nordic.service.member;
 
 import java.lang.reflect.Member;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-//import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
@@ -23,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberService {
 	
-//	private final PasswordEncoder passwordEncoder;
 	private final MemberRepository memberRepository;
 	
 	public PageInfo<MemberDto> findAll(int pageNum) {
@@ -89,5 +91,18 @@ public class MemberService {
 		List<MemberDto> memberDto = memberRepository.doSearch(searchDto);
 		return PageInfo.of(memberDto);
 	}
+	
+	public static Map getUserInfo() {
+	       final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+	       if (authentication == null || authentication.getName() == null) {
+	           throw new RuntimeException("No authentication information.");
+	       }
+	       
+	       Map user_info = new HashMap();
+	       user_info.put("member_code", authentication.getName());
+	       user_info.put("role", authentication.getAuthorities());
+	       return user_info;
+	   }
 	
 }

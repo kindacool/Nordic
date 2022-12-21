@@ -1,5 +1,10 @@
 package com.nordic.api;
 
+import java.net.BindException;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+
 import org.apache.ibatis.binding.BindingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +16,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import com.mysql.cj.xdevapi.Schema.Validation;
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
 
@@ -73,4 +80,31 @@ public class ControllerAdvice {
 		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("값을 입력해주세요", e.getMessage());
 		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.METHOD_NOT_ALLOWED);
 	  }
+	  
+	  @ExceptionHandler(value = MethodArgumentNotValidException.class )
+	  @ResponseStatus
+	  public ResponseEntity<ExceptionResponseDto> handleBindException (Exception e) {
+			
+			ExceptionResponseDto exceptionResponseDto;
+			log.info("회원가입 오류 : "+e);
+			System.out.println("회원가입 오류 : " + e);
+			
+			try {
+				String[] errSplit = e.getMessage().split(",");
+				if (errSplit.length > 1) {
+					throw new Exception (e.getMessage());
+				}
+				
+				log.info("회원가입 오류");
+				exceptionResponseDto = new ExceptionResponseDto(errSplit[0], errSplit[1]);
+				
+			} catch (Exception innerE) {
+				exceptionResponseDto = new ExceptionResponseDto<>("에러입니다", e.getMessage());
+			}
+			
+			System.out.println("exceptionResponseDto = " + exceptionResponseDto);
+			log.info("4");
+			return new ResponseEntity(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+			
+		}
 }

@@ -45,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("api/member")
 public class MemberApiController {
 	
+//	private final CustomUserDetailsService customeservice;
 	private final MemberService memberService;
 	private final PasswordEncoder passwordEncoder;
 	
@@ -52,6 +53,10 @@ public class MemberApiController {
 	@ApiOperation(value = "회원 전체목록 조회")
 	@GetMapping("/members/{pageNum}")
 	public ResponseDto MemberDtoList(@PathVariable int pageNum) throws Exception {
+		
+//		String member_code = (String) customerservice.getUserInfo().get("member_code");
+		String member_code = (String) memberService.getUserInfo().get("member_code");
+		log.info("member_code : " + member_code);
 		
 		Map<String, Object> memberObj = new HashMap<>();
 		memberObj.put("data", memberService.findAll(pageNum));
@@ -105,8 +110,8 @@ public class MemberApiController {
 		
 	}
 	
-	/******************************** 회원 탈퇴 실행 ********************************/
-	@ApiOperation(value = "회원 탈퇴 실행")
+	/******************************** 회원 탈퇴 실행(관리자) ********************************/
+	@ApiOperation(value = "회원 탈퇴 실행(관리자)")
 	@PostMapping(value="/del/{mC}")
 	public ResponseDto DelOne (@PathVariable(value="mC") String mC) throws Exception {
 		
@@ -266,7 +271,10 @@ public class MemberApiController {
 //									  BindingResult bindingResult) throws Exception {
 		
 		String inputPassword = memberDto.getPassword();
+		log.info("inputPassword : "+inputPassword);
+		log.info("memberDto : "+memberDto);
 		memberDto.setPassword(passwordEncoder.encode(inputPassword));
+		log.info("setPassword : "+memberDto.getPassword());
 		
 		int mbrRegister = memberService.mbrRegister(memberDto);
 		System.out.println("mbrRegister: "+mbrRegister);
