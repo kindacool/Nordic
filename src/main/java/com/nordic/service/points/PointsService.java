@@ -21,7 +21,7 @@ public class PointsService {
 
 	public void updateMemberPoint(PointsDto pointsDto) {
 		pointsDao.updateMemberReqPoint(pointsDto); // req 에 + 시키기
-		pointsDao.updateMemberTotalPoint(pointsDto); // totla 에 - 시키기
+		//pointsDao.updateMemberTotalPoint(pointsDto); //
 	}
 	
 	// 멤버별 가용 포인트 구하기

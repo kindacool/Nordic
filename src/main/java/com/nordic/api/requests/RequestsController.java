@@ -88,7 +88,7 @@ public class RequestsController {
 	@ApiResponses({
 		@ApiResponse(responseCode = "200", description = "구매 신청 성공 / 잔액 부족 실패 모두 OK 반환")
 	})
-	@PostMapping("/{no}")
+	@PostMapping("goods/{no}")
 	public ResponseDto createRequest(@PathVariable int no) throws Exception{
 		log.info("굿즈 요청 Controller 도착");
 		
