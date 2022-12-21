@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nordic.dto.common.ResponseDto;
 import com.nordic.service.points.TopMemberPointService;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+//@Api(tags = {"TopMemberPointController"})
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +24,8 @@ public class TopMemberPointController {
 	
 	private final TopMemberPointService topMemberPointService;
 	
-	@ApiOperation(value = "포인트 최다 적립 TOP 10")
+	@ApiOperation(value = "최다 적립 회원 TOP 10", 
+				  notes = "포인트를 가장 많이 적립한 회원 상위 10명의 리스트를 출력한다.")
 	@GetMapping ("/top10")
 	public ResponseDto TopRanking () throws Exception {
 		
