@@ -31,5 +31,5 @@ public interface RequestsMapper {
 
 	public GoodsReqDto duplicateRequestsCheck(GoodsReqDto goodsReqDto);
 
-	public void cancelRequest(int reqNo);
+	public void cancelRequest(GoodsReqDto goodsReqDto);
 }

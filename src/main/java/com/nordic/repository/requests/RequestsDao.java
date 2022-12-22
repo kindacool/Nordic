@@ -64,7 +64,7 @@ public class RequestsDao implements RequestsMapper{
 		return requestsMapper.duplicateRequestsCheck(goodsReqDto);
 	}
 
-	public void cancelRequest(int reqNo) {
-		requestsMapper.cancelRequest(reqNo);
+	public void cancelRequest(GoodsReqDto goodsReqDto) {
+		requestsMapper.cancelRequest(goodsReqDto);
 	}
 }

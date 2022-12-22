@@ -102,7 +102,7 @@ select * from point_goods_req where goods_no = #{goods_no} and
 member_code = #{member_code} and confirm_yn = 'N' and use_yn = 'Y'
 </select>
 
-<update id="cancelRequest" parameterType="int">
-update point_goods_req set use_yn = 'N' where request_no = #{reqNo}
+<update id="cancelRequest" parameterType="goodsreq">
+update point_goods_req set use_yn = 'N', update_member = #{update_member}, update_date = now() where request_no = #{request_no}
 </update>
 </mapper>
