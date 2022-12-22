@@ -1,13 +1,6 @@
 package com.nordic.api;
 
-<<<<<<< HEAD
 import java.io.FileNotFoundException;
-=======
-import java.net.BindException;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
->>>>>>> minji
 
 import org.apache.ibatis.binding.BindingException;
 
@@ -23,9 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
-import com.mysql.cj.xdevapi.Schema.Validation;
 import com.nordic.config.CustomException;
 import com.nordic.dto.common.ExceptionResponseDto;
 import com.nordic.exception.CancleRequestException;
@@ -38,29 +29,27 @@ import com.nordic.exception.NotConfirmException;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
-@RestControllerAdvice(annotations = {RestController.class, Service.class})
+@RestControllerAdvice(annotations = { RestController.class, Service.class })
 public class ControllerAdvice {
 
-    @ExceptionHandler(value = {Exception.class, CustomException.class})
-    @ResponseStatus
-    public ResponseEntity<ExceptionResponseDto> errorHandler(Exception e) {
-        ExceptionResponseDto exceptionResponseDto ;
-        System.out.println("e = " + e);
-        try {
-            String[] errSplit = e.getMessage().split(",");
-            if (errSplit.length >1)
-                throw new Exception(e.getMessage());
-            exceptionResponseDto = new ExceptionResponseDto(errSplit[0], errSplit[1]);
-        }
-        catch (Exception innerE){
-            exceptionResponseDto = new ExceptionResponseDto("XXXXXX", e.getMessage());
-        }
+	@ExceptionHandler(value = { Exception.class, CustomException.class })
+	@ResponseStatus
+	public ResponseEntity<ExceptionResponseDto> errorHandler(Exception e) {
+		ExceptionResponseDto exceptionResponseDto;
+		System.out.println("e = " + e);
+		try {
+			String[] errSplit = e.getMessage().split(",");
+			if (errSplit.length > 1)
+				throw new Exception(e.getMessage());
+			exceptionResponseDto = new ExceptionResponseDto(errSplit[0], errSplit[1]);
+		} catch (Exception innerE) {
+			exceptionResponseDto = new ExceptionResponseDto("XXXXXX", e.getMessage());
+		}
 
-        System.out.println("exceptionResponseDto = " + exceptionResponseDto);
-        return new ResponseEntity(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+		System.out.println("exceptionResponseDto = " + exceptionResponseDto);
+		return new ResponseEntity(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 //    @ExceptionHandler(NoHandlerFoundException.class)
 //    @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -77,138 +66,104 @@ public class ControllerAdvice {
 //        ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
 //        return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
 //    }
-    
-  @ExceptionHandler(NoBalanceException.class)
-  @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<ExceptionResponseDto> handleNoBalanceException(NoBalanceException e) {
 
-      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("NoBalance", e.getMessage());
-      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
-  }
-  
-  @ExceptionHandler(MethodArgumentNotValidException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ExceptionResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-	    String errorMessage = e.getBindingResult()
-	    	    .getAllErrors()
-	    	    .get(0)
-	    	    .getDefaultMessage();
-	  System.out.println(errorMessage);
+	@ExceptionHandler(NoBalanceException.class)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<ExceptionResponseDto> handleNoBalanceException(NoBalanceException e) {
 
-      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("빈값 허용 불가", errorMessage);
-      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
-  }
-  
-  @ExceptionHandler(FileNotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ExceptionResponseDto> handleNoBalanceException(FileNotFoundException e) {
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("NoBalance", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+	}
 
-      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("파일을 찾을 수 없습니다", e.getMessage());
-      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
-  }
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ExceptionResponseDto> handleMethodArgumentNotValidException(
+			MethodArgumentNotValidException e) {
+		String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+		System.out.println(errorMessage);
 
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("빈값 허용 불가", errorMessage);
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	}
 
-	  @ExceptionHandler(NoHandlerFoundException.class)
-	  @ResponseStatus(HttpStatus.NOT_FOUND)
-	  public ResponseEntity<ExceptionResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
-		  
-		  log.info("NoHandlerFoundException");
-	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("BAD_REQUEST", e.getMessage());
-	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
-	  }
-	
-	  @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
-	  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-	  public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(NoHandlerFoundException e) {
-	
-		  log.info("UNAUTHORIZED");
-	      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
-	      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
-	  }
-	  
-	  @ExceptionHandler(NotConfirmException.class)
-	  @ResponseStatus(HttpStatus.BAD_REQUEST)
-	  public ResponseEntity<ExceptionResponseDto> handleNotConfirmException(NotConfirmException e) {
-		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("NotConfirm", e.getMessage());
-		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
-	  }
-	  
-	  @ExceptionHandler(ExpireException.class)
-	  @ResponseStatus(HttpStatus.BAD_REQUEST)
-	  public ResponseEntity<ExceptionResponseDto> handleExpireException(ExpireException e) {
-		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ExpireMission", e.getMessage());
-		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
-	  }
-		  
-	  @ExceptionHandler(BindingException.class)
-	  public ResponseEntity<ExceptionResponseDto> handleBeanPropertyBindingResult (BindingException e) {
-		  
-		  log.info("BindingException");
-		  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("값을 입력해주세요", e.getMessage());
-		  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.METHOD_NOT_ALLOWED);
-	  }
-<<<<<<< HEAD
+	@ExceptionHandler(FileNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<ExceptionResponseDto> handleNoBalanceException(FileNotFoundException e) {
 
-  
-  @ExceptionHandler(GoodsNotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(GoodsNotFoundException e) {
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("파일을 찾을 수 없습니다", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
+	}
 
-      ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("GoodsNotFound", e.getMessage());
-      return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
-  }
-  
-  @ExceptionHandler(DuplicateRequestsException.class)
-  @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(DuplicateRequestsException e) {
-	  
-	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("DuplicateRequests", e.getMessage());
-	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
-  }
-  
-  @ExceptionHandler(CancleRequestException.class)
-  @ResponseStatus(HttpStatus.OK)
-  public ResponseEntity<ExceptionResponseDto> handleCancleRequestException(CancleRequestException e) {
-	  
-	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("CancelRequestsException", e.getMessage());
-	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
-  }
-  
-  @ExceptionHandler(ImageInvalidFormatException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResponseEntity<ExceptionResponseDto> handleImageFormatException(ImageInvalidFormatException e) {
-	  
-	  ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ImageFormatException", e.getMessage());
-	  return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
-  }
+	@ExceptionHandler(NoHandlerFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<ExceptionResponseDto> handleNoHandlerFoundException(NoHandlerFoundException e) {
 
-=======
-	  
-	  @ExceptionHandler(value = MethodArgumentNotValidException.class )
-	  @ResponseStatus
-	  public ResponseEntity<ExceptionResponseDto> handleBindException (Exception e) {
-			
-			ExceptionResponseDto exceptionResponseDto;
-			log.info("회원가입 오류 : "+e);
-			System.out.println("회원가입 오류 : " + e);
-			
-			try {
-				String[] errSplit = e.getMessage().split(",");
-				if (errSplit.length > 1) {
-					throw new Exception (e.getMessage());
-				}
-				
-				log.info("회원가입 오류");
-				exceptionResponseDto = new ExceptionResponseDto(errSplit[0], errSplit[1]);
-				
-			} catch (Exception innerE) {
-				exceptionResponseDto = new ExceptionResponseDto<>("에러입니다", e.getMessage());
-			}
-			
-			System.out.println("exceptionResponseDto = " + exceptionResponseDto);
-			log.info("4");
-			return new ResponseEntity(exceptionResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
-			
-		}
->>>>>>> minji
+		log.info("NoHandlerFoundException");
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("BAD_REQUEST", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ResponseEntity<ExceptionResponseDto> handleUnauthorizedException(NoHandlerFoundException e) {
+
+		log.info("UNAUTHORIZED");
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("Unauthorized", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(NotConfirmException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ExceptionResponseDto> handleNotConfirmException(NotConfirmException e) {
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("NotConfirm", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ExpireException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ExceptionResponseDto> handleExpireException(ExpireException e) {
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ExpireMission", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(BindingException.class)
+	public ResponseEntity<ExceptionResponseDto> handleBeanPropertyBindingResult(BindingException e) {
+
+		log.info("BindingException");
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("값을 입력해주세요", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.METHOD_NOT_ALLOWED);
+	}
+
+	@ExceptionHandler(GoodsNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(GoodsNotFoundException e) {
+
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("GoodsNotFound", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(DuplicateRequestsException.class)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<ExceptionResponseDto> handleGoodsNotFoundException(DuplicateRequestsException e) {
+
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("DuplicateRequests", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+	}
+
+	@ExceptionHandler(CancleRequestException.class)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<ExceptionResponseDto> handleCancleRequestException(CancleRequestException e) {
+
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("CancelRequestsException", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.OK);
+	}
+
+	@ExceptionHandler(ImageInvalidFormatException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ResponseEntity<ExceptionResponseDto> handleImageFormatException(ImageInvalidFormatException e) {
+
+		ExceptionResponseDto exceptionResponseDto = new ExceptionResponseDto("ImageFormatException", e.getMessage());
+		return new ResponseEntity<>(exceptionResponseDto, HttpStatus.BAD_REQUEST);
+	}
+
 }
