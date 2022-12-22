@@ -226,6 +226,22 @@ public class MemberApiController {
 		return result;
 	}
 	
+	/******************************** 특정 회원 1명 조회 (사용자)********************************/
+	@ApiOperation(value="특정 회원 1명 조회 (사용자)", 
+			notes = "member_code를 이용해 특정 회원 1명을 조회한다.")
+	@GetMapping("user/{member_code}")
+	public ResponseDto FindMe (@ApiParam("member_code")
+	@PathVariable String member_code) throws Exception {
+		
+		MemberDto memberDto = memberService.findMe(member_code);
+		ResponseDto result = new ResponseDto("회원"+memberDto.getMember_name()+" 정보 : ", memberDto);
+		
+		log.info("result: "+result);
+		log.info(memberDto.getMember_code()+" 조회하기");
+		
+		return result;
+	}
+	
 	/******************************** 회원정보수정 폼 이동 ********************************/
 	@ApiOperation(value = "회원 정보 수정 폼",
 				  notes = "member_code 회원을 조회하여 수정 폼으로 이동한다.")
@@ -234,7 +250,7 @@ public class MemberApiController {
 								   @PathVariable String member_code) throws Exception {
 		
 		//특정 회원 정보 db에서 찾아오기
-		MemberDto memberDto = memberService.findOne(member_code);
+		MemberDto memberDto = memberService.findMe(member_code);
 		ResponseDto result = new ResponseDto("회원 "+memberDto.getMember_name()+" 정보 구하기 성공", memberDto);
 		
 		log.info("result: "+result);

@@ -1,11 +1,11 @@
-package com.nordic.service.points;
+package com.nordic.service.report;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.nordic.dto.points.TopMemberPointDto;
-import com.nordic.repository.points.TopMemberPointRepository;
+import com.nordic.dto.report.TopMemberPointDto;
+import com.nordic.repository.report.TopMemberPointRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

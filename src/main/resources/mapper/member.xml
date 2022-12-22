@@ -153,6 +153,10 @@
 			</if>
 		</where>
 	</select>
+	
+	<select id ="findMe" resultType="MemberDto">
+		select * from where member_code = #{member_code}
+	</select>
 
 
 </mapper>

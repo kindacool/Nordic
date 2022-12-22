@@ -1,4 +1,4 @@
-package com.nordic.api.points;
+package com.nordic.api.report;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nordic.dto.common.ResponseDto;
-import com.nordic.service.points.TopMemberPointService;
+import com.nordic.service.report.TopMemberPointService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,4 +1,4 @@
-package com.nordic.dto.points;
+package com.nordic.dto.report;
 
 import org.apache.ibatis.type.Alias;
 

@@ -22,12 +22,11 @@ public interface MemberMapper {
 	int doUnadmin (MemberDto memberDto);
 	List<MemberDto> findAdmins();
 	MemberDto findOne (String member_code);
+	MemberDto findMe (String member_code);
 	int mbrRegister (MemberDto memberDto);
 	int modifyOne (MemberModifyDto memberModifyDto);
 	int delOne (MemberDto memberDto);
 	int undoDelete (MemberDto memberDto);
 	List<MemberDto> doSearch (SearchDto searchDto);
-//	void createMember (MemberDto memberDto);
-//	int getNewCode();
 
 }

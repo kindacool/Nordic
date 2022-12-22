@@ -68,6 +68,11 @@ public class MemberService {
 		MemberDto memberDto = memberRepository.findOne(member_code);
 		return memberDto;
 	}
+	
+	public MemberDto findMe (String member_code) {
+		MemberDto memberDto = memberRepository.findMe(member_code);
+		return memberDto;
+	}
 
 	public int mbrRegister (MemberDto memberDto) {
 		return memberRepository.mbrRegister(memberDto);
