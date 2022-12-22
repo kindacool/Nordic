@@ -2,14 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nordic.repository.report.TopCommentMemberMapper">
 	<!-- 조회-최대 댓글 쓴 유저 -->
-	<select id="getTopCommentMember" parameterType="Map"
-		resultType="String">
-		<![CDATA[
-			SELECT create_member FROM board_reply 
-			where create_date >= #{start_date}
-			and create_date <= #{end_date}
-			group by create_member 
-			ORDER BY count(*) DESC LIMIT 5
-		]]>
+	<select id="getTopCommentMember" resultType="com.nordic.dto.report.TopCommentMemberDto">
+			SELECT create_member,MAX(create_date) as max, MIN(CREATE_DATE) AS min, count(*) as count
+			FROM board_reply
+			group by create_member limit 10
+	</select>
+	
+	<select id="getCommentList" parameterType="String" resultType="com.nordic.dto.report.ReplyDto">
+			SELECT br.*, bm.board_object
+			FROM board_reply as br join board_master as bm
+		 	on br.board_no = bm.board_no
+			WHERE br.create_member = #{create_member}
 	</select>
 </mapper>

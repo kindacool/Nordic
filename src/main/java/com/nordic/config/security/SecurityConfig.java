@@ -85,9 +85,9 @@ public class SecurityConfig {
                 .antMatchers("/swagger-resources/**").permitAll()
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/member/**").permitAll()
-                .antMatchers("**").permitAll()
                 .antMatchers("/api/admin/mission/result/image/**").permitAll()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/api/mission/image/**").permitAll()
+                .antMatchers("/api/admin/mission/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider));
