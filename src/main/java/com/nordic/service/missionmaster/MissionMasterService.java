@@ -1,10 +1,13 @@
 package com.nordic.service.missionmaster;
 
 import com.github.pagehelper.PageHelper;
+import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.missionmasterbean.MissionMasterBean;
 import com.nordic.dto.missionmasterbean.MissionMasterListBean;
 import com.nordic.dto.missionmasterbean.MissionSearchBean;
 import com.nordic.repository.missionmasterrepo.MissionMasterImp;
+import com.nordic.service.login.CustomUserDetailsService;
+import com.nordic.service.member.MemberService;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,6 +27,8 @@ public class MissionMasterService {
 
     @Autowired
     private MissionMasterImp mmd;
+    @Autowired
+    private MemberService ms;
 
 
     public List<MissionMasterBean> getAllData() {
@@ -33,15 +38,26 @@ public class MissionMasterService {
 
     //정보 입력
     public void insertData(MissionMasterBean mmb) {
+        String membercode = (String) CustomUserDetailsService.getUserInfo().get("member_cdoe");
+        MemberDto md = ms.findOne(membercode);
+        mmb.setUpdate_member(md.getMember_name());
+        mmb.setCreate_member(md.getMember_name());
         mmd.insertData(mmb);
     }
 
     public void updateData(int mission_no, MissionMasterBean mmb) {
+        String membercode = (String) CustomUserDetailsService.getUserInfo().get("member_cdoe");
+        MemberDto md = ms.findOne(membercode);
+        mmb.setUpdate_member(md.getMember_name());
         mmb.setMission_no(mission_no);
         mmd.updateData(mmb);
     }
 
     public void deleteDataByMissionNo(int mission_no, String update_member) {
+        String membercode = (String) CustomUserDetailsService.getUserInfo().get("member_cdoe");
+        MemberDto md = ms.findOne(membercode);
+        update_member = md.getMember_name();
+
         mmd.deleteDataByMissionNo(mission_no, update_member);
     }
 
