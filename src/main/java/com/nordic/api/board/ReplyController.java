@@ -18,6 +18,7 @@ import java.util.Map;
 public class ReplyController {
 
     private final ReplyService service;
+    // private final CustomUserDetailsService customeservice;
 
     @ApiOperation(value = "작성된 댓글 불러오기", notes = "게시글 고유넘버 값을 받아 글에 작성된 댓글 목록을 불러온다.")
     @GetMapping("/{board_no}/replies")
@@ -31,6 +32,10 @@ public class ReplyController {
     @PostMapping("/{board_no}/reply")
     public ResponseDto input(@PathVariable("board_no") int board_no,
                              @RequestParam(required = true) Map<String, Object> map) throws Exception {
+        log.info("write - {}", map);
+
+        // String writer = customeservice.getUserInfo().get("member_code");
+
         service.input(map);
         List<BoardReplyDto> reply = service.load(board_no);
 
@@ -40,11 +45,15 @@ public class ReplyController {
     @ApiOperation(value = "작성한 댓글 수정하기", notes = "댓글 고유넘버 값을 받아 작성한 댓글을 수정한다.")
     @PutMapping("/{board_no}/reply")
     public ResponseDto modify(@PathVariable("board_no") int board_no,
-                              @RequestParam Map<String, Object> map) throws Exception {
-        service.modify(map);
-        List<BoardReplyDto> reply = service.load(board_no);
+                              @RequestBody Map<String, Object> map) throws Exception {
+        log.info("modify - {}", board_no);
+        log.info("modify - {}", map);
 
-        return new ResponseDto("수정완료", reply);
+        // String writer = customeservice.getUserInfo().get("member_code");
+
+        service.modify(map);
+
+        return new ResponseDto("수정완료");
     }
 
     @ApiOperation(value = "작성한 댓글 삭제하기", notes = "댓글 고유넘버 값을 받아 작성한 댓글을 삭제한다.")
@@ -52,6 +61,9 @@ public class ReplyController {
     public ResponseDto delete(@PathVariable("board_no") int board_no,
                               @RequestBody(required = true) Map<String, Object> map) throws Exception {
         log.info("del map - {}", map.get("reply_no"));
+
+        // String writer = customeservice.getUserInfo().get("member_code");
+
         service.delete(map);
         List<BoardReplyDto> reply = service.load(board_no);
 

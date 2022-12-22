@@ -22,6 +22,7 @@ import java.util.Map;
 public class BoardImgController {
 
     private final BoardImgUploadService service;
+    // private final CustomUserDetailsService customeservice;
 
     @ApiOperation(value = "이미지 불러오기", notes = "이미지 이름 값을 받아 바이너리 코드로 전송한다.")
     @GetMapping(value = "/img/{imgName}", produces = {MediaType.IMAGE_JPEG_VALUE})
@@ -36,6 +37,10 @@ public class BoardImgController {
     @DeleteMapping("/img/{update_member}/{board_image_no}")
     public ResponseDto deleteImg(@PathVariable("update_member") String update_member,
                                  @PathVariable("board_image_no") int board_image_no) throws Exception {
+        // String writer = customeservice.getUserInfo().get("member_code");
+
+        log.info("member - {}", update_member);
+        log.info("no - {}", board_image_no);
         Map<String, Object> param = new HashMap<>();
         param.put("update_member", update_member);
         param.put("board_image_no", board_image_no);

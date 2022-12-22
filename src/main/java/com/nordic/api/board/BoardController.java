@@ -10,6 +10,7 @@ import com.nordic.dto.common.ResponseDto;
 import com.nordic.service.board.BoardImgUploadService;
 import com.nordic.service.board.BoardService;
 import io.swagger.annotations.ApiOperation;
+import jdk.internal.org.jline.utils.Log;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -30,6 +31,7 @@ public class BoardController {
     private int pageSize = 20;
     private final BoardService service;
     private final BoardImgUploadService uploadService;
+    // private final CustomUserDetailsService customeservice;
 
     // 게시글 작성
     @ApiOperation(value = "게시판 글 작성", notes = "글 작성에 필요한 정보를 받아 처리한다.")
@@ -38,6 +40,8 @@ public class BoardController {
                                   @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception{
         log.info("board - {}", board);
         log.info("files - {}", files);
+
+        // String writer = customeservice.getUserInfo().get("member_code");
 
         List<String> image_file;
         List<String> orignal_name = new ArrayList<>();
@@ -107,6 +111,8 @@ public class BoardController {
         log.info("board - {}", board);
         log.info("files - {}", files);
 
+        // String writer = customeservice.getUserInfo().get("member_code");
+
         List<String> image_file;
         List<String> orignal_name = new ArrayList<>();
         Map<String, Object> param = new HashMap<>();
@@ -132,6 +138,9 @@ public class BoardController {
     @DeleteMapping("/board/{board_no}/{update_member}")
     public ResponseDto deleteBoard(@PathVariable(value = "board_no") int board_no,
                                    @PathVariable(value = "update_member") String update_member) throws Exception {
+
+        // String writer = customeservice.getUserInfo().get("member_code");
+
         Map<String, Object> param = new HashMap<>();
         List<BoardMasterDto> board = service.load(board_no);
         service.delete(board_no, update_member);
