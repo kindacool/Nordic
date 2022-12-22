@@ -10,7 +10,6 @@ import com.nordic.dto.common.ResponseDto;
 import com.nordic.service.board.BoardImgUploadService;
 import com.nordic.service.board.BoardService;
 import io.swagger.annotations.ApiOperation;
-import jdk.internal.org.jline.utils.Log;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;

@@ -62,6 +62,11 @@ public class MemberRepository implements MemberMapper {
 	}
 	
 	@Override
+	public MemberDto findMe (String member_code) {
+		return memberMapper.findMe(member_code);
+	}
+	
+	@Override
 	public int mbrRegister (MemberDto memberDto) {
 		return memberMapper.mbrRegister(memberDto);
 	}

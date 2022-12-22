@@ -10,7 +10,6 @@
 	
 	<select id="pointArrange" parameterType="String" resultType="MemberDto">
 		select * from member
-
 		<if test="pointArrange == 'totalasc' ">
 			order by total_point asc
 		</if>
@@ -153,6 +152,10 @@
 				${search} like CONCAT('%',#{keyword},'%')
 			</if>
 		</where>
+	</select>
+	
+	<select id ="findMe" resultType="MemberDto">
+		select * from where member_code = #{member_code}
 	</select>
 
 

@@ -1,7 +1,5 @@
 package com.nordic.dto.member;
 
-import java.util.Date;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -55,17 +53,17 @@ public class MemberDto {
     
     private String approval_yn;		// 9. 승인여부
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private String approval_date;	// 10. 승인일시
     
     private String stop_yn;			// 11. 중지여부
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private String stop_date;		// 12. 중지일시
     
     private String admin_yn;		// 13. 관리자여부
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private String admin_date;		// 14. 관리자등록일
     
     private int total_point;		// 15. 총포인트
@@ -78,12 +76,12 @@ public class MemberDto {
     
     private String create_member;	// 19. 등록자
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private String create_date;		// 20. 등록일시
     
     private String update_member;	// 21. 변경자
     
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+//    @JsonFormat(pattern = "yyyy-MM-dd")
     private String update_date;		// 22. 변경일시
     
     

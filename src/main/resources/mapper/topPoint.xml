@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nordic.repository.points.TopMemberPointMapper">
+
+	<select id="topRanking" resultType="TopMemberPointDto">
+		SELECT 
+			m.member_code,
+			m.member_name,
+			count(mh.member_code) as 'mission_count',
+			sum(mh.point) as 'sum_point',
+			mm.start_date,
+			mm.end_date,
+			mh.refuse_yn
+		FROM
+			member m INNER JOIN mission_history mh
+			USING (member_code)
+			INNER JOIN mission_master mm
+			USING (mission_no)
+		GROUP BY 
+			m.member_code
+		HAVING
+			mh.refuse_yn = 'N'
+		ORDER BY
+			sum_point desc, m.member_code asc
+		LIMIT
+			0, 10
+	</select>
+
+
+</mapper>
