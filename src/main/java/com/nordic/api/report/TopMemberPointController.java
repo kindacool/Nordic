@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/points")
+@RequestMapping("api/report")
 public class TopMemberPointController {
 	
 	private final TopMemberPointService topMemberPointService;
@@ -29,9 +29,9 @@ public class TopMemberPointController {
 	@GetMapping ("/top10")
 	public ResponseDto TopRanking () throws Exception {
 		
-		log.info("진입");
 		Map<String, Object> topRankingObj = new HashMap<>();
 		topRankingObj.put("data", topMemberPointService.topRanking());
+		
 		ResponseDto result = new ResponseDto<>("TOP 10 구하기 성공", topRankingObj.get("data"));
 		
 		log.info("result : "+ result);

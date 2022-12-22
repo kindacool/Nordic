@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.nordic.repository.points.TopMemberPointMapper">
+<mapper namespace="com.nordic.repository.report.TopMemberPointMapper">
 
 	<select id="topRanking" resultType="TopMemberPointDto">
 		SELECT 
-			m.member_code,
-			m.member_name,
+			m.member_code as 'member_code',
+			m.member_name as 'member_name',
 			count(mh.member_code) as 'mission_count',
 			sum(mh.point) as 'sum_point',
-			mm.start_date,
-			mm.end_date,
-			mh.refuse_yn
+			mm.start_date as 'start_date',
+			mm.end_date as 'end_date',
+			mh.refuse_yn as 'refuse_yn'
 		FROM
 			member m INNER JOIN mission_history mh
 			USING (member_code)
