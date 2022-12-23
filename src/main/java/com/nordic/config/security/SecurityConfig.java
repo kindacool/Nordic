@@ -87,6 +87,7 @@ public class SecurityConfig {
                 .antMatchers("/api/hello").permitAll()
                 .antMatchers("/api/member/**").permitAll()
                 .antMatchers("/api/admin/mission/result/image/**").permitAll()
+                .antMatchers("/api/admin/mission/result/point/**").permitAll()
                 .antMatchers("/api/mission/image/**").permitAll()
                 .antMatchers("/api/intro/**").permitAll()
                 .antMatchers("/api/origin/**").permitAll()
@@ -95,6 +96,7 @@ public class SecurityConfig {
                 .antMatchers("/api/image/**").permitAll()
                 .antMatchers("/api/countImage/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/list/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/mission/{mission_no}").permitAll()
                 //동민님
                 .antMatchers("/api/img/**").permitAll()
                 .antMatchers("/api/board/**").permitAll()

@@ -118,9 +118,9 @@ public class MissionResultFindController {
 	/* 포인트 지급 */
 	@ApiOperation(value = "포인트 지급")
 	@PostMapping("/point/add")
-	public ResponseDto addPoint(@RequestParam int mission_history_no){
-		
-		String member_code = (String) customeservice.getUserInfo().get("member_code");
+	public ResponseDto addPoint(@RequestParam int mission_history_no, @RequestParam String member_code){
+		System.out.println("============"+mission_history_no);
+		System.out.println("============"+member_code);
 		PointHistoryDto point_history = mrfservice.addPoint(mission_history_no, member_code);
 		
 		log.info("=== 포인트 지급 : "+point_history.getPoint()+" ===");

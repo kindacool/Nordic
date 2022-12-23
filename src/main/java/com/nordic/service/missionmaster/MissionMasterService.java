@@ -1,10 +1,12 @@
 package com.nordic.service.missionmaster;
 
 import com.github.pagehelper.PageHelper;
+import com.nordic.dto.member.MemberDto;
 import com.nordic.dto.missionmasterbean.MissionMasterBean;
 import com.nordic.dto.missionmasterbean.MissionMasterListBean;
 import com.nordic.dto.missionmasterbean.MissionSearchBean;
 import com.nordic.repository.missionmasterrepo.MissionMasterImp;
+import com.nordic.service.member.MemberService;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,6 +28,8 @@ public class MissionMasterService {
     @Autowired
     private MissionMasterImp mmd;
 
+    @Autowired
+    private MemberService ms;
 
     public List<MissionMasterBean> getAllData() {
         List<MissionMasterBean> list = mmd.getAllData();
@@ -34,8 +38,10 @@ public class MissionMasterService {
 
     //정보 입력
     public void insertData(MissionMasterBean mmb) {
-        mmb.setMission_name("");
-        mmb.setUpdate_member("");
+        MemberDto md =  ms.findOne(mmb.getCreate_member());
+        mmb.setCreate_member(md.getMember_name());
+        mmb.setUpdate_member(md.getMember_name());
+        System.out.println("mmb : "+mmb);
         mmd.insertData(mmb);
 
     }
