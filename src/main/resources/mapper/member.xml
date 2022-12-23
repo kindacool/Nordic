@@ -76,7 +76,7 @@
 			remark = '관리자 해제',
 			update_member = '관리자',
 			update_date = sysdate()
-		where member_code = ${member_code}
+		where member_code = #{member_code}
 	</update>
 	
 	<select id="findAdmins" resultType="MemberDto">

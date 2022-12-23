@@ -53,17 +53,21 @@ public class MissionMasterController {
     @ApiOperation(value = "모든 미션 리스트" , notes = "모든 미션 정보를 page단위로 가져온다")
     @GetMapping(value = "/list")
     public List<MissionMasterListBean> list(MissionSearchBean msb) throws ParseException, IOException {
-        System.out.println(msb);
-        System.out.println(msb.getPageSize());
-        System.out.println(msb.getPageNum());
-        return mms.list(msb);
+        System.out.println("================================");
+        System.out.println("msb1 : " + msb);
+        List list  = mms.list(msb);
+        System.out.println("list : "+list);
+        System.out.println("================================");
+        return list;
     }
 
     //get top five
     @ApiOperation(value = "미션 조회" , notes = "키워드에 따른 검색결과를 나타낸다.")
     @GetMapping(value = "/search")
     public List<MissionMasterBean> search(MissionSearchBean msb) {
+        System.out.println("================================");
         System.out.println("msb : " + msb);
+        System.out.println("================================");
         return mms.search(msb);
     }
 

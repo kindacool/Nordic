@@ -6,6 +6,7 @@ import com.nordic.jwt.JwtSecurityConfig;
 import com.nordic.jwt.TokenProvider;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -87,6 +88,26 @@ public class SecurityConfig {
                 .antMatchers("/api/member/**").permitAll()
                 .antMatchers("/api/admin/mission/result/image/**").permitAll()
                 .antMatchers("/api/mission/image/**").permitAll()
+                .antMatchers("/api/intro/**").permitAll()
+                .antMatchers("/api/origin/**").permitAll()
+                .antMatchers("/api/goods/avail").permitAll()
+                //황준성
+                .antMatchers("/api/image/**").permitAll()
+                .antMatchers("/api/countImage/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/list/**").permitAll()
+                //동민님
+                .antMatchers("/api/img/**").permitAll()
+                .antMatchers("/api/board/**").permitAll()
+                .antMatchers("/api/board/view/{page}/{board_no}").permitAll()
+                .antMatchers("/api/board/{searchType}/{searchContent}").permitAll()
+                .antMatchers("/api/board/{board_no}/replies").permitAll()
+                //자영님
+                .antMatchers(HttpMethod.GET, "/api/goods/{no}").permitAll()
+                .antMatchers("/api/goods/image/**").permitAll()
+                //민지님
+                .antMatchers("/api/member/register").permitAll()
+                .antMatchers("/api/member/registerForm/**").permitAll()
+                .antMatchers("/api/goods/image/**").permitAll()
                 .antMatchers("/api/admin/mission/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()

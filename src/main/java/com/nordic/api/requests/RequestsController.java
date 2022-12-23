@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nordic.service.login.CustomUserDetailsService;
 import org.springframework.aop.ThrowsAdvice;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +51,7 @@ public class RequestsController {
 	private final RequestsService requestsService;
 	private final GoodsService goodsService;
 	private final PointsService pointsService;
-	//private final CustomUserDetailsService customeservice;
+	private final CustomUserDetailsService customeservice;
 	
 	// 요청 중복검사(같은사람이 같은 상품 구매한적있는지 확인)
 	@ApiOperation(value="포인트 상품 구매 신청 중복검사", notes="이용자 / 같은 상품을 구매 신청한 적 있는지, 그 신청이 미확인 신청인지 검사")
@@ -64,8 +65,8 @@ public class RequestsController {
 	public ResponseDto duplicateRequestsCheck(@PathVariable int no) throws Exception{
 		log.info("중복 요청 체크 Controller 도착");
 		
-		String buyer = "10007"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String buyer = //"10007"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
 		goodsReqDto.setMember_code(buyer);
@@ -99,8 +100,8 @@ public class RequestsController {
 		
 		goodsReqDto.setPoint(oldPoint);
 		
-		String buyer = "10007"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String buyer = //"10007"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		goodsReqDto.setMember_code(buyer);
 		goodsReqDto.setCreate_member(buyer);
 		goodsReqDto.setUse_yn('Y');
@@ -223,8 +224,8 @@ public class RequestsController {
 	@PostMapping("/{reqNo}/y")
 	public ResponseDto acceptRequest(@PathVariable int reqNo) throws IOException{
 		log.info("요청 수락 Controller 도착");
-		String master = "Yoo"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String master = //"Yoo"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsReqDto old = requestsService.findOneRequest(reqNo);
 		if(old.getUse_yn() == 'N') {
@@ -270,8 +271,8 @@ public class RequestsController {
 			throw new CancleRequestException(CancleRequestException.ERR_0006);
 		} 
 		
-		String master = "Yoo"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String master = //"Yoo"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsReqDto goodsReqDto = new GoodsReqDto();
 		goodsReqDto.setConfirm_yn('Y');
@@ -335,8 +336,8 @@ public class RequestsController {
 		
 		log.info("내 요청 목록 Controller 도착");
 		
-		String member_code = "10007"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String member_code = //"10007"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		
 		List<ConfirmedRequestsDto> requestList = requestsService.myRequests(member_code, pageNum);
 		return new ResponseDto("내 요청 목록", PageInfo.of(requestList));

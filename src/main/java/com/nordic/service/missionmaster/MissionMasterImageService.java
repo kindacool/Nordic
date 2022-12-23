@@ -52,9 +52,10 @@ public class MissionMasterImageService {
         //getting 0's value
         String filename = (String) object.get(Integer.toString(count));
 
-        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\IntelliJWorkSpace\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
-        String fullFileName = path + filename;
 
+        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\tttttt\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
+        String fullFileName = path + filename;
+        System.out.println(fullFileName);
         InputStream in = new FileInputStream(fullFileName);
         byte[] bytes = IOUtils.toByteArray(in);
 
@@ -64,6 +65,7 @@ public class MissionMasterImageService {
     //사진 1개 출력 (list에서 사용)
     public byte[] getImgByMissionNo(int mission_no) throws Exception {
         String name = mmi.getImgByMissionNo(mission_no);
+
 
         JSONParser jsonParser = new JSONParser();
         //String to json
@@ -76,8 +78,10 @@ public class MissionMasterImageService {
         //getting 0's value
         String filename = (String) object.get("0");
 
-        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\IntelliJWorkSpace\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
+
+        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\tttttt\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
         String fullFileName = path + filename;
+        System.out.println(fullFileName);
 
         InputStream in = new FileInputStream(fullFileName);
         byte[] bytes = IOUtils.toByteArray(in);
@@ -90,7 +94,7 @@ public class MissionMasterImageService {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\IntelliJWorkSpace\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
+        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\tttttt\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
 
         int b = 0;
         for (MultipartFile file : uploadfiles) {
@@ -100,6 +104,7 @@ public class MissionMasterImageService {
             String randomString = RandomStringUtils.randomAlphabetic(10);
             String fileFullName = randomString + "." + originNameArr[1];
             String save = path + fileFullName;
+            System.out.println("save : "+save);
 
 
             try (FileOutputStream fos = new FileOutputStream(save);
@@ -127,8 +132,8 @@ public class MissionMasterImageService {
         JSONArray jsonArray = new JSONArray();
         JSONParser jsonParser = new JSONParser();
 
-        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\IntelliJWorkSpace\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
-
+        String path = "C:\\Users\\hwangjoonsoung\\Desktop\\tttttt\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
+        System.out.println(path);
         String dbConfirm_file = mmi.getImgByMissionNo(mission_no);
         Object o = jsonParser.parse(dbConfirm_file);
 

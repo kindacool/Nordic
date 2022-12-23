@@ -22,6 +22,7 @@ public class MissionMasterImageController {
     @ApiOperation(value = "미션 이미지 등록", notes = "미션이 등록되면 전달받은 이미지를 입력한다.")
     @PostMapping(value = "/image/{create_member}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public void insertImage(@RequestPart MultipartFile[] uploadfiles, @PathVariable String create_member) throws Exception {
+        System.out.println(uploadfiles);
         mmis.insertImage(uploadfiles, create_member);
     }
 

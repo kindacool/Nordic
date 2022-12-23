@@ -28,6 +28,7 @@ public class MissionImageController {
 	public @ResponseBody byte[] ImageView(@PathVariable String fileName, @RequestParam String path) throws Exception {
 		log.info("=== fileName = "+fileName+" ===");
 		String res = System.getProperty("user.dir") + "/src/main/resources/static/img/"+path+"/"+fileName;
+		System.out.println(res);
 		InputStream in = new FileInputStream(res);
 		return IOUtils.toByteArray(in);
 	}

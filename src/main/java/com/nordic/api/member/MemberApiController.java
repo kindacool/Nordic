@@ -252,7 +252,9 @@ public class MemberApiController {
 								   @PathVariable String member_code) throws Exception {
 		
 		//특정 회원 정보 db에서 찾아오기
-		MemberDto memberDto = memberService.findMe(member_code);
+		log.info("member_code: "+member_code);
+		MemberDto memberDto = memberService.findOne(member_code);
+		log.info("member_code로 구해오기 완료");
 		ResponseDto result = new ResponseDto("회원 "+memberDto.getMember_name()+" 정보 구하기 성공", memberDto);
 		
 		log.info("result: "+result);

@@ -2,6 +2,7 @@ package com.nordic.api.points;
 
 import java.io.IOException;
 
+import com.nordic.service.login.CustomUserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class PointsController {
 	private final PointsService pointsService;
 	private final RequestsService requestsService;
-	//private final CustomUserDetailsService customeservice;
+	private final CustomUserDetailsService customeservice;
 
 	// 굿즈신청 후 포인트 빼기
 	@ApiIgnore
@@ -101,8 +102,8 @@ public class PointsController {
 	@ApiOperation(value="내 포인트 확인", notes="이용자 / 내 포인트 확인")
 	@GetMapping("mypoint")
 	public ResponseDto getMyPoint() {
-		String member_code = "10007"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String member_code = //"10007"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		int point = pointsService.getAvailablePoints(member_code);
 		return new ResponseDto("내 포인트 조회", point);
 	}

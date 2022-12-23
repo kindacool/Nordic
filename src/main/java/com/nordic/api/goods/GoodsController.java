@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import com.nordic.service.login.CustomUserDetailsService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,7 +57,7 @@ import springfox.documentation.annotations.ApiIgnore;
 public class GoodsController {
 
 	private final GoodsService goodsService;
-	//private final CustomUserDetailsService customeservice;
+	private final CustomUserDetailsService customeservice;
 	
 	@ApiOperation(value="포인트 상품 등록", notes = "관리자 권한 / create form 을 통한 상품 등록")
 	@ApiResponses({
@@ -69,8 +70,8 @@ public class GoodsController {
     		@ApiIgnore HttpSession session) throws Exception {
 		log.info("굿즈 등록 Controller 도착");
 		//System.out.println(fileOrder);
-		String writer = "Lee"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String writer = //"Lee"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		goodsDto.setCreate_member(writer);
 		
 		if(fileList != null) {
@@ -255,8 +256,8 @@ public class GoodsController {
 		} else {
 		
 		// 수정자 정보
-		String writer = "Kim"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String writer = //"Kim"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		
 		GoodsDto goodsDto = new GoodsDto();
 		goodsDto.setUpdate_member(writer);
@@ -286,8 +287,8 @@ public class GoodsController {
 		}
 		
 		// 수정자 정보
-		String writer = "Kim"; // 토큰 구현전까지 일시로
-		//(String) customeservice.getUserInfo().get("member_code");
+		String writer = //"Kim"; // 토큰 구현전까지 일시로
+		(String) customeservice.getUserInfo().get("member_code");
 		goodsDto.setUpdate_member(writer);
 		goodsDto.setGoods_no(no);
 		
