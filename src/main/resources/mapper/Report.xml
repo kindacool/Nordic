@@ -5,7 +5,7 @@
 	<select id="getTopCommentMember" resultType="com.nordic.dto.report.TopCommentMemberDto">
 			SELECT create_member,MAX(create_date) as max, MIN(CREATE_DATE) AS min, count(*) as count
 			FROM board_reply
-			group by create_member limit 10
+			group by create_member order by count(*) desc limit 10
 	</select>
 	
 	<select id="getCommentList" parameterType="String" resultType="com.nordic.dto.report.ReplyDto">
