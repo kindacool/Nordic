@@ -108,8 +108,10 @@ public class GoodsController {
 				
 				// 첨부파일 업로드
 				//String path = 
-				String path = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+				String path = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 						//"C:/file";
+						System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
+				
 						//System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
 						//session.getServletContext().getRealPath("resources/static/img/goods");
 				System.out.println("path : " + path);
@@ -185,8 +187,9 @@ public class GoodsController {
     public @ResponseBody byte[] fileView(@PathVariable String fileName) throws IOException {
 		//log.info("cacheable 실행");
 
-    	String path = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+    	String path = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 				//"C:/file"; // 파일이 저장된 로컬 폴더
+    			 System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
         InputStream in = new FileInputStream(path + "/" + fileName);
         System.out.println("파일시스템" + in);
         byte[] temp = IOUtils.toByteArray(in);
@@ -335,8 +338,9 @@ public class GoodsController {
 				
 				// 첨부파일 업로드
 				//String path = 
-				String path = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+				String path = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 						//"C:/file";
+						System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
 						//System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
 						//session.getServletContext().getRealPath("resources/static/img/goods");
 				System.out.println("path : " + path);
@@ -348,8 +352,9 @@ public class GoodsController {
 				if(fileOrder.get(i) == 0) {
 					if(old.getImage1() != null) {
 						// 기존 파일 삭제하기
-						String imagePath = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+						String imagePath = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 								//"C:/file";
+								System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
 								
 						//현재 게시판에 존재하는 파일객체를 만듬
 						File imageFile = new File(imagePath + "/" + old.getImage1());
@@ -365,9 +370,10 @@ public class GoodsController {
 					goodsDto.setImage2(newfilename);
 					if(old.getImage2() != null) {
 						// 기존 파일 삭제하기
-						String imagePath = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+						String imagePath = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 								//"C:/file";
-								
+								System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
+						
 						//현재 게시판에 존재하는 파일객체를 만듬
 						File imageFile = new File(imagePath + "/" + old.getImage2());
 						System.out.println(path + "/" + old.getImage2());
@@ -380,9 +386,10 @@ public class GoodsController {
 					goodsDto.setImage3(newfilename);
 					if(old.getImage3() != null) {
 						// 기존 파일 삭제하기
-						String imagePath = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+						String imagePath = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 								//"C:/file";
-								
+								System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
+						
 						//현재 게시판에 존재하는 파일객체를 만듬
 						File imageFile = new File(imagePath + "/" + old.getImage3());
 						System.out.println(path + "/" + old.getImage3());
@@ -395,9 +402,10 @@ public class GoodsController {
 					goodsDto.setImage4(newfilename);
 					if(old.getImage4() != null) {
 						// 기존 파일 삭제하기
-						String imagePath = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+						String imagePath = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 								//"C:/file";
-								
+								System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
+						
 						//현재 게시판에 존재하는 파일객체를 만듬
 						File imageFile = new File(imagePath + "/" + old.getImage4());
 						System.out.println(path + "/" + old.getImage4());
@@ -410,9 +418,10 @@ public class GoodsController {
 					goodsDto.setImage5(newfilename);
 					if(old.getImage5() != null) {
 						// 기존 파일 삭제하기
-						String imagePath = "C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
+						String imagePath = //"C:/Users/hwangjoonsoung/Desktop/tttttt/Nordic/src/main/resources/static/img/goods";
 								//"C:/file";
-								
+								System.getProperty("user.dir") + "/src/main/resources/static/img/goods";
+						
 						//현재 게시판에 존재하는 파일객체를 만듬
 						File imageFile = new File(imagePath + "/" + old.getImage5());
 						System.out.println(path + "/" + old.getImage5());
