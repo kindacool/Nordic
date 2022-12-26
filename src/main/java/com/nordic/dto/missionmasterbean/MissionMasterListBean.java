@@ -14,7 +14,6 @@ public class MissionMasterListBean {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING , pattern ="yyyy-MM-dd")
     private java.sql.Date start_date;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING , pattern ="yyyy-MM-dd")
     private java.sql.Date end_date;
     private String level_code;

@@ -41,7 +41,7 @@ public class MissionMasterService {
         MemberDto md =  ms.findOne(mmb.getCreate_member());
         mmb.setCreate_member(md.getMember_name());
         mmb.setUpdate_member(md.getMember_name());
-        System.out.println("mmb : "+mmb);
+
         mmd.insertData(mmb);
 
     }
@@ -82,7 +82,8 @@ public class MissionMasterService {
             JSONArray array = (JSONArray) object.get("picture");
             JSONObject test = (JSONObject) array.get(0);
             String fileName = (String) test.get("0");
-            String path = "C:\\Users\\hwangjoonsoung\\Desktop\\tttttt\\Nordic\\src\\main\\resources\\static\\img\\missionmaster\\";
+            String path1 = System.getProperty("user.dir");
+            String path = path1+"\\src\\main\\resources\\static\\img\\missionmaster\\";
             String fullName = path + fileName;
             //변환
             InputStream in = null;
@@ -114,7 +115,7 @@ public class MissionMasterService {
         }
 
         List<MissionMasterBean> list = mmd.search(msb);
-        System.out.println("service "+msb);
+
         return list;
     }
 }
